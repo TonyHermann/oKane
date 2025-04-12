@@ -4,7 +4,7 @@ import { Assistant } from "../components/Assistant.js";
 const assistant = new Assistant(); 
 
 export const runLegacy = async () => {
-  const url = "../public/data/test2.txt";
+  const url = "/data/test2.txt";
   const $main = document.querySelector(".legacy");
 
   const getData = async (url) => {

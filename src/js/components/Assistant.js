@@ -37,7 +37,7 @@ export const Assistant = class {
         <div class="globo_texto">
             <div class="globo_texto_header">
                 <div class="title">
-                    <img src="../public/img/976.ico" class="ico">
+                    <img src="../img/976.ico" class="ico">
                     <span>${this.name}</span>
                 </div>
                 <div class="close_button">
@@ -63,6 +63,6 @@ export const Assistant = class {
 
 }
 
-const assistant = new Assistant("../public/img/kurisu.webp", "Kurisu", [], "004");
+const assistant = new Assistant("../img/kurisu.webp", "Kurisu", [], "004");
 
 export default assistant;
