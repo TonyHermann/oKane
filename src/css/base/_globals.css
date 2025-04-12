@@ -1,0 +1,57 @@
+html {
+    width: 100%;
+    scroll-behavior: smooth;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+body {
+    font-family: Asar, serif!important;
+    font-weight: 400;
+    font-style: normal;
+    background-color: #fff;
+    margin: 0;
+    height: 100%;
+    width: 1260px;
+    background-image: url(https://portfolio-tonyhermann.vercel.app/background.png);
+}
+
+
+/* .jp {
+    font-family: $secondary_font;
+} */
+
+
+/* ===== Scrollbar CSS ===== */
+/* Firefox */
+
+span {
+    font-size: 0.8rem;
+}
+
+p {
+    font-size: 0.8rem;
+}
+
+h1 {
+    font-size: 2rem;
+}
+
+a {
+    color: var(--link_color)!important;
+}
+
+.wrapper {
+    display: flex;
+    gap: 20px;
+}
+
+.container {
+    margin: 0 0 10px 0;
+}
+
+.disabled {
+    cursor: not-allowed;
+}
+

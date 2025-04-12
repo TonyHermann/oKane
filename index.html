@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/x-icon" href="../src/files/img/326.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <title>【お金】</title>
+    <script>
+    const $ = (q) => {
+      const els = document.querySelectorAll(q);
+
+      if (els.length > 1) {
+        return els;
+      } else if (els.length == 1) {
+        return els[0];
+      }
+    };
+    </script>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <div class="nav_left"><p>【お金】</p></div>
+        <div class="nav_right">
+          <div class="changeThemeButton">
+            <p><i class="fa fa-refresh" aria-hidden="true"></i> Cambiar tema</p>
+            <div class="themeColor gray"></div>
+            <div class="themeColor orange"></div>
+            <div class="themeColor lightblue"></div>
+          </div>
+          <div class="buttonWithIcon">
+            <a href="/" onclick="route()"
+              ><i class="fa fa-home" aria-hidden="true"></i>スタートページ</a>
+          </div>
+          <div class="buttonWithIcon">
+            <a href="/legacy" onclick="route()"
+              ><i class="fa fa-home" aria-hidden="true"></i>Legacy</a>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <div class="main-content"></div>
+    </main>
+    <footer class="glass">
+      <div>
+        <p>
+          Developed by<a
+            href="https://github.com/TonyHermann/"
+            target="_blank"
+            rel="noreferrer"
+            >@TonyHermann</a>~竹
+        </p>
+      </div>
+    </footer>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,69 @@
+.assistant {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: top;
+
+    .character img {
+        width: 200px;
+        position: relative;
+        bottom: 0;
+    }
+
+    .globo_texto {
+        display: flex;
+        flex-direction: column;
+        background: #ffffcb;
+        padding: 10px;
+        height: 100%;
+        border: 1px solid black;
+        border-radius: 7px;
+        max-width: 200px;
+        -webkit-box-shadow: 5px 5px 7px 0px rgba(0,0,0,0.29);
+        -moz-box-shadow: 5px 5px 7px 0px rgba(0,0,0,0.29);
+        box-shadow: 5px 5px 7px 0px rgba(0,0,0,0.29);
+
+        .globo_texto_header { 
+            display: flex;
+            height: 10px;
+            margin-bottom: 10px;
+            justify-content: space-between;
+            align-items: center;
+
+            .title {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                font-weight: bold;
+            }
+
+        }
+
+        .globo_texto_content {
+            
+        }
+    }
+}
+
+.close_button {
+    background-color: red;
+    width: 13px;
+    height: 13px;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    background-color: #fffff5;
+    border-radius: 2px;
+    border: 1px #c8bfa7 solid;
+    color: #b0a38e;
+    cursor: pointer;
+    user-select: none;
+
+    span {
+        font-size: 13px;
+    }
+
+}
