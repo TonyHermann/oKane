@@ -14,4 +14,5 @@ const initAssistant = (assistant) => {
 
 const run = () => {
   initAssistant(assistant)
+  console.log("Testeando!")
 }
