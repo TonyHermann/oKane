@@ -1,6 +1,4 @@
-
-
-class Modal {
+export const Modal = class {
     constructor(title, content) {
         this.title = title;
         this.content = content;
@@ -20,7 +18,7 @@ class Modal {
           </div>
         </div>
         <div class="window-body">
-          <p>${this.content}</p>
+          ${this.content}
         </div>
         `
         this.modal = document.createElement("div")
@@ -39,9 +37,3 @@ class Modal {
     }
 
 }
-
-
-$("#addTransaction").addEventListener("click", () => {
-  let añadirMovimientosModal = new Modal ("Añadir movimientos", "Aquí, podrás añadir tus mivimientos.");
-  añadirMovimientosModal.create()
-})
