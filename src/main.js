@@ -13,7 +13,7 @@ const initAssistant = (assistant) => {
   assistant.greet();
 };
 
-const run = () => {
+const run = async () => {
   initAssistant(assistant);
   categoryController();
 };

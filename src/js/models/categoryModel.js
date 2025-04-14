@@ -4,8 +4,20 @@ const getCategoriesDB = async () => {
     const db = await openDB();
     const transaction = db.transaction('categories', 'readonly');
     const store = transaction.objectStore('categories');
-    const categories = await store.getAll();
-    return categories;
+
+    return new Promise((resolve, reject) => {
+        const request = store.getAll();
+
+        request.onsuccess = (event) => {
+            const categories = event.target.result;
+            resolve(categories);
+        }
+
+        request.onerror = (event) => {
+            reject(`Error al obtener categorías: ${event.target.error}`)
+        }
+
+    })
 }
 
 const saveCategoryDB = async (category) => {
@@ -13,6 +25,7 @@ const saveCategoryDB = async (category) => {
     const transaction = db.transaction('categories', 'readwrite');
     const store = transaction.objectStore('categories');
     store.add(category);
+    console.log("guardnado.-..")
     return new Promise((resolve, reject) => {
         transaction.oncomplete = resolve;
         transaction.onerror = reject;

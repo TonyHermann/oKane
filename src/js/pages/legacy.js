@@ -1,11 +1,13 @@
-import { categories } from "../../../public/data/categories.js";
+// import { categories } from "../../../public/data/categories.js";
 // import { assistant } from "../../main.js";
 import { Assistant } from "../components/Assistant.js";
+import { getCategories } from "../services/categoryService.js";
 const assistant = new Assistant(); 
 
 export const runLegacy = async () => {
   const url = "/data/test2.txt";
   const $main = document.querySelector(".legacy");
+  const categories = await getCategories();
 
   const getData = async (url) => {
     let dataFinal = "";
