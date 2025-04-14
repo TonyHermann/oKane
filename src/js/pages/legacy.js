@@ -1,11 +1,10 @@
-// import { categories } from "../../../public/data/categories.js";
-// import { assistant } from "../../main.js";
 import { Assistant } from "../components/Assistant.js";
 import { getCategories } from "../services/categoryService.js";
 const assistant = new Assistant(); 
 
 export const runLegacy = async () => {
-  const url = "/data/test2.txt";
+  // const url = "/data/test2.txt";
+  const url = "/data_public/test2.txt";
   const $main = document.querySelector(".legacy");
   const categories = await getCategories();
 
@@ -27,7 +26,9 @@ export const runLegacy = async () => {
               return { date, description, amount: Number(amount) };
             }
           });
+          console.log(dataFinal)
       });
+      
     return dataFinal.slice(1, dataFinal.length);
   };
 
