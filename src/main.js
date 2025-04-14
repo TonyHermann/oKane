@@ -1,7 +1,7 @@
 import './css/index.css';
 import './js/router.js';
-import { Modal } from "./js/components/Modal.js";
 import { Assistant } from "./js/components/Assistant.js";
+import { categoryController } from './js/controllers/categoryController.js';
 const assistant = new Assistant(); 
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -15,16 +15,5 @@ const initAssistant = (assistant) => {
 
 const run = () => {
   initAssistant(assistant);
-
-  $("#admCat").addEventListener("click", () => {
-    let html = 
-    `
-      <p>Administrador de categorías</p>
-      <button id="showCategories">Mostrar categorías</button>
-      <button id="addCategorie">Añadir una categoría</button>
-    `;
-
-    let admCatModal = new Modal ("Administrador de categorías", html);
-    admCatModal.create();
-  });
+  categoryController();
 };

@@ -5,8 +5,6 @@ export const Modal = class {
         this.modal = null;
     }
 
-    
-
     create() {
         const modalXP = `
         <div class="title-bar">
