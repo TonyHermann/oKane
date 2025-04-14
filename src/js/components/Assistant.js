@@ -21,6 +21,10 @@ export const Assistant = class {
     say(text) {
         let char = document.querySelector(`#assistant_${this.id}`);
         let text_globe = char.querySelector(".globo_texto_content");
+        if(!text_globe) {
+            this.generateGlobo();
+            text_globe = char.querySelector(".globo_texto_content");
+        }
         text_globe.textContent = text
     }
 
