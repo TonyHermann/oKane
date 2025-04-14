@@ -1,5 +1,4 @@
 import { Modal } from "../components/Modal";
-// import { categories } from "../../../public/data/categories";
 import { addCategory, deleteCategory, getCategories, updateCategory } from "../services/categoryService";
 
 
