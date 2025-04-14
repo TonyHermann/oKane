@@ -1,0 +1,10 @@
+.modal {
+    position: absolute;
+    top: 50%;
+        .title-bar-controls button {
+        cursor:not-allowed;
+    }
+    .title-bar-controls .closeBtnXP {
+        cursor: pointer;
+    }
+}

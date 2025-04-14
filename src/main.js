@@ -1,5 +1,6 @@
 import './css/index.css';
 import './js/router.js';
+import './js/components/Modal.js'
 import { Assistant } from "./js/components/Assistant.js";
 const assistant = new Assistant(); 
 
