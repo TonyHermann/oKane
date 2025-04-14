@@ -25,7 +25,7 @@ const saveCategoryDB = async (category) => {
     const transaction = db.transaction('categories', 'readwrite');
     const store = transaction.objectStore('categories');
     store.add(category);
-    console.log("guardnado.-..")
+    console.log("guardnado...")
     return new Promise((resolve, reject) => {
         transaction.oncomplete = resolve;
         transaction.onerror = reject;

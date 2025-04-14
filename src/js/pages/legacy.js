@@ -222,10 +222,8 @@ export const runLegacy = async () => {
 
     // handleMiniPanel()
 
-    const $balanceActual = document.querySelector(".balance_actual");
     assistant.say(`Monto total ${data.total}`);
     $main.innerHTML = html;
-    // $balanceActual.innerHTML = data.total;
   }
 
   const handleMiniPanel = () => {
@@ -245,10 +243,8 @@ export const runLegacy = async () => {
   };
 
   let data = await getData(url);
-  let sum = data.reduce((acc, el) => acc + Number(el.amount), 0);
   let dataFiltrada = dividirPorFecha(dividirArrEnCategorias(data, categories));
   console.log(sinCat);
   dataFiltrada = calcularMontoTotal(dataFiltrada);
   render(dataFiltrada);
-  console.log("asd");
 };
