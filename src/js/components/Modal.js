@@ -1,4 +1,5 @@
 export const Modal = class {
+  
     constructor(title, content, eventHandlers = {}) {
         this.title = title;
         this.content = content;

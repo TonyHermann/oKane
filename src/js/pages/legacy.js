@@ -1,5 +1,6 @@
 import { Assistant } from "../components/Assistant.js";
 import { getCategories } from "../services/categoryService.js";
+// import { categories } from "../../../public/data/categories.js"
 const assistant = new Assistant(); 
 
 export const runLegacy = async () => {

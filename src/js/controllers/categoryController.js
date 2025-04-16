@@ -22,7 +22,6 @@ const manageCategoryModal = (name, categories) => {
         }).join(',')}</textarea>
         <p><strong>Palabras clave seleccionadas</strong></p>
         <ul id="keywords-list">
-            <!-- Aquí se agregarán las palabras clave -->
         </ul>
 
         <div class="modal-actions">
@@ -47,9 +46,15 @@ const manageCategoryModal = (name, categories) => {
             let catToSave = {"name": nameToSave, "keywords": keywordsToSave};
             console.log(catToSave);
             if(name) {
-                updateCategory(catToSave);
+                updateCategory(catToSave).then(() => {
+                    console.log("asdads")
+                    actualizarCategorias();
+                });
             } else {
-                addCategory(catToSave);
+                addCategory(catToSave).then(() => {
+                    console.log("asdads")
+                    actualizarCategorias();
+                });
             };
 
             addCatModal.close();
@@ -59,8 +64,8 @@ const manageCategoryModal = (name, categories) => {
         }
     };
 
-    let addCatModal = new Modal("Añadir una categoría", html, eventHandlers)
-    addCatModal.create()
+    let addCatModal = new Modal("Añadir una categoría", html, eventHandlers);
+    addCatModal.create();
     
     // Función para agregar palabras clave a la lista (ul)
     const addKeywordToList = () => {
@@ -72,7 +77,7 @@ const manageCategoryModal = (name, categories) => {
             keywordsArray.forEach(keyword => {
                 const li = document.createElement("li");
                 li.textContent = keyword;
-                keywordsList.push(keyword)
+                keywordsList.push(keyword);
                 ul.appendChild(li);
             });
         }
@@ -85,7 +90,7 @@ const manageCategoryModal = (name, categories) => {
     $("#category-keywords").addEventListener("input", addKeywordToList);
 }
 
-const createModal = (categories) => {
+const createCategoryModal = (categories) => {
     let html = 
     `
     <p>Administrador de categorías</p>
@@ -121,11 +126,13 @@ const createModal = (categories) => {
         removeCategory: () => {
             let toRemoveCat = prompt("Ingresa el nombre de la categoría a eliminar");
             if(toRemoveCat != null && toRemoveCat != "") {
-                deleteCategory(toRemoveCat);
+                deleteCategory(toRemoveCat).then(() => {
+                    actualizarCategorias();
+                });
             } else {
                 alert("No has ingresado un nombre de categoría.");
             }
-            actualizarCategorias();
+            
         },
         actualizeCategory: () => {
             actualizarCategorias();
@@ -135,14 +142,12 @@ const createModal = (categories) => {
 
     let admCatModal = new Modal ("Administrador de categorías", html, eventHandlers);
     admCatModal.create();
-
 }
 
-const actualizarCategorias = async ()  => {
+const actualizarCategorias = async () => {
     if($(".category-container")) {
         let categories = await getCategories();
         $(".category-container").innerHTML = `
-        <div class='container category-container'>
         <p>Categorias:</p>
         ${categories.map(category => {
             return `
@@ -151,14 +156,14 @@ const actualizarCategorias = async ()  => {
             </li>
             `
         }).join('')}
-    </container>`
+        `
     }
 }
 
 const categoryController = () => {
     $("#admCat").addEventListener("click", async () => {
-        const categories = await getCategories();
-        createModal(categories);
+        let categories = await getCategories();
+        createCategoryModal(categories);
     });
 };
 
