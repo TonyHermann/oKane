@@ -1,0 +1,17 @@
+.category-container {
+    max-height: 300px;
+    overflow: scroll;
+    span img {
+        width: 20px;
+        cursor: pointer;
+    }
+    ul {
+        padding-inline-start: 20px;
+        li {
+            div {
+                display: flex;
+                justify-content: space-between;
+            }
+        }
+    }
+}

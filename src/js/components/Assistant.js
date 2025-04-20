@@ -69,4 +69,4 @@ export const Assistant = class {
 
 const assistant = new Assistant("../img/kurisu.webp", "Kurisu", [], "004");
 
-export default assistant;
+export { assistant }

@@ -1,5 +1,4 @@
 export const Modal = class {
-  
     constructor(title, content, eventHandlers = {}) {
         this.title = title;
         this.content = content;
@@ -10,7 +9,6 @@ export const Modal = class {
     }
 
     create() {
-
         this.overlay = document.createElement("div");
         this.overlay.classList.add("modal-overlay");
         $("html").appendChild(this.overlay);
