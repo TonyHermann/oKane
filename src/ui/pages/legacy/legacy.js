@@ -1,12 +1,14 @@
 import { Assistant } from "../../../js/components/Assistant";
 import { categoryStore } from "../../../js/store/categoryStore.js";
 const assistant = new Assistant();
+import { CategoryActions } from "../../../adapters/CategoryActions.js";
 
 export const runLegacy = async () => {
   // const url = "/data/test2.txt";
   const url = "/data_public/test2.txt";
   const $main = document.querySelector(".legacy");
-  const categories = categoryStore.getState();
+  // const categories = categoryStore.getState();
+  const categories = await CategoryActions.getAll;
 
   const getData = async (url) => {
     let dataFinal = "";
