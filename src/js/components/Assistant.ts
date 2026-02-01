@@ -89,6 +89,6 @@ export class Assistant implements IAssisant {
   }
 }
 
-const assistant = new Assistant("../img/kurisu.webp", "Kurisu", [], 4);
+const assistant = new Assistant("src/ui/assets/img/kurisu.webp", "Kurisu", [], 4);
 
 export { assistant };
