@@ -1,8 +1,6 @@
 import { Assistant } from "../components/Assistant.js";
-// import { getCategories } from "../services/categoryService.js";
-// import { categories } from "../../../public/data/categories.js"
 import { categoryStore } from "../store/categoryStore.js";
-const assistant = new Assistant(); 
+const assistant = new Assistant();
 
 export const runLegacy = async () => {
   // const url = "/data/test2.txt";
@@ -28,20 +26,16 @@ export const runLegacy = async () => {
               return { date, description, amount: Number(amount) };
             }
           });
-          console.log(dataFinal)
+        console.log(dataFinal);
       });
-      
+
     return dataFinal.slice(1, dataFinal.length);
   };
 
   // Función para determinar la categoría de un gasto en función de su descripción
   function getCategory(description, categorias) {
     for (const category of categorias) {
-      if (
-        category.keywords.some((keyword) =>
-          description.toLowerCase().includes(keyword.toLowerCase()),
-        )
-      ) {
+      if (category.keywords.some((keyword) => description.toLowerCase().includes(keyword.toLowerCase()))) {
         return category.name;
       }
     }
@@ -92,9 +86,7 @@ export const runLegacy = async () => {
     let transOrdenadas = {};
 
     for (const categoria in transaccionesPorCat) {
-      if (
-        Object.prototype.hasOwnProperty.call(transaccionesPorCat, categoria)
-      ) {
+      if (Object.prototype.hasOwnProperty.call(transaccionesPorCat, categoria)) {
         const element = transaccionesPorCat[categoria];
         element.forEach((transaccion) => {
           let fecha = transaccion.date.split("/");
@@ -102,8 +94,7 @@ export const runLegacy = async () => {
 
           transOrdenadas[anio] = transOrdenadas[anio] || {};
           transOrdenadas[anio][mes] = transOrdenadas[anio][mes] || {};
-          transOrdenadas[anio][mes][categoria] =
-            transOrdenadas[anio][mes][categoria] || [];
+          transOrdenadas[anio][mes][categoria] = transOrdenadas[anio][mes][categoria] || [];
 
           transOrdenadas[anio][mes][categoria].push(transaccion);
         });
@@ -118,17 +109,10 @@ export const runLegacy = async () => {
       Object.keys(data[anio]).forEach((mes) => {
         Object.keys(data[anio][mes]).forEach((categoria) => {
           data[anio][mes][categoria]["total"] = (
-            Math.round(
-              data[anio][mes][categoria].reduce(
-                (acc, el) => acc + el.amount,
-                0,
-              ) * 100,
-            ) / 100
+            Math.round(data[anio][mes][categoria].reduce((acc, el) => acc + el.amount, 0) * 100) / 100
           ).toFixed(2);
           data[anio][mes]["total"] = data[anio][mes]["total"] || 0;
-          data[anio][mes]["total"] =
-            data[anio][mes]["total"] +
-            Number(data[anio][mes][categoria]["total"]);
+          data[anio][mes]["total"] = data[anio][mes]["total"] + Number(data[anio][mes][categoria]["total"]);
         });
 
         data[anio]["total"] = data[anio]["total"] || 0;
@@ -183,14 +167,9 @@ export const runLegacy = async () => {
                                       <details closed>
                                         <summary>${transaccion}</summary>
                                         <ul>
-                                          ${Object.entries(
-                                            data[anio][mes][transaccion],
-                                          )
+                                          ${Object.entries(data[anio][mes][transaccion])
                                             .map(([movimiento]) => {
-                                              let itm =
-                                                data[anio][mes][transaccion][
-                                                  movimiento
-                                                ];
+                                              let itm = data[anio][mes][transaccion][movimiento];
                                               if (itm["date"]) {
                                                 return `<li>${itm["date"]} - ${itm["description"]} - ${itm["amount"]}</li>`;
                                               } else {
