@@ -1,18 +1,10 @@
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
 import "./ui/styles/index.css";
-import "./js/router.js";
-import { assistant } from "./ui/components/Assistant.ts";
-import { categoryController } from "./js/controllers/categoryController.js";
+import App from "./ui/App.tsx";
 
-document.addEventListener("DOMContentLoaded", () => {
-  run();
-});
-
-const initAssistant = (assistant) => {
-  assistant.render($("body"));
-  assistant.greet();
-};
-
-const run = async () => {
-  initAssistant(assistant);
-  categoryController();
-};
+createRoot(document.getElementById("root")!).render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+);
