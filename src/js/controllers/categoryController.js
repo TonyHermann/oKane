@@ -1,5 +1,5 @@
 import { fetchCategories } from "../services/categoryService";
-import { createCategoryModal } from "../../ui/dialgos/CategoryDialogs";
+import { createCategoryModal } from "../../ui/dialogs/CategoryDialogs";
 import { categoryStore } from "../store/categoryStore";
 
 const categoryController = () => {
