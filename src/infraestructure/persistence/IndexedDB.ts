@@ -1,4 +1,4 @@
-const openDB = () => {
+const openDB = (): Promise<IDBDatabase> => {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open("oKaneDB", 1);
 
@@ -9,8 +9,8 @@ const openDB = () => {
         db.createObjectStore("categories", { keyPath: "name" });
       }
 
-      if (!db.objectStoreNames.contains("transactions")) {
-        db.createObjectStore("transactions", { autoIncrement: true });
+      if (!db.objectStoreNames.contains("movements")) {
+        db.createObjectStore("movements", { autoIncrement: true });
       }
     };
 
