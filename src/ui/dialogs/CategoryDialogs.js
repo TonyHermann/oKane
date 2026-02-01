@@ -1,4 +1,4 @@
-import { Modal } from "../../js/components/Modal";
+import { Modal } from "../components/Modal";
 import { addCategory, deleteCategory, updateCategory } from "../../js/services/categoryService";
 import { categoryStore } from "../../js/store/categoryStore";
 

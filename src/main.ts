@@ -1,6 +1,6 @@
 import "./ui/styles/index.css";
 import "./js/router.js";
-import { assistant } from "./js/components/Assistant.js";
+import { assistant } from "./ui/components/Assistant.js";
 import { categoryController } from "./js/controllers/categoryController.js";
 
 document.addEventListener("DOMContentLoaded", () => {

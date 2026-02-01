@@ -1,4 +1,4 @@
-import { Assistant } from "../../../js/components/Assistant";
+import { Assistant } from "../../components/Assistant.js";
 import { categoryStore } from "../../../js/store/categoryStore.js";
 const assistant = new Assistant();
 import { CategoryActions } from "../../../adapters/CategoryActions.js";

@@ -1,5 +1,5 @@
 // import { assistant } from "../../main.js";
-import { Assistant } from "../../../js/components/Assistant";
+import { Assistant } from "../../components/Assistant";
 const assistant = new Assistant();
 
 export const runIndex = () => {
