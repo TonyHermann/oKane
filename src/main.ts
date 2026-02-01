@@ -1,4 +1,4 @@
-import "./css/index.css";
+import "./ui/styles/css/index.css";
 import "./js/router.js";
 import { assistant } from "./js/components/Assistant.js";
 import { categoryController } from "./js/controllers/categoryController.js";
