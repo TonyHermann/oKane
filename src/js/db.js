@@ -9,8 +9,8 @@ const openDB = () => {
         db.createObjectStore("categories", { keyPath: "name" });
       }
 
-      if (!db.objectStoreNames.contains("movements")) {
-        db.createObjectStore("movements", { autoIncrement: true });
+      if (!db.objectStoreNames.contains("transactions")) {
+        db.createObjectStore("transactions", { autoIncrement: true });
       }
     };
 
