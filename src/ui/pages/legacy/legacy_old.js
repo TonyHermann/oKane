@@ -1,10 +1,10 @@
-import { Assistant } from "../components/Assistant.js";
-import { categoryStore } from "../store/categoryStore.js";
-import { transactionStore } from "../store/transactionStore.js";
-import { fetchTransactions } from "../services/transactionService.js";
-import { fetchCategories } from "../services/categoryService.js";
-import { Modal } from "../components/Modal.js";
-import { updateCategory } from "../services/categoryService.js";
+import { Assistant } from "../../../js/components/Assistant.js";
+import { categoryStore } from "../../../js/store/categoryStore.js";
+import { transactionStore } from "../../../js/store/transactionStore.js";
+import { fetchTransactions } from "../../../js/services/transactionService.js";
+import { fetchCategories } from "../../../js/services/categoryService.js";
+import { Modal } from "../../../js/components/Modal.js";
+import { updateCategory } from "../../../js/services/categoryService.js";
 
 const assistant = new Assistant();
 
