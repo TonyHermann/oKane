@@ -1,5 +1,5 @@
-const openDB = (): Promise<IDBDatabase> => {
-  return new Promise((resolve, reject) => {
+const openDB = (): Promise<IDBDatabase> =>
+  new Promise((resolve, reject) => {
     const request = indexedDB.open("oKaneDB", 1);
 
     request.onupgradeneeded = () => {
@@ -10,7 +10,7 @@ const openDB = (): Promise<IDBDatabase> => {
       }
 
       if (!db.objectStoreNames.contains("movements")) {
-        db.createObjectStore("movements", { autoIncrement: true });
+        db.createObjectStore("transactions", { autoIncrement: true });
       }
     };
 
@@ -18,6 +18,5 @@ const openDB = (): Promise<IDBDatabase> => {
 
     request.onerror = (err) => reject(err);
   });
-};
 
 export { openDB };
