@@ -1,44 +1,227 @@
-import type { ICategoryRepository } from "../../core/repositories/ICategoryRepository.js";
-import { Category } from "../../core/entities/Category.js";
-import { openDB } from "./IndexedDB.js";
+import type { ICategoryRepository } from "../../core/repositories/ICategoryRepository.ts";
+import { Category } from "../../core/entities/Category.ts";
+import { openDB } from "./IndexedDB.ts";
+import { logger } from "../../shared/logger/Logger.ts";
 
 export class IndexedDBCategoryRepository implements ICategoryRepository {
-  private storename = "categories";
+  private readonly storeName = "categories";
 
   async save(category: Category): Promise<void> {
-    const db = await openDB();
-    const cat = db.transaction(this.storename, "readwrite");
-    const store = cat.objectStore(this.storename);
+    logger.info("Saving category", { name: category.name });
 
-    store.add(category);
+    try {
+      const db = await openDB();
+
+      return new Promise<void>((resolve, reject) => {
+        const transaction = db.transaction(this.storeName, "readwrite");
+        const store = transaction.objectStore(this.storeName);
+
+        transaction.onerror = () => {
+          const error = transaction.error;
+          logger.error(error || new Error("Unknown transaction error"), {
+            operation: "save_category",
+            categoryName: category.name,
+            errorName: error?.name,
+            errorMessage: error?.message,
+          });
+          reject(
+            new Error(
+              `Failed to save category: ${error?.message || "Unknown error"}`,
+            ),
+          );
+        };
+
+        const request = store.add(category);
+
+        request.onsuccess = () => {
+          logger.info("Category saved successfully", { name: category.name });
+          resolve();
+        };
+
+        request.onerror = () => {
+          const error = request.error;
+          let errorMessage = "Failed to save category";
+
+          if (error?.name === "ConstraintError") {
+            errorMessage = `Category with name '${category.name}' already exists`;
+          } else if (error?.message) {
+            errorMessage = `Failed to save category: ${error.message}`;
+          }
+
+          logger.error(error || new Error("Unknown error"), {
+            operation: "save_category_request",
+            categoryName: category.name,
+            errorName: error?.name,
+            errorMessage,
+          });
+          reject(new Error(errorMessage));
+        };
+      });
+    } catch (error) {
+      logger.error(error as Error, { operation: "save_category_unexpected" });
+      throw error;
+    }
   }
 
   async update(category: Category): Promise<void> {
-    const db = await openDB();
-    const cat = db.transaction(this.storename, "readwrite");
-    const store = cat.objectStore(this.storename);
+    logger.info("Updating category", { name: category.name });
 
-    store.put(category);
+    try {
+      const db = await openDB();
+
+      return new Promise<void>((resolve, reject) => {
+        const transaction = db.transaction(this.storeName, "readwrite");
+        const store = transaction.objectStore(this.storeName);
+
+        transaction.onerror = () => {
+          const error = transaction.error;
+          logger.error(error || new Error("Unknown error"), {
+            operation: "update_category",
+            categoryName: category.name,
+            errorName: error?.name,
+            errorMessage: error?.message,
+          });
+          reject(
+            new Error(
+              `Failed to update category: ${error?.message || "Unknown error"}`,
+            ),
+          );
+        };
+
+        const request = store.put(category);
+
+        request.onsuccess = () => {
+          logger.info("Category updated successfully", { name: category.name });
+          resolve();
+        };
+
+        request.onerror = () => {
+          const error = request.error;
+          let errorMessage = "Failed to update category";
+
+          if (error?.name === "NotFoundError") {
+            errorMessage = `Category with name '${category.name}' not found`;
+          } else if (error?.message) {
+            errorMessage = `Failed to update category: ${error.message}`;
+          }
+
+          logger.error(error || new Error("Unknown error"), {
+            operation: "update_category_request",
+            categoryName: category.name,
+            errorName: error?.name,
+            errorMessage,
+          });
+          reject(new Error(errorMessage));
+        };
+      });
+    } catch (error) {
+      logger.error(error as Error, { operation: "update_category_unexpected" });
+      throw error;
+    }
   }
 
   async delete(id: string): Promise<void> {
-    const db = await openDB();
-    const cat = db.transaction(this.storename, "readwrite");
-    const store = cat.objectStore(this.storename);
+    logger.info("Deleting category", { id });
 
-    store.delete(id);
+    try {
+      const db = await openDB();
+
+      return new Promise<void>((resolve, reject) => {
+        const transaction = db.transaction(this.storeName, "readwrite");
+        const store = transaction.objectStore(this.storeName);
+
+        transaction.onerror = () => {
+          const error = transaction.error;
+          logger.error(error || new Error("Unknown error"), {
+            operation: "delete_category",
+            categoryId: id,
+            errorName: error?.name,
+            errorMessage: error?.message,
+          });
+          reject(
+            new Error(
+              `Failed to delete category: ${error?.message || "Unknown error"}`,
+            ),
+          );
+        };
+
+        const request = store.delete(id);
+
+        request.onsuccess = () => {
+          logger.info("Category deleted successfully", { id });
+          resolve();
+        };
+
+        request.onerror = () => {
+          const error = request.error;
+          const errorMessage = `Failed to delete category: ${error?.message || "Unknown error"}`;
+
+          logger.error(error || new Error("Unknown error"), {
+            operation: "delete_category_request",
+            categoryId: id,
+            errorName: error?.name,
+            errorMessage,
+          });
+          reject(new Error(errorMessage));
+        };
+      });
+    } catch (error) {
+      logger.error(error as Error, { operation: "delete_category_unexpected" });
+      throw error;
+    }
   }
 
   async findAll(): Promise<Category[]> {
-    const db = await openDB();
-    const cat = db.transaction(this.storename, "readonly");
-    const store = cat.objectStore(this.storename);
+    logger.info("Finding all categories");
 
-    return new Promise((resolve, reject) => {
-      const req = store.getAll();
+    try {
+      const db = await openDB();
 
-      req.onsuccess = () => resolve(req.result);
-      req.onerror = () => reject("Error al obtener transacciones.");
-    });
+      return new Promise<Category[]>((resolve, reject) => {
+        const transaction = db.transaction(this.storeName, "readonly");
+        const store = transaction.objectStore(this.storeName);
+
+        transaction.onerror = () => {
+          const error = transaction.error;
+          logger.error(error || new Error("Unknown error"), {
+            operation: "find_all_categories",
+            errorName: error?.name,
+            errorMessage: error?.message,
+          });
+          reject(
+            new Error(
+              `Failed to retrieve categories: ${error?.message || "Unknown error"}`,
+            ),
+          );
+        };
+
+        const request = store.getAll();
+
+        request.onsuccess = () => {
+          const categories = request.result;
+          logger.info("Categories retrieved successfully", {
+            count: categories.length,
+          });
+          resolve(categories);
+        };
+
+        request.onerror = () => {
+          const error = request.error;
+          const errorMessage = `Failed to retrieve categories: ${error?.message || "Unknown error"}`;
+
+          logger.error(error || new Error("Unknown error"), {
+            operation: "find_all_categories_request",
+            errorName: error?.name,
+            errorMessage,
+          });
+          reject(new Error(errorMessage));
+        };
+      });
+    } catch (error) {
+      logger.error(error as Error, {
+        operation: "find_all_categories_unexpected",
+      });
+      throw error;
+    }
   }
 }

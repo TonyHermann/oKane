@@ -3,5 +3,5 @@ import type { ITransactionRepository } from "../../repositories/ITransactionRepo
 export const DeleteTransactions = async (repository: ITransactionRepository) => {
   return async (transactionId: string) => {
     return await repository.delete(transactionId);
-  };
-};
+  }
+}
