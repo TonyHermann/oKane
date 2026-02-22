@@ -1,4 +1,8 @@
-export const Navbar = () => {
+interface NavbarProps {
+  onOpenCategoryManager?: () => void;
+}
+
+export const Navbar = ({ onOpenCategoryManager }: NavbarProps) => {
   return (
     <nav>
       <div className="nav_left">
@@ -23,11 +27,9 @@ export const Navbar = () => {
             <i className="fa fa-home" aria-hidden="true"></i>Legacy
           </a>
         </div>
-        <div className="buttonWithIcon" id="admCat">
-          <a href="#">
-            <i className="fa fa-home" aria-hidden="true"></i>Administrar categorías
-          </a>
-        </div>
+        <button className="buttonWithIcon" type="button" onClick={onOpenCategoryManager}>
+          <i className="fa fa-home" aria-hidden="true"></i>Administrar categorías
+        </button>
       </div>
     </nav>
   );

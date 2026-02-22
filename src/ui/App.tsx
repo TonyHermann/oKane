@@ -1,12 +1,15 @@
+import { useState } from "react";
+import CategoryDialogs from "./dialogs/CategoryDialogs";
+import CategoryList from "./components/CategoryList";
 import { MainLayout } from "./layout/MainLayout";
 
 const App = () => {
+  const [isCategoryDialogOpen, setIsCategoryDialogOpen] = useState(false);
+
   return (
-    <MainLayout>
-      <>
-        <h1>oKane - Clean Architecture con React</h1>
-        <p>Si ves esto, el cableado está perfecto.</p>
-      </>
+    <MainLayout onOpenCategoryManager={() => setIsCategoryDialogOpen(true)}>
+      <CategoryList />
+      <CategoryDialogs isOpen={isCategoryDialogOpen} onClose={() => setIsCategoryDialogOpen(false)} />
     </MainLayout>
   );
 };
