@@ -1,67 +1,49 @@
-# oKane 💸
+# oKane 🪙
 
-Una aplicación frontend para la organización de gastos y categorías de movimientos bancarios, pensada para facilitar la visualización y categorización automática de movimientos.
+A webapp built to be a fast, local and private personal finance tool.
+Developed with React, TypeScript, Vite and IndexedDB as it's database.
 
-Está desarrollada con **Vite**, **JavaScript Vanilla** e **IndexedDB** como sistema de persistencia local.
+If oKane was useful for you, please consider leaving a ⭐!
 
 ---
 
-## 🚀 Cómo empezar
+## How to start
 
-1. Clonar el repositorio:
+1. Clone the repo:
+
    ```bash
    git clone https://github.com/TonyHermann/oKane.git
    cd oKane
    ```
 
-2. Instalar las dependencias:
+2. Instal deps:
+
    ```bash
    npm install
    ```
 
-3. Iniciar el entorno de desarrollo:
+3. Run dev command:
+
    ```bash
    npm run dev
    ```
 
-4. (Opcional) Crear versión de producción:
+4. (Optional) Build for production:
    ```bash
    npm run build
    ```
 
 ---
 
-## 🧠 ¿Para qué sirve?
+## Translation
 
-Esta app permite:
-
-- Cargar movimientos bancarios.
-- Visualizar dichos movimientos dividios por año, mes y categorías.
-- Guardar y editar las categorías localmente.
-
-Está pensada para ser usada en navegadores modernos, sin necesidad de backend, gracias a IndexedDB.
-
----
-
-## 🛠️ TO-DO / Por hacer
-
-- [ ] Crear interfaz para subir movimientos.
-- [ ] CRUD completo para los movimientos.
-- [ ] Validaciones y mensajes de error más claros.
-- [ ] Agregar sección de estadísticas básicas.
-- [ ] Responsive y UI (no por ahora).
-
----
-
-## ✨ Tecnologías usadas
-
-- Vite
-- JavaScript (Vanilla)
-- HTML/CSS
-- IndexedDB
-
+_Pending..._
 
 ---
 
 Hecho con amor y fernet [Tony Hermann](https://github.com/TonyHermann) 🎍
+
 ```
+
+```
+
