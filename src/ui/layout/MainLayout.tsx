@@ -4,16 +4,12 @@ import { Footer } from "./Footer";
 
 interface MainLayoutProps {
   children: React.ReactNode;
-  onOpenCategoryManager?: () => void;
 }
 
-export const MainLayout: React.FC<MainLayoutProps> = ({
-  children,
-  onOpenCategoryManager,
-}) => {
+export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   return (
     <div className="main-layout">
-      <Navbar onOpenCategoryManager={onOpenCategoryManager} />
+      <Navbar />
       <main className="main-content">{children}</main>
       <Footer />
     </div>
