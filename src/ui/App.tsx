@@ -1,17 +1,12 @@
-import { useState } from "react";
-import CategoryDialogs from "./dialogs/CategoryDialogs";
-import CategoryList from "./components/CategoryList";
-import { MainLayout } from "./layout/MainLayout";
+import type { ReactNode } from "react";
+import "./styles/index.css";
 
-const App = () => {
-  const [isCategoryDialogOpen, setIsCategoryDialogOpen] = useState(false);
+interface AppProps {
+  children: ReactNode;
+}
 
-  return (
-    <MainLayout onOpenCategoryManager={() => setIsCategoryDialogOpen(true)}>
-      <CategoryList />
-      <CategoryDialogs isOpen={isCategoryDialogOpen} onClose={() => setIsCategoryDialogOpen(false)} />
-    </MainLayout>
-  );
+const App = ({ children }: AppProps) => {
+  return <>{children}</>;
 };
 
 export default App;

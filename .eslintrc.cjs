@@ -39,6 +39,7 @@ module.exports = {
     "import/extensions": "off", // Evita errores al importar archivos .ts/.tsx
     "@typescript-eslint/lines-between-class-members": "error",
     "@typescript-eslint/no-throw-literal": "error",
+    "react/require-default-props": "off",
   },
   settings: {
     react: {

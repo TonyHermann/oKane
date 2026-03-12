@@ -13,6 +13,9 @@ nav {
       text-decoration: none;
       /* color: $link_color; */
       font-size: 15px;
+      i {
+        margin-right: 5px;
+      }
     }
   }
   .nav_right {
