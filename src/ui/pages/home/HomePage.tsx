@@ -2,6 +2,11 @@ import useModalContext from "../../components/modal/context/useModalContext";
 import Modal from "../../components/modal/Modal";
 import CategoryList from "./components/CategoryList";
 
+const ErrorComponent = () => {
+  throw new Error("Falló el render!");
+  return <></>;
+};
+
 export const HomePage = () => {
   const { setState } = useModalContext();
 
@@ -22,7 +27,9 @@ export const HomePage = () => {
             </Modal.Body>
           </Modal>
         </div>
-        <div className="panel"></div>
+        <div className="panel">
+          <ErrorComponent />
+        </div>
         <div className="panel"></div>
         <div className="panel"></div>
         <div className="panel"></div>
