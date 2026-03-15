@@ -10,7 +10,10 @@ interface ErrorBoundaryProps {
   fallback: ReactNode;
 }
 
-class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+export class ErrorBoundary extends Component<
+  ErrorBoundaryProps,
+  ErrorBoundaryState
+> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = {
@@ -37,5 +40,3 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     return children;
   }
 }
-
-export default ErrorBoundary;

@@ -27,9 +27,7 @@ export const HomePage = () => {
             </Modal.Body>
           </Modal>
         </div>
-        <div className="panel">
-          <ErrorComponent />
-        </div>
+        <div className="panel"></div>
         <div className="panel"></div>
         <div className="panel"></div>
         <div className="panel"></div>
