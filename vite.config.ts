@@ -7,6 +7,7 @@ export default defineConfig({
   // Esto es útil para que Vite reconozca las rutas de tu nueva estructura
   resolve: {
     alias: {
+      "@": "/src",
       "@core": "/src/core",
       "@infra": "/src/infrastructure",
       "@ui": "/src/ui",
