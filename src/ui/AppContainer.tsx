@@ -2,12 +2,15 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App.tsx";
 import { ModalProvider } from "./components/modal/context/modalContext.tsx";
 import { GlobalProvider } from "./context/global.provider.tsx";
-import { AppRoutes } from "./routes/index.tsx";
+import { AppRoutes } from "@/ui/routes/";
 import "./styles/index.css";
-import { ErrorBoundary } from "@/ui/components/ErrorBoundary/";
+import {
+  ErrorBoundary,
+  AppErrorFallback,
+} from "@/ui/components/ErrorBoundary/";
 
 export const AppContainer = () => (
-  <ErrorBoundary fallback={<></>}>
+  <ErrorBoundary Fallback={AppErrorFallback}>
     <GlobalProvider>
       <ModalProvider>
         <App>
