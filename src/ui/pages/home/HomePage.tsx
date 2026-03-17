@@ -1,3 +1,4 @@
+import { Spinner } from "@/ui/components/Spinner";
 import useModalContext from "../../components/modal/context/useModalContext";
 import Modal from "../../components/modal/Modal";
 import CategoryList from "./components/CategoryList";
@@ -21,7 +22,9 @@ export const HomePage = () => {
           </Modal.Body>
         </Modal>
       </div>
-      <div className="panel"></div>
+      <div className="panel">
+        <Spinner />
+      </div>
       <div className="panel"></div>
       <div className="panel"></div>
       <div className="panel"></div>

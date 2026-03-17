@@ -1,68 +1,100 @@
+import { lazy, Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
-import type { FunctionComponent } from "react";
 import { PATHS } from "./paths";
 
 // Layouts
 import { RootLayout } from "../layouts/RootLayout";
 
-// Pages
-import { HomePage } from "../pages/home/HomePage";
-import { AdminLayout } from "../pages/admin/AdminLayout";
-import { CategoriesPage } from "../pages/admin/categories/CategoriesPage";
-import { SettingsPage } from "../pages/settings/SettingsPage";
-import { BudgetPage } from "../pages/budget/BudgetPage";
-import { ErrorBoundary, ErrorFallback } from "@/ui/components/ErrorBoundary";
+// Components
+import { PageWrapper } from "../components/PageWrapper/PageWrapper";
+import { Spinner } from "../components/Spinner";
 
-// Placeholder pages (por crear)
-const MovementsPage = () => (
-  <div className="window" style={{ padding: "20px" }}>
-    <div className="title-bar">
-      <div className="title-bar-text">Movimientos</div>
-    </div>
-    <div className="window-body">
-      <p>Movements Page - en construcción 🚧</p>
-    </div>
-  </div>
+// Lazy-loaded Pages
+const HomePage = lazy(() =>
+  import("../pages/home/HomePage").then((m) => ({ default: m.HomePage })),
 );
-
-const AccountsPage = () => (
-  <div className="window" style={{ padding: "20px" }}>
-    <div className="title-bar">
-      <div className="title-bar-text">Cuentas</div>
-    </div>
-    <div className="window-body">
-      <p>Accounts Page - en construcción 🚧</p>
-    </div>
-  </div>
+const AdminLayout = lazy(() =>
+  import("../pages/admin/AdminLayout").then((m) => ({
+    default: m.AdminLayout,
+  })),
+);
+const CategoriesPage = lazy(() =>
+  import("../pages/admin/categories/CategoriesPage").then((m) => ({
+    default: m.CategoriesPage,
+  })),
+);
+const SettingsPage = lazy(() =>
+  import("../pages/settings/SettingsPage").then((m) => ({
+    default: m.SettingsPage,
+  })),
+);
+const BudgetPage = lazy(() =>
+  import("../pages/budget/BudgetPage").then((m) => ({ default: m.BudgetPage })),
+);
+const MovementsPage = lazy(() =>
+  import("../pages/movements/MovementsPage").then((m) => ({
+    default: m.MovementsPage,
+  })),
 );
 
 export const AppRoutes = () => {
-  const withErrorBoundary = (Component: FunctionComponent) => (
-    <ErrorBoundary Fallback={ErrorFallback}>
-      <Component />
-    </ErrorBoundary>
-  );
-
   return (
-    <Routes>
-      <Route element={<RootLayout />}>
-        <Route path={PATHS.HOME} element={withErrorBoundary(HomePage)} />
-
-        <Route path={PATHS.ADMIN} element={withErrorBoundary(AdminLayout)}>
+    <Suspense fallback={<Spinner />}>
+      <Routes>
+        <Route element={<RootLayout />}>
           <Route
-            path="categories"
-            element={withErrorBoundary(CategoriesPage)}
+            path={PATHS.HOME}
+            element={
+              <PageWrapper>
+                <HomePage />
+              </PageWrapper>
+            }
           />
-          <Route path="movements" element={withErrorBoundary(MovementsPage)} />
-          <Route path="accounts" element={withErrorBoundary(AccountsPage)} />
-        </Route>
 
-        <Route
-          path={PATHS.SETTINGS}
-          element={withErrorBoundary(SettingsPage)}
-        />
-        <Route path={PATHS.BUDGET} element={withErrorBoundary(BudgetPage)} />
-      </Route>
-    </Routes>
+          <Route
+            path={PATHS.ADMIN}
+            element={
+              <PageWrapper>
+                <AdminLayout />
+              </PageWrapper>
+            }
+          >
+            <Route
+              path="categories"
+              element={
+                <PageWrapper>
+                  <CategoriesPage />
+                </PageWrapper>
+              }
+            />
+            <Route
+              path="movements"
+              element={
+                <PageWrapper>
+                  <MovementsPage />
+                </PageWrapper>
+              }
+            />
+          </Route>
+
+          <Route
+            path={PATHS.SETTINGS}
+            element={
+              <PageWrapper>
+                <SettingsPage />
+              </PageWrapper>
+            }
+          />
+          <Route
+            path={PATHS.BUDGET}
+            element={
+              <PageWrapper>
+                <BudgetPage />
+              </PageWrapper>
+            }
+          />
+        </Route>
+      </Routes>
+    </Suspense>
   );
 };
