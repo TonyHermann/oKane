@@ -1,0 +1,82 @@
+/* Spinner - Retro WinXP Style */
+.spinner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinner-icon {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    #3675d6 0deg,
+    #3675d6 30deg,
+    #5a9cf0 30deg,
+    #5a9cf0 60deg,
+    #3675d6 60deg,
+    #3675d6 90deg,
+    #5a9cf0 90deg,
+    #5a9cf0 120deg,
+    #3675d6 120deg,
+    #3675d6 150deg,
+    #5a9cf0 150deg,
+    #5a9cf0 180deg,
+    #3675d6 180deg,
+    #3675d6 210deg,
+    #5a9cf0 210deg,
+    #5a9cf0 240deg,
+    #3675d6 240deg,
+    #3675d6 270deg,
+    #5a9cf0 270deg,
+    #5a9cf0 300deg,
+    #3675d6 300deg,
+    #3675d6 330deg,
+    #5a9cf0 330deg,
+    #5a9cf0 360deg
+  );
+  box-shadow:
+    inset 2px 2px 3px rgba(255, 255, 255, 0.4),
+    inset -1px -1px 2px rgba(0, 0, 0, 0.2),
+    0 0 2px rgba(54, 117, 214, 0.5);
+  animation: spinner-rotate 0.8s linear infinite;
+  position: relative;
+}
+
+/* Inner disc to give it that classic XP spinner look */
+.spinner-icon::after {
+  content: "";
+  position: absolute;
+  top: 20%;
+  left: 20%;
+  width: 60%;
+  height: 60%;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f4f9ff 0%, #d4e4f7 40%, #a8c5e4 100%);
+  box-shadow:
+    inset 1px 1px 2px rgba(255, 255, 255, 0.8),
+    inset -1px -1px 1px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes spinner-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Screen reader only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
