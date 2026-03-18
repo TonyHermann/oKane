@@ -1,4 +1,3 @@
-// src/ui/routes/paths.ts
 export const PATHS = {
   HOME: "/",
   ADMIN: "/admin",
