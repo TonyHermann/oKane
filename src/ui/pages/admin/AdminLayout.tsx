@@ -10,7 +10,6 @@ export const AdminLayout = () => {
         <nav style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
           <Link to={PATHS.ADMIN_CATEGORIES}>Categorías</Link>
           <Link to={PATHS.ADMIN_MOVEMENTS}>Movimientos</Link>
-          <Link to={PATHS.ADMIN_ACCOUNTS}>Cuentas</Link>
         </nav>
         <hr />
         <Link to={PATHS.HOME}>← Volver al inicio</Link>
