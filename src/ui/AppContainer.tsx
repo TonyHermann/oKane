@@ -1,4 +1,3 @@
-import { BrowserRouter } from "react-router-dom";
 import App from "./App.tsx";
 import { ModalProvider } from "./components/modal/context/modalContext.tsx";
 import { GlobalProvider } from "./context/global.provider.tsx";
@@ -14,9 +13,7 @@ export const AppContainer = () => (
     <GlobalProvider>
       <ModalProvider>
         <App>
-          <BrowserRouter>
-            <AppRoutes />
-          </BrowserRouter>
+          <AppRoutes />
         </App>
       </ModalProvider>
     </GlobalProvider>
