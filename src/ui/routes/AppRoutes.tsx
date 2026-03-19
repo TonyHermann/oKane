@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
 import { PATHS } from "./paths";
 
 // Layouts
@@ -39,69 +39,73 @@ const MovementsPage = lazy(() =>
 );
 
 export const AppRoutes = () => {
-  <Suspense fallback={<Spinner />}>
-    <Routes>
-      <Route element={<RootLayout />}>
-        <Route
-          path={PATHS.HOME}
-          element={
-            <PageWrapper>
-              <HomePage />
-            </PageWrapper>
-          }
-        />
+  return (
+    <BrowserRouter>
+      <Suspense fallback={<Spinner />}>
+        <Routes>
+          <Route element={<RootLayout />}>
+            <Route
+              path={PATHS.HOME}
+              element={
+                <PageWrapper>
+                  <HomePage />
+                </PageWrapper>
+              }
+            />
 
-        <Route
-          path={PATHS.ADMIN}
-          element={
-            <PageWrapper>
-              <AdminLayout />
-            </PageWrapper>
-          }
-        >
-          <Route
-            path="categories"
-            element={
-              <PageWrapper>
-                <CategoriesPage />
-              </PageWrapper>
-            }
-          />
-          <Route
-            path="movements"
-            element={
-              <PageWrapper>
-                <MovementsPage />
-              </PageWrapper>
-            }
-          />
-        </Route>
+            <Route
+              path={PATHS.ADMIN}
+              element={
+                <PageWrapper>
+                  <AdminLayout />
+                </PageWrapper>
+              }
+            >
+              <Route
+                path="categories"
+                element={
+                  <PageWrapper>
+                    <CategoriesPage />
+                  </PageWrapper>
+                }
+              />
+              <Route
+                path="movements"
+                element={
+                  <PageWrapper>
+                    <MovementsPage />
+                  </PageWrapper>
+                }
+              />
+            </Route>
 
-        <Route
-          path={PATHS.SETTINGS}
-          element={
-            <PageWrapper>
-              <SettingsPage />
-            </PageWrapper>
-          }
-        />
-        <Route
-          path={PATHS.BUDGET}
-          element={
-            <PageWrapper>
-              <BudgetPage />
-            </PageWrapper>
-          }
-        />
-        <Route
-          path="*"
-          element={
-            <PageWrapper>
-              <NotFoundPage />
-            </PageWrapper>
-          }
-        />
-      </Route>
-    </Routes>
-  </Suspense>;
+            <Route
+              path={PATHS.SETTINGS}
+              element={
+                <PageWrapper>
+                  <SettingsPage />
+                </PageWrapper>
+              }
+            />
+            <Route
+              path={PATHS.BUDGET}
+              element={
+                <PageWrapper>
+                  <BudgetPage />
+                </PageWrapper>
+              }
+            />
+            <Route
+              path="*"
+              element={
+                <PageWrapper>
+                  <NotFoundPage />
+                </PageWrapper>
+              }
+            />
+          </Route>
+        </Routes>
+      </Suspense>
+    </BrowserRouter>
+  );
 };
