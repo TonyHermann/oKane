@@ -40,6 +40,7 @@ module.exports = {
     "@typescript-eslint/lines-between-class-members": "error",
     "@typescript-eslint/no-throw-literal": "error",
     "react/require-default-props": "off",
+    "arrow-body-style": "off",
   },
   settings: {
     react: {
