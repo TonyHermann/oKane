@@ -10,7 +10,6 @@ import { PageWrapper } from "../components/PageWrapper/PageWrapper";
 import { Spinner } from "../components/Spinner";
 import { RoutesWithNotFound } from "../components/RoutesWithNotFound/RoutesWithNotFound";
 
-// Lazy-loaded Pages
 const HomePage = lazy(() =>
   import("../pages/home/HomePage").then((m) => ({ default: m.HomePage })),
 );
