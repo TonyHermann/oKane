@@ -3,6 +3,7 @@ import type { Category } from "../../entities/Category.js";
 
 export const UpdateCategory = async (repository: ICategoryRepository) => {
   return async (categoryData: Category) => {
-    return await repository.update(categoryData);
+    return repository.update(categoryData);
   };
 };
+

@@ -2,6 +2,7 @@ import type { ICategoryRepository } from "../../repositories/ICategoryRepository
 
 export const DeleteCategory = async (repository: ICategoryRepository) => {
   return async (categoryId: string) => {
-    return await repository.delete(categoryId);
+    return repository.delete(categoryId);
   };
 };
+
