@@ -1,4 +1,4 @@
-import type { FallbackProps } from "./ErrorBoundary.types";
+import type { FallbackProps } from "./ErrorBoundaryTypes";
 
 export const ErrorFallback = ({ error, resetError }: FallbackProps) => {
   const { message } = error;
