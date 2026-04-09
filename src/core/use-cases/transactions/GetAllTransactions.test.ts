@@ -20,13 +20,13 @@ describe("GetAllTransactions", () => {
       {
         id: "1",
         amount: 100,
-        date: "2024-01-01",
+        date: new Date("2024-01-01"),
         description: "Transaction 1",
       },
       {
         id: "2",
         amount: 200,
-        date: "2024-01-02",
+        date: new Date("2024-01-02"),
         description: "Transaction 2",
       },
     ];

@@ -1,11 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { Transaction } from "@/core/entities/Transaction";
 import type { ITransactionRepository } from "@/core/repositories/ITransactionRepository";
-import { SaveTransaction } from "./SaveTransaction";
+import { UpdateTransaction } from "./UpdateTransaction";
 
-describe("SaveTransaction", () => {
+describe("UpdateTransaction", () => {
   let mockRepository: ITransactionRepository;
-  let saveTransaction: (transaction: Transaction) => Promise<void>;
+  let updateTransaction: (transaction: Transaction) => Promise<void>;
 
   beforeEach(() => {
     mockRepository = {
@@ -15,10 +15,10 @@ describe("SaveTransaction", () => {
       findAll: vi.fn().mockResolvedValue([]),
     };
 
-    saveTransaction = SaveTransaction(mockRepository);
+    updateTransaction = UpdateTransaction(mockRepository);
   });
 
-  it("should call repository.save when transaction is valid", async () => {
+  it("should call repository.update when transaction is valid", async () => {
     const transaction = new Transaction({
       id: "1",
       amount: 100,
@@ -26,9 +26,9 @@ describe("SaveTransaction", () => {
       description: "Test transaction",
     });
 
-    await saveTransaction(transaction);
+    await updateTransaction(transaction);
 
-    expect(mockRepository.save).toHaveBeenCalledTimes(1);
-    expect(mockRepository.save).toHaveBeenCalledWith(transaction);
+    expect(mockRepository.update).toHaveBeenCalledTimes(1);
+    expect(mockRepository.update).toHaveBeenCalledWith(transaction);
   });
 });
