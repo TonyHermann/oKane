@@ -1,14 +1,17 @@
 export type TransactionProps = {
   id: string;
   amount: number;
-  date: string;
+  date: Date;
   description: string;
 };
 
 export class Transaction {
   public readonly id: string;
+
   public readonly amount: number;
-  public readonly date: string;
+
+  public readonly date: Date;
+
   public readonly description: string;
 
   constructor(props: TransactionProps) {
