@@ -1,8 +1,11 @@
+import type { Category } from "./Category";
+
 export type TransactionProps = {
   id: string;
   amount: number;
   date: Date;
   description: string;
+  categories?: Category[];
 };
 
 export class Transaction {
@@ -13,6 +16,8 @@ export class Transaction {
   public readonly date: Date;
 
   public readonly description: string;
+
+  public readonly categories: Category[];
 
   constructor(props: TransactionProps) {
     if (props.amount === 0) {
@@ -26,5 +31,6 @@ export class Transaction {
     this.amount = props.amount;
     this.date = props.date;
     this.description = props.description;
+    this.categories = props.categories ? props.categories : [];
   }
 }
