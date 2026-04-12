@@ -12,12 +12,12 @@ export class IndexedDBTransactionRepository implements ITransactionRepository {
     try {
       const db = await openDB();
 
-      return new Promise<void>((resolve, reject) => {
+      return await new Promise<void>((resolve, reject) => {
         const tx = db.transaction(this.storename, "readwrite");
         const store = tx.objectStore(this.storename);
 
         tx.onerror = () => {
-          const error = tx.error;
+          const { error } = tx;
           logger.error(error || new Error("Unknown transaction error"), {
             operation: "save_transaction",
             transactionId: transaction.id,

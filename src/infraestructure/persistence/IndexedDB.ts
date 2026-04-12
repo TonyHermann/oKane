@@ -7,7 +7,7 @@ class DatabaseConnection {
   private static instance: Promise<IDBDatabase> | null = null;
 
   static async getConnection(): Promise<IDBDatabase> {
-    if (!this.instance || this.instance == undefined) {
+    if (!this.instance || this.instance === undefined) {
       this.instance = this.openConnection();
     }
     return this.instance;
@@ -42,7 +42,7 @@ class DatabaseConnection {
 
         if (!db.objectStoreNames.contains("transactions")) {
           logger.info('Creating "transactions" object store');
-          db.createObjectStore("transactions", { autoIncrement: true });
+          db.createObjectStore("transactions", { keyPath: "id" });
         }
       };
 
