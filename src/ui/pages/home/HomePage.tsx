@@ -15,9 +15,9 @@ export const HomePage = () => {
     <div className="overview_father">
       <div className="panel">
         <button onClick={openModal} type="button">
-          Abrir modal
+          Importar transacciones
         </button>
-        <Modal title="CategoryList">
+        <Modal title="Importar transacciones">
           <Modal.Body>
             <Importer />
             <CategoryList />
@@ -27,13 +27,13 @@ export const HomePage = () => {
       <div className="panel">
         <Spinner />
       </div>
-      <div className="panel"></div>
-      <div className="panel"></div>
-      <div className="panel"></div>
-      <div className="panel"></div>
-      <div className="panel"></div>
-      <div className="panel"></div>
-      <div className="panel"></div>
+      <div className="panel" />
+      <div className="panel" />
+      <div className="panel" />
+      <div className="panel" />
+      <div className="panel" />
+      <div className="panel" />
+      <div className="panel" />
     </div>
   );
 };
