@@ -1,3 +1,4 @@
+import { Importer } from "@/ui/components/importer/Importer";
 import { Spinner } from "@/ui/components/Spinner";
 import useModalContext from "../../components/modal/context/useModalContext";
 import Modal from "../../components/modal/Modal";
@@ -18,6 +19,7 @@ export const HomePage = () => {
         </button>
         <Modal title="CategoryList">
           <Modal.Body>
+            <Importer />
             <CategoryList />
           </Modal.Body>
         </Modal>
