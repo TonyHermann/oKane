@@ -1,15 +1,13 @@
-import { useForm, type SubmitHandler } from "react-hook-form";
+import { useState, type DragEvent, type FC, type ReactNode } from "react";
 
-interface FileDropZoneProps {
+type Props = {
   onFileDrop: (file: File) => void;
-}
-
-type FormValues = {
-  file: File;
+  children?: ReactNode;
 };
 
-export const FileDropZone = ({ onFileDrop }: FileDropZoneProps) => {
-  const { register, handleSubmit } = useForm<FormValues>();
+export const FileDropZone = (props: Props) => {
+  const { onFileDrop, children } = props;
+  const [error, setError] = useState<Error | null>(null);
 
   const handleDrop = (e: DragEvent) => {
     e.preventDefault();
@@ -19,22 +17,21 @@ export const FileDropZone = ({ onFileDrop }: FileDropZoneProps) => {
     }
   };
 
-  const onSubmit: SubmitHandler<FormValues> = (data) => {
-    console.log(data);
+  const handleDragOver = (e: DragEvent) => {
+    e.preventDefault();
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div className="FileDropZone__container">
-        <input
-          data-testid="dropzone"
-          onDrop={handleDrop}
-          type="file"
-          {...register("file")}
-        />
+    <div className="FileDropZone__container">
+      <div
+        className="dropZone"
+        data-testid="dropzone"
+        onDrop={handleDrop}
+        onDragOver={handleDragOver}
+      >
+        <p>¡Dropea un archivo aquí!</p>
       </div>
-
-      <button type="submit">Subir</button>
-    </form>
+      {children}
+    </div>
   );
 };
