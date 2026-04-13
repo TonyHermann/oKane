@@ -27,7 +27,9 @@ const Modal = ({ title, children, onClose }: ModalProps) => {
 
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
-    closeModal();
+    if (e.target === e.currentTarget) {
+      closeModal();
+    }
   };
 
   if (!state || !modalRoot) {
