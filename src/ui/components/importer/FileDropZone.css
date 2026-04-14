@@ -1,0 +1,73 @@
+.dropZone {
+  border: 2px dashed #003399;
+  border-radius: 8px;
+  padding: 32px 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+  box-shadow:
+    inset 1px 1px 0 #ffffff,
+    inset -1px -1px 0 #999999,
+    2px 2px 4px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.FileDropZone__hint {
+  font-size: 11px;
+  color: #666666;
+  font-weight: normal;
+  margin-top: 8px;
+}
+
+.dropZone:hover {
+  background: linear-gradient(180deg, #f0f7ff 0%, #d6eaff 50%, #c0e0ff 100%);
+  border-color: #004080;
+}
+
+.dropZone--active {
+  background: linear-gradient(180deg, #3399ff 0%, #0066cc 50%, #003399 100%);
+  box-shadow:
+    inset 0 0 20px rgba(255, 255, 255, 0.3),
+    0 0 15px rgba(0, 102, 204, 0.6),
+    2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.dropZone--active p,
+.dropZone--active .FileDropZone__hint {
+  color: #ffffff !important;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.FileDropZone__error {
+  background: linear-gradient(180deg, #ffcccc 0%, #ff9999 100%);
+  border: 2px solid #cc0000;
+  border-radius: 4px;
+  padding: 8px 12px;
+  margin-top: 12px;
+  color: #cc0000;
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.5),
+    2px 2px 4px rgba(0, 0, 0, 0.2);
+  animation: shake 0.3s ease-in-out;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-4px);
+  }
+  75% {
+    transform: translateX(4px);
+  }
+}
+
+.FileDropZone__container input[type="file"] {
+  display: none;
+}
