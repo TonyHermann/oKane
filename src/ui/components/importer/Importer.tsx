@@ -12,15 +12,13 @@ export const Importer = () => {
     console.log(data);
   };
 
-  const handleDrop = () => {
-    console.log("Desde el handle!");
+  const handleDrop = (files: FileList | File) => {
+    console.log("desde el handleDrop de importer", files);
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <FileDropZone onFileDrop={handleDrop}>
-        <input type="file" {...register("file")} />
-      </FileDropZone>
+      <FileDropZone onFileDrop={handleDrop} />
       <button type="submit">Subir</button>
     </form>
   );
