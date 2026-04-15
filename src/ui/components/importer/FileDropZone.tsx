@@ -5,14 +5,17 @@ import { useDragging } from "@/ui/hooks/useDragging";
 
 type Props = {
   onFileDrop: (files: File | Array<File>) => void;
+  onSelect: (files: File | Array<File>) => void;
+  handleChange: (files: File | Array<File>) => void;
   children?: ReactNode;
 };
 
 export const FileDropZone = (props: Props) => {
   const [error, setError] = useState<Error | null>(null);
+  const [fileOrFiles, setFiles] = useState<File | Array<Files> | null>(null);
   const elementRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const { onFileDrop, children } = props;
+  const { onFileDrop, onSelect, handleChange, children } = props;
   const { isValid } = FileValidator;
 
   const validateFile = (file: File): boolean => {
@@ -36,6 +39,8 @@ export const FileDropZone = (props: Props) => {
       }
     }
     if (checkError) return false;
+    handleChange(files);
+    setFiles(files);
     setError(null);
     return true;
   };
@@ -69,6 +74,13 @@ export const FileDropZone = (props: Props) => {
         <p className="FileDropZone__hint">o haz clic para seleccionar</p>
       </div>
       {error && <div className="FileDropZone__error">{error.message}</div>}
+      {fileOrFiles && (
+        <div className="FileDropZone__files">
+          {fileOrFiles instanceof Array
+            ? fileOrFiles.map((file) => file.name)
+            : fileOrFiles.name}
+        </div>
+      )}
       <input type="file" ref={inputRef} onChange={handleInputChange} />
       {children}
     </div>
