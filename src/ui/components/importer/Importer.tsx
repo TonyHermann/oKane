@@ -8,7 +8,7 @@ type FormValues = {
 
 export const Importer = () => {
   const { register, handleSubmit } = useForm<FormValues>();
-  const [fileOrFiles, setFiles] = useState<File | Array<File> | Null>(null);
+  const [fileOrFiles, setFiles] = useState<File | Array<File> | null>(null);
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     console.log(data);
@@ -33,7 +33,9 @@ export const Importer = () => {
       <FileDropZone
         onFileDrop={handleDrop}
         handleChange={handleChange}
-        onSelect={onSelect}
+        onFileSelect={onSelect}
+        maxFileSize={20000}
+        validFileTypes={["text/csv", "text/plain"]}
       />
       <button type="submit">Subir</button>
     </form>

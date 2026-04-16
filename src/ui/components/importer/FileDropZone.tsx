@@ -5,22 +5,39 @@ import { useDragging } from "@/ui/hooks/useDragging";
 
 type Props = {
   onFileDrop: (files: File | Array<File>) => void;
-  onSelect: (files: File | Array<File>) => void;
+  onFileSelect: (files: File | Array<File>) => void;
   handleChange: (files: File | Array<File>) => void;
+  maxFileSize?: number;
+  validFileTypes?: string[];
   children?: ReactNode;
 };
 
 export const FileDropZone = (props: Props) => {
   const [error, setError] = useState<Error | null>(null);
-  const [fileOrFiles, setFiles] = useState<File | Array<Files> | null>(null);
+  const [fileOrFiles, setFiles] = useState<File | Array<File> | null>(null);
   const elementRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const { onFileDrop, onSelect, handleChange, children } = props;
-  const { isValid } = FileValidator;
+  const {
+    onFileDrop,
+    onFileSelect,
+    handleChange,
+    maxFileSize,
+    validFileTypes,
+    children,
+  } = props;
+  const { isValidType, isValidSize } = FileValidator;
 
   const validateFile = (file: File): boolean => {
-    if (!isValid(file)) {
-      setError(new Error("El archivo que has ingresado, no es válido."));
+    if (maxFileSize && !isValidSize(maxFileSize, file)) {
+      setError(
+        new Error("El archivo que has ingresado, supera el límite de peso."),
+      );
+      return false;
+    }
+    if (validFileTypes && !isValidType(validFileTypes, file)) {
+      setError(
+        new Error("El archivo que has ingresado, no es de un tipo válido."),
+      );
       return false;
     }
     setError(null);
@@ -52,7 +69,7 @@ export const FileDropZone = (props: Props) => {
     const toPass = files.length > 1 ? Array.from(files) : files[0];
     const success = handleChanges(toPass);
     if (success) {
-      onSelect(toPass);
+      onFileSelect(toPass);
     }
   };
 
