@@ -9,7 +9,7 @@ export default defineConfig({
     alias: {
       "@": "/src",
       "@core": "/src/core",
-      "@infra": "/src/infrastructure",
+      "@infra": "/src/infraestructure",
       "@ui": "/src/ui",
       "@adapters": "/src/adapters",
     },
