@@ -28,13 +28,13 @@ export const FileDropZone = ({
   const { isValidType, isValidSize } = FileValidator;
 
   const validateFile = (file: File): boolean => {
-    if (maxFileSize && !isValidSize(maxFileSize, file)) {
+    if (maxFileSize && !isValidSize(maxFileSize, file.size)) {
       setError(
         new Error("El archivo que has ingresado, supera el límite de peso."),
       );
       return false;
     }
-    if (validFileTypes && !isValidType(validFileTypes, file)) {
+    if (validFileTypes && !isValidType(validFileTypes, file.type)) {
       setError(
         new Error("El archivo que has ingresado, no es de un tipo válido."),
       );

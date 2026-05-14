@@ -1,8 +1,8 @@
 export const FileValidator = {
-  isValidType(allowedTypes: string[], file: File) {
-    return allowedTypes.includes(file.type);
+  isValidType(allowedTypes: string[], fileType: string) {
+    return allowedTypes.includes(fileType);
   },
-  isValidSize(maxSize: number, file: File) {
-    return file.size <= maxSize;
+  isValidSize(maxSize: number, fileSize: number) {
+    return fileSize <= maxSize;
   },
 };
