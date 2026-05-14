@@ -21,7 +21,7 @@ describe("FileDropZone", () => {
     const csvFile = createMockFile(csv);
 
     const onFileDrop = vi.fn();
-    render(<FileDropZone onFileDrop={onFileDrop} />);
+    render(<FileDropZone onFileDrop={onFileDrop} handleChange={() => true} />);
 
     const dropZone = screen.getByTestId("dropzone");
 

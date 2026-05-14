@@ -12,19 +12,19 @@ type Props = {
   children?: ReactNode;
 };
 
-export const FileDropZone = (props: Props) => {
+export const FileDropZone = ({
+  onFileDrop,
+  onFileSelect,
+  handleChange,
+  maxFileSize,
+  validFileTypes,
+  children,
+}: Props) => {
   const [error, setError] = useState<Error | null>(null);
   const [fileOrFiles, setFiles] = useState<File | Array<File> | null>(null);
   const elementRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const {
-    onFileDrop,
-    onFileSelect,
-    handleChange,
-    maxFileSize,
-    validFileTypes,
-    children,
-  } = props;
+
   const { isValidType, isValidSize } = FileValidator;
 
   const validateFile = (file: File): boolean => {
