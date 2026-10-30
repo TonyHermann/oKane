@@ -1,0 +1,6 @@
+.admin-layout-aside {
+  width: 200px;
+  padding: var(--space-4);
+  /* Documented collapse: the previous inline background was #f0f0f0. */
+  background: var(--color-chrome);
+}

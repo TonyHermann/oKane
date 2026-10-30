@@ -1,0 +1,70 @@
+{
+  "name": "okane",
+  "private": false,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "lint": "eslint src vite.config.ts vitest.config.ts --ext .ts,.tsx,.js,.jsx",
+    "typecheck": "tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.node.json --noEmit"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.3",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/node": "^25.1.0",
+    "@types/papaparse": "^5.5.2",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@types/uuid": "^10.0.0",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "@vitejs/plugin-react": "^5.1.2",
+    "eslint": "^8.2.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-airbnb-typescript": "^18.0.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-prettier": "^5.5.5",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "globals": "^17.3.0",
+    "jsdom": "^29.0.2",
+    "prettier": "3.8.1",
+    "typescript": "^5.9.3",
+    "vite": "^6.2.0",
+    "vite-tsconfig-paths": "^6.1.1",
+    "vitest": "^4.1.3"
+  },
+  "dependencies": {
+    "@reduxjs/toolkit": "^2.12.0",
+    "papaparse": "^5.5.3",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-hook-form": "^7.72.1",
+    "react-redux": "^9.3.0",
+    "react-router-dom": "^7.13.0",
+    "uuid": "^13.0.0",
+    "zod": "^4.5.4"
+  },
+  "description": "Una aplicación frontend para la organización de gastos y categorías de movimientos bancarios, pensada para facilitar la visualización y categorización automática de movimientos.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TonyHermann/oKane.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TonyHermann/oKane/issues"
+  },
+  "homepage": "https://github.com/TonyHermann/oKane#readme"
+}

@@ -1,0 +1,9 @@
+form {
+  div {
+    gap: var(--space-3);
+    margin-bottom: var(--space-3);
+    input {
+      margin-left: var(--space-3);
+    }
+  }
+}

@@ -1,0 +1,27 @@
+.button-sm {
+  img {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.buttonComponent {
+  min-width: 20px;
+  min-height: 20px;
+
+  cursor: pointer;
+}
+
+button.button-sm.button-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.button-icon {
+  background: none;
+  border: none;
+}
+.button-icon:hover {
+  box-shadow: none !important;
+  /* TODO: Fix this !important; */
+}

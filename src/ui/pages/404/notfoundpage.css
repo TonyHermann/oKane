@@ -1,0 +1,10 @@
+.notFound-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: var(--space-5);
+  img {
+    max-width: 404px;
+  }
+}

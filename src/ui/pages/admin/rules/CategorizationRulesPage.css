@@ -1,0 +1,57 @@
+.categorization-rules-page {
+  max-width: 720px;
+}
+
+.categorization-rules-form {
+  display: grid;
+  gap: var(--space-2);
+  margin: var(--space-4) 0;
+  max-width: 420px;
+}
+
+.categorization-rules-form button {
+  justify-self: start;
+}
+
+.categorization-rules-selected-descriptions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.categorization-rules-description-tag {
+  align-items: center;
+  display: inline-flex;
+  gap: var(--space-1);
+  padding: 2px var(--space-1) 2px var(--space-2);
+}
+
+.categorization-rules-description-tag button {
+  align-items: center;
+  display: inline-flex;
+  justify-content: center;
+  padding: 0 var(--space-1);
+}
+
+.categorization-rules-actions {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.categorization-rules-applied {
+  margin: var(--space-4) 0;
+}
+
+.categorization-rules-list {
+  display: grid;
+  gap: var(--space-2);
+  padding-left: var(--space-5);
+}
+
+.categorization-rules-list li {
+  align-items: center;
+  display: flex;
+  gap: var(--space-3);
+  justify-content: space-between;
+}

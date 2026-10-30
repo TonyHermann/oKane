@@ -1,0 +1,26 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: var(--z-overlay);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal {
+  position: relative;
+  width: 50%;
+  margin: auto;
+
+  .title-bar-controls button {
+    cursor: not-allowed;
+  }
+  .title-bar-controls .closeBtnXP {
+    cursor: pointer;
+  }
+  z-index: var(--z-modal);
+}

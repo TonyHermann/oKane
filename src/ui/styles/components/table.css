@@ -1,0 +1,23 @@
+table {
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+  width: 100%;
+  table-layout: fixed;
+}
+
+thead {
+  background: var(--color-border);
+}
+
+table {
+  border-collapse: collapse;
+}
+
+td,
+th {
+  padding: var(--space-1);
+}
+
+td {
+  border-bottom: solid 1px var(--color-border);
+}

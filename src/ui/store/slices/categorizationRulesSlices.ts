@@ -1,0 +1,192 @@
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { CategorizationRuleActions } from "@/adapters/CategorizationRuleActions";
+import type { RuleApplicationPreview } from "@/core/use-cases/rules/PreviewRulesApplication";
+import {
+  createCategorizationRule,
+  RULE_CONDITION_TYPES,
+} from "@/core/entities/CategorizationRule";
+import { Category } from "@/core/entities/Category";
+import { toTransactionState } from "../mappers/toTransaction";
+import type { RootState } from "../store";
+import type { CategoryState } from "./categorySlices";
+
+export interface CategorizationRuleState {
+  id: string;
+  order: number;
+  enabled: boolean;
+  conditionType: (typeof RULE_CONDITION_TYPES)[keyof typeof RULE_CONDITION_TYPES];
+  conditionValues: string[];
+  category: CategoryState;
+}
+
+export interface CreateCategorizationRuleState {
+  conditionValues: string[];
+  categoryId: string;
+}
+
+interface CategorizationRulesState {
+  items: CategorizationRuleState[];
+  loading: boolean;
+  error: string | null;
+  loadedAt: number | null;
+}
+
+const initialState: CategorizationRulesState = {
+  items: [],
+  loading: false,
+  error: null,
+  loadedAt: null,
+};
+
+const toRuleState = (rule: Awaited<ReturnType<typeof CategorizationRuleActions.getAll>>[number]) => ({
+  id: rule.id,
+  order: rule.order,
+  enabled: rule.enabled,
+  conditionType: rule.condition.type,
+  conditionValues: rule.condition.values,
+  category: {
+    id: rule.category.id,
+    name: rule.category.name,
+    created_at: rule.category.created_at,
+  },
+});
+
+export const loadCategorizationRules = createAsyncThunk<
+  { items: CategorizationRuleState[]; loadedAt: number },
+  { force?: boolean } | undefined,
+  { state: RootState }
+>(
+  "categorizationRules/load",
+  async () => ({
+    items: (await CategorizationRuleActions.getAll()).map(toRuleState),
+    loadedAt: new Date().getTime(),
+  }),
+  {
+    condition(arg, { getState }) {
+      const { loading, loadedAt } = getState().categorizationRules;
+      if (loading) return false;
+      if (arg?.force) return true;
+      return loadedAt === null;
+    },
+  },
+);
+
+export const saveCategorizationRule = createAsyncThunk(
+  "categorizationRules/save",
+  async (state: CreateCategorizationRuleState, thunkApi) => {
+    const category = (thunkApi.getState() as RootState).categories.items.find(
+      (item) => item.id === state.categoryId,
+    );
+
+    if (!category) throw new Error("La categoría seleccionada no existe.");
+
+    const conditionValues = state.conditionValues
+      .map((value) => value.trim())
+      .filter((value) => value !== "");
+
+    if (conditionValues.length === 0)
+      throw new Error("La rule necesita al menos una descripción.");
+
+    const rule = createCategorizationRule({
+      order:
+        Math.max(
+          0,
+          ...(thunkApi.getState() as RootState).categorizationRules.items.map(
+            (item) => item.order,
+          ),
+        ) + 1,
+      condition: {
+        type: RULE_CONDITION_TYPES.DESCRIPTION_CONTAINS,
+        values: conditionValues,
+      },
+      category: Category.Rehydrate(category),
+    });
+
+    await CategorizationRuleActions.save(rule);
+    return toRuleState(rule);
+  },
+);
+
+export const applyAllCategorizationRules = createAsyncThunk(
+  "categorizationRules/applyAll",
+  async () => (await CategorizationRuleActions.applyAll()).map(toTransactionState),
+);
+
+// The preview crosses the Redux action boundary, so it must carry plain
+// numbers only. `RuleApplicationPreview` already is a flat block of counts.
+export const previewCategorizationRules = createAsyncThunk<
+  RuleApplicationPreview,
+  void
+>(
+  "categorizationRules/preview",
+  async () => CategorizationRuleActions.preview(),
+);
+
+export const removeCategorizationRule = createAsyncThunk(
+  "categorizationRules/remove",
+  async (id: string) => {
+    await CategorizationRuleActions.delete(id);
+    return id;
+  },
+);
+
+const categorizationRulesSlice = createSlice({
+  name: "CategorizationRules",
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(loadCategorizationRules.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(loadCategorizationRules.fulfilled, (state, action) => {
+        state.loading = false;
+        state.items = action.payload.items;
+        state.loadedAt = action.payload.loadedAt;
+      })
+      .addCase(loadCategorizationRules.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message ?? "Error al cargar las rules.";
+      })
+      .addCase(saveCategorizationRule.fulfilled, (state, action) => {
+        state.loading = false;
+        state.items.push(action.payload);
+        if (state.loadedAt !== null) state.loadedAt = new Date().getTime();
+      })
+      .addCase(saveCategorizationRule.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(saveCategorizationRule.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message ?? "Error al guardar la rule.";
+      })
+      .addCase(removeCategorizationRule.fulfilled, (state, action) => {
+        state.loading = false;
+        state.items = state.items.filter((item) => item.id !== action.payload);
+        if (state.loadedAt !== null) state.loadedAt = new Date().getTime();
+      })
+      .addCase(removeCategorizationRule.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(removeCategorizationRule.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message ?? "Error al eliminar la rule.";
+      })
+      .addCase(applyAllCategorizationRules.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(applyAllCategorizationRules.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(applyAllCategorizationRules.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message ?? "Error al aplicar las rules.";
+      });
+  },
+});
+
+export default categorizationRulesSlice.reducer;

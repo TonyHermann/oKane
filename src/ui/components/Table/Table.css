@@ -1,0 +1,36 @@
+.table-container {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  .table-scroll {
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  .table-scroll table {
+    thead {
+      position: sticky;
+      top: 0;
+    }
+    tfoot tr {
+      position: sticky;
+      bottom: 0;
+      z-index: var(--z-sticky);
+    }
+
+    tfoot td {
+      background: var(--color-surface);
+    }
+  }
+
+  .table-pagination {
+    flex: 0 0 auto;
+  }
+}
+
+.rowActions-container {
+  display: flex;
+  justify-content: flex-start;
+  gap: var(--space-3);
+}
