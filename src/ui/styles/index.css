@@ -5,6 +5,7 @@
 @import url(./layout/navbar.css);
 @import url(./layout/footer.css);
 @import url(./layout/aside.css);
+@import url(./layout/main.css);
 
 @import url(./components/ico.css);
 @import url(./components/table.css);

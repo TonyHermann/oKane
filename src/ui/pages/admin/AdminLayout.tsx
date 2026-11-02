@@ -4,7 +4,7 @@ import "./AdminLayout.css";
 
 export const AdminLayout = () => {
   return (
-    <div style={{ display: "flex", minHeight: "90vh" }}>
+    <div className="admin-layout">
       <aside className="admin-layout-aside">
         <h3>Admin</h3>
         <nav style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
@@ -16,9 +16,9 @@ export const AdminLayout = () => {
         <Link to={PATHS.HOME}>← Volver al inicio</Link>
       </aside>
 
-      <main style={{ flex: 1, padding: "16px" }}>
+      <div className="admin-layout-content">
         <Outlet />
-      </main>
+      </div>
     </div>
   );
 };

@@ -1,4 +1,17 @@
+.admin-layout {
+  display: flex;
+  min-height: 90vh;
+  gap: var(--space-2);
+}
+
+.admin-layout-content {
+  flex: 1;
+}
+
 .admin-layout-aside {
+  /* Neutralizes the global `aside` margins so the flex gap owns the spacing. */
+  margin-top: 0;
+  margin-left: 0;
   width: 200px;
   padding: var(--space-4);
   /* Documented collapse: the previous inline background was #f0f0f0. */

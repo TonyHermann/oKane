@@ -1,5 +1,4 @@
 .overview_father {
-  margin-top: var(--space-3);
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   width: 100%;
