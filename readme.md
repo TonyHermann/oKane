@@ -63,6 +63,10 @@ Three decisions shape the rest:
 
 Early but usable. `v0.0.x`: single user, single currency (EUR), Spanish UI. Not there yet: budgets, recurring transactions, multi-currency, charts beyond native tables.
 
+## Third-party assets
+
+XP.css (MIT) and the Asar typeface (SIL OFL 1.1) are bundled in this repository; the app makes no requests to third-party origins. See [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
+
 ## License
 
 MIT — see [LICENSE](LICENSE).
