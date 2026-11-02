@@ -1,5 +1,6 @@
 @import url(./base/_xp.css);
 @import url(./base/_variables.css);
+@import url(./base/fonts.css);
 @import url(./base/_globals.css);
 
 @import url(./layout/navbar.css);
