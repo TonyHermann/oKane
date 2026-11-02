@@ -1,0 +1,11 @@
+.hidden {
+  display: none;
+}
+
+#output {
+  font-family: monospace;
+  font-size: 6px;
+  line-height: 6px;
+  letter-spacing: 0;
+  white-space: pre;
+}
