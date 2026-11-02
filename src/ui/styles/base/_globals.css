@@ -14,7 +14,7 @@ body {
   margin: 0;
   height: 100%;
   width: 1260px;
-  background-image: url(https://portfolio-tonyhermann.vercel.app/background.png);
+  background-image: url(../../../assets/images/background.png);
 }
 
 #root {
@@ -22,7 +22,7 @@ body {
 }
 
 .main-layout {
-  background-image: url(https://walzr.com/gridnew.png);
+  background-image: url(../../../assets/images/gridnew.png);
   background-size: 100px 100px;
   padding: var(--space-3);
 }
