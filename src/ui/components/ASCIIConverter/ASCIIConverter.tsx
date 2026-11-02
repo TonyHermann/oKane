@@ -88,17 +88,12 @@ export const ASCIIConverter = () => {
     };
   }, [image]);
 
-  const handleChange = (file: File | Array<File>) => {
+  const handleFilesAccepted = (file: File | Array<File>) => {
     if (Array.isArray(file)) {
       throw new ValidationError("Solo se permite una imagen a la vez", "file");
     }
-  };
-
-  const handleSelect = async (file: File | Array<File>) => {
-    if (!Array.isArray(file)) {
-      setLoadedImage(null);
-      setImage(file);
-    }
+    setLoadedImage(null);
+    setImage(file);
   };
 
   const handleGenerate = () => {
@@ -126,9 +121,7 @@ export const ASCIIConverter = () => {
             "image/webp",
             "image/jpg",
           ]}
-          onFileSelect={handleSelect}
-          handleChange={handleChange}
-          onFileDrop={() => {}}
+          onFilesAccepted={handleFilesAccepted}
         />
       ) : (
         <button
