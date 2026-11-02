@@ -4,18 +4,14 @@ import { FileValidator } from "@/core/services/FileValidator";
 import { useDragging } from "@/ui/hooks/useDragging";
 
 type Props = {
-  onFileDrop: (files: File | Array<File>) => void;
-  onFileSelect: (files: File | Array<File>) => void;
-  handleChange: (files: File | Array<File>) => void;
+  onFilesAccepted: (files: File | Array<File>) => void | Promise<void>;
   maxFileSize?: number;
   validFileTypes?: string[];
   children?: ReactNode;
 };
 
 export const FileDropZone = ({
-  onFileDrop,
-  onFileSelect,
-  handleChange,
+  onFilesAccepted,
   maxFileSize,
   validFileTypes,
   children,
@@ -44,7 +40,15 @@ export const FileDropZone = ({
     return true;
   };
 
-  const handleChanges = (files: File | Array<File>): boolean => {
+  const reportError = (cause: unknown) => {
+    setError(
+      cause instanceof Error
+        ? cause
+        : new Error("No se pudo procesar el archivo."),
+    );
+  };
+
+  const handleChanges = (files: File | Array<File>) => {
     let checkError = false;
     if (files) {
       if (files instanceof File) {
@@ -55,11 +59,20 @@ export const FileDropZone = ({
         });
       }
     }
-    if (checkError) return false;
-    handleChange(files);
+    if (checkError) return;
+
+    try {
+      const result = onFilesAccepted(files);
+      if (result instanceof Promise) {
+        result.catch(reportError);
+      }
+    } catch (cause: unknown) {
+      reportError(cause);
+      return;
+    }
+
     setFiles(files);
     setError(null);
-    return true;
   };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -67,16 +80,12 @@ export const FileDropZone = ({
     const files = e.currentTarget.files;
     if (!files || files.length === 0) return;
     const toPass = files.length > 1 ? Array.from(files) : files[0];
-    const success = handleChanges(toPass);
-    if (success) {
-      onFileSelect(toPass);
-    }
+    handleChanges(toPass);
   };
 
   const isDragging = useDragging({
     elementRef,
     inputRef,
-    onDropCB: onFileDrop,
     handleChanges,
   });
 

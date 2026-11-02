@@ -3,13 +3,12 @@ import { useCallback, useEffect, useState, type RefObject } from "react";
 type Props = {
   elementRef: RefObject<HTMLDivElement | null>;
   inputRef: RefObject<HTMLInputElement | null>;
-  handleChanges: (files: File | Array<File>) => boolean;
-  onDropCB: (files: File | Array<File>) => void;
+  handleChanges: (files: File | Array<File>) => void;
 };
 
 export const useDragging = (props: Props) => {
   const [isDragging, setIsDragging] = useState(false);
-  const { elementRef, inputRef, onDropCB, handleChanges } = props;
+  const { elementRef, inputRef, handleChanges } = props;
 
   const handleClick = useCallback(() => {
     inputRef?.current?.click();
@@ -28,20 +27,16 @@ export const useDragging = (props: Props) => {
 
       const eventFiles = e.dataTransfer?.files;
       if (eventFiles && eventFiles.length > 0) {
-        let success = false;
         let toTestFiles;
         if (eventFiles.length > 1) {
           toTestFiles = Array.from(eventFiles);
         } else {
           [toTestFiles] = eventFiles;
         }
-        success = handleChanges(toTestFiles);
-        if (success) {
-          onDropCB(toTestFiles);
-        }
+        handleChanges(toTestFiles);
       }
     },
-    [onDropCB, handleChanges],
+    [handleChanges],
   );
 
   const handleDragEnter = useCallback((e: DragEvent) => {

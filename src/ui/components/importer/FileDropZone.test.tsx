@@ -20,14 +20,8 @@ describe("FileDropZone", () => {
 `;
     const csvFile = createMockFile(csv);
 
-    const onFileDrop = vi.fn();
-    render(
-      <FileDropZone
-        onFileDrop={onFileDrop}
-        onFileSelect={vi.fn()}
-        handleChange={() => true}
-      />,
-    );
+    const onFilesAccepted = vi.fn();
+    render(<FileDropZone onFilesAccepted={onFilesAccepted} />);
 
     const dropZone = screen.getByTestId("dropzone");
 
@@ -35,7 +29,7 @@ describe("FileDropZone", () => {
       dataTransfer: { files: [csvFile] },
     });
 
-    expect(onFileDrop).toHaveBeenCalledWith(csvFile);
+    expect(onFilesAccepted).toHaveBeenCalledWith(csvFile);
   });
 
   it("should accept file via input click", async () => {});
@@ -44,5 +38,5 @@ describe("FileDropZone", () => {
 
   it("should display current selected file name", async () => {});
 
-  it("should call onFileSelect callback with file", async () => {});
+  it("should call onFilesAccepted callback with file", async () => {});
 });

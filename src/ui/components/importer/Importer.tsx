@@ -3,6 +3,7 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 
 import { FileDropZone } from "./FileDropZone";
 
+import { ValidationError } from "@/core/errors/DomainErrors";
 import { FileReaderService } from "@/infraestructure/files/FileReaderService";
 
 import { PapaCsvParser } from "@/infraestructure/parsers/PapaCsvParser";
@@ -21,9 +22,10 @@ type FormValues = {
 export const Importer = () => {
   const dispatch = useAppDispatch();
   const { handleSubmit } = useForm<FormValues>();
-  const [fileOrFiles, setFiles] = useState<File | File[] | null>(null);
+  const [fileOrFiles, setFiles] = useState<File | null>(null);
   const [rows, setRows] = useState<ICsvRow[] | null>(null);
   const [selectedRows, setSelectedRows] = useState<ICsvRow[] | null>(null);
+  const [error, setError] = useState<Error | null>(null);
   const requiredColumns = [
     "dateColumn",
     "amountColumn",
@@ -39,15 +41,11 @@ export const Importer = () => {
   const onSubmit: SubmitHandler<FormValues> = async () => {
     try {
       if (!fileOrFiles) {
-        throw new Error("No file selected.");
-      }
-
-      if (Array.isArray(fileOrFiles)) {
-        throw new Error("Only one file is supported.");
+        throw new ValidationError("No file selected.", "file");
       }
 
       if (!selectedRows) {
-        throw new Error("No rows selected");
+        throw new ValidationError("No rows selected", "rows");
       }
 
       const schema = new CsvSchema(["date", "amount", "description"]);
@@ -61,39 +59,27 @@ export const Importer = () => {
         failed: result.failed,
         total: result.total,
       });
-    } catch (error) {
-      const err = error instanceof Error ? error : new Error(String(error));
+    } catch (cause: unknown) {
+      const err = cause instanceof Error ? cause : new Error(String(cause));
       logger.error(err, "Import failed");
     }
   };
 
-  const handleDrop = (files: File | Array<File>) => {
-    logger.info("desde el handleDrop de importer", files);
-  };
-
-  const handleChange = async (files: File | Array<File>) => {
-    logger.info("desde el handleChange de importer", files);
-
-    setFiles(files);
-  };
-
-  const onSelect = async (files: File | Array<File>) => {
-    logger.info("desde el onSelect de importer", files);
-
-    if (!files) {
-      throw new Error("No file selected.");
-    }
-
+  const handleFilesAccepted = async (files: File | Array<File>) => {
     if (Array.isArray(files)) {
-      throw new Error("Only one file is supported.");
+      throw new ValidationError("Only one file is supported.", "file");
     }
+
+    setError(null);
+    setFiles(files);
 
     try {
       const content = await FileReaderService.readAsText(files);
       const parsed = await PapaCsvParser.parse(content);
       setRows(parsed.rows);
-    } catch (error) {
-      const err = error instanceof Error ? error : new Error(String(error));
+    } catch (cause: unknown) {
+      const err = cause instanceof Error ? cause : new Error(String(cause));
+      setError(err);
       logger.error(err, "Import failed");
     }
   };
@@ -101,6 +87,7 @@ export const Importer = () => {
   const handleRemoveFile = () => {
     setFiles(null);
     setRows(null);
+    setError(null);
   };
 
   const handleSelectionChange = (selectionState: ICsvRow[] | null) => {
@@ -111,9 +98,7 @@ export const Importer = () => {
     <form onSubmit={handleSubmit(onSubmit)}>
       {!fileOrFiles ? (
         <FileDropZone
-          onFileDrop={handleDrop}
-          handleChange={handleChange}
-          onFileSelect={onSelect}
+          onFilesAccepted={handleFilesAccepted}
           maxFileSize={200000}
           validFileTypes={["text/csv", "text/plain"]}
         />
@@ -122,6 +107,8 @@ export const Importer = () => {
           Subir otro archivo
         </button>
       )}
+
+      {error && <p role="alert">{error.message}</p>}
 
       {rows && rows.length > 0 && (
         <>
