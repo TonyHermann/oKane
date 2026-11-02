@@ -14,10 +14,7 @@ export const updateTransactionSchema = z.object({
     .trim()
     .min(2, "La descripción es obligatoria.")
     .max(100, "La descripción no puede tener más de 100 carácteres."),
-  amount: z
-    .number()
-    .min(0.01, "El monto no puede ser inferior a 0.01.")
-    .max(999999, "El monto no puede ser superrior a 999999"),
+  amount: z.number().max(999999, "El monto no puede ser superior a 999999"),
   date: z.date(),
   categoryId: z.string(),
 });
