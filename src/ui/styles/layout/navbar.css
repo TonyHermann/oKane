@@ -8,6 +8,13 @@ nav {
   height: 20px;
   border: solid 1px var(--color-border-strong);
   align-items: center;
+  .nav-icon {
+    width: 1em;
+    height: 1em;
+    margin-right: 5px;
+    vertical-align: -0.125em;
+    fill: currentColor;
+  }
   .buttonWithIcon {
     margin-left: var(--space-3);
     a {
@@ -15,19 +22,15 @@ nav {
       text-decoration: none;
       /* color: $link_color; */
       font-size: 15px;
-      i,
-      .nav-icon {
+      i {
         margin-right: 5px;
-      }
-      .nav-icon {
-        width: 1em;
-        height: 1em;
-        vertical-align: -0.125em;
-        fill: currentColor;
       }
     }
   }
   .nav_right {
+    .changeThemeLabel {
+      display: flex;
+    }
     .changeThemeButton {
       display: flex;
       flex-direction: row;

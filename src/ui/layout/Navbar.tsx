@@ -11,7 +11,7 @@ export const Navbar = () => {
       </div>
       <div className="nav_right">
         <div className="changeThemeButton">
-          <p>
+          <p className="changeThemeLabel">
             <RefreshIcon /> Cambiar tema
           </p>
           <div className="themeColor gray" />
