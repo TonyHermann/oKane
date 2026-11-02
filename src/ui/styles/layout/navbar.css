@@ -15,8 +15,15 @@ nav {
       text-decoration: none;
       /* color: $link_color; */
       font-size: 15px;
-      i {
+      i,
+      .nav-icon {
         margin-right: 5px;
+      }
+      .nav-icon {
+        width: 1em;
+        height: 1em;
+        vertical-align: -0.125em;
+        fill: currentColor;
       }
     }
   }

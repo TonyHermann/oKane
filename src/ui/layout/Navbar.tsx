@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { PATHS } from "../routes/paths";
+import { HomeIcon, MoneyIcon, RefreshIcon, SettingsIcon } from "./NavbarIcons";
 
 export const Navbar = () => {
   // TODO: [theming] Replace the theme controls with a persisted, accessible theme system and a single source of truth for tokens.
@@ -11,7 +12,7 @@ export const Navbar = () => {
       <div className="nav_right">
         <div className="changeThemeButton">
           <p>
-            <i className="fa fa-refresh" aria-hidden="true" /> Cambiar tema
+            <RefreshIcon /> Cambiar tema
           </p>
           <div className="themeColor gray" />
           <div className="themeColor orange" />
@@ -19,25 +20,25 @@ export const Navbar = () => {
         </div>
         <div className="buttonWithIcon">
           <Link to={PATHS.HOME}>
-            <i className="fa fa-home" aria-hidden="true" />
+            <HomeIcon />
             スタートページ
           </Link>
         </div>
         <div className="buttonWithIcon">
           <Link to={PATHS.ADMIN_CATEGORIES}>
-            <i className="fa fa-home" aria-hidden="true" />
+            <HomeIcon />
             Administrar
           </Link>
         </div>
         <div className="buttonWithIcon">
           <Link to={PATHS.SETTINGS}>
-            <i className="fa fa-cog" aria-hidden="true" />
+            <SettingsIcon />
             Configuración
           </Link>
         </div>
         <div className="buttonWithIcon">
           <Link to={PATHS.BUDGET}>
-            <i className="fa fa-usd" aria-hidden="true" />
+            <MoneyIcon />
             Presupuesto
           </Link>
         </div>
