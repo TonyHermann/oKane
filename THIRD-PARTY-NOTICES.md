@@ -25,5 +25,6 @@ third-party origins.
 
 - `src/assets/images/background.png` and
   `src/assets/images/fondo-a-cuadros-nihongo.png` — project author.
-- `src/assets/images/gridnew.png` — provenance and license not documented.
-  Replace with an owned asset or record the license here.
+- `public/favicon.svg` — project author.
+- The surface texture in `.main-layout` is drawn with CSS gradients, so it is
+  not an asset and carries no license.
