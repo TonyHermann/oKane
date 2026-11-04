@@ -25,11 +25,15 @@ nav {
       i {
         margin-right: 5px;
       }
+      &.iconOnly .nav-icon {
+        margin-right: 0;
+      }
     }
   }
   .nav_right {
     .changeThemeLabel {
-      display: flex;
+      margin: 0;
+      font-size: 15px;
     }
     .changeThemeButton {
       display: flex;
