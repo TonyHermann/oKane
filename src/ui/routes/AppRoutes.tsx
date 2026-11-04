@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { Route, BrowserRouter } from "react-router-dom";
+import { Route, BrowserRouter, Navigate } from "react-router-dom";
 import { PATHS } from "./paths";
 
 // Layouts
@@ -26,9 +26,21 @@ const CategoriesPage = lazy(() =>
   })),
 );
 
+const SettingsLayout = lazy(() =>
+  import("../pages/settings/SettingsLayout").then((m) => ({
+    default: m.SettingsLayout,
+  })),
+);
+
 const SettingsPage = lazy(() =>
   import("../pages/settings/SettingsPage").then((m) => ({
     default: m.SettingsPage,
+  })),
+);
+
+const AsciiPage = lazy(() =>
+  import("../pages/settings/AsciiPage").then((m) => ({
+    default: m.AsciiPage,
   })),
 );
 
@@ -101,10 +113,31 @@ export const AppRoutes = () => {
               path={PATHS.SETTINGS}
               element={
                 <PageWrapper>
-                  <SettingsPage />
+                  <SettingsLayout />
                 </PageWrapper>
               }
-            />
+            >
+              <Route
+                index
+                element={<Navigate to={PATHS.SETTINGS_GENERAL} replace />}
+              />
+              <Route
+                path="general"
+                element={
+                  <PageWrapper>
+                    <SettingsPage />
+                  </PageWrapper>
+                }
+              />
+              <Route
+                path="ascii"
+                element={
+                  <PageWrapper>
+                    <AsciiPage />
+                  </PageWrapper>
+                }
+              />
+            </Route>
             <Route
               path={PATHS.BUDGET}
               element={

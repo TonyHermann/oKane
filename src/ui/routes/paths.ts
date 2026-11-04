@@ -6,5 +6,7 @@ export const PATHS = {
   ADMIN_RULES: "/admin/rules",
   ADMIN_ACCOUNTS: "/admin/accounts",
   SETTINGS: "/settings",
+  SETTINGS_GENERAL: "/settings/general",
+  SETTINGS_ASCII: "/settings/ascii",
   BUDGET: "/budget",
 } as const;
