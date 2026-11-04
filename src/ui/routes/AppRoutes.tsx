@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { Route, BrowserRouter, Navigate } from "react-router-dom";
+import { Route, BrowserRouter, Navigate, Routes } from "react-router-dom";
 import { PATHS } from "./paths";
 
 // Layouts
@@ -8,7 +8,7 @@ import { RootLayout } from "../layouts/RootLayout";
 // Components
 import { PageWrapper } from "../components/PageWrapper/PageWrapper";
 import { Spinner } from "../components/Spinner";
-import { RoutesWithNotFound } from "../components/RoutesWithNotFound/RoutesWithNotFound";
+import { NotFoundPage } from "../pages/404/NotFoundPage";
 
 const HomePage = lazy(() =>
   import("../pages/home/HomePage").then((m) => ({ default: m.HomePage })),
@@ -64,7 +64,7 @@ export const AppRoutes = () => {
   return (
     <BrowserRouter>
       <Suspense fallback={<Spinner />}>
-        <RoutesWithNotFound>
+        <Routes>
           <Route element={<RootLayout />}>
             <Route
               path={PATHS.HOME}
@@ -146,8 +146,16 @@ export const AppRoutes = () => {
                 </PageWrapper>
               }
             />
+            <Route
+              path="*"
+              element={
+                <PageWrapper>
+                  <NotFoundPage />
+                </PageWrapper>
+              }
+            />
           </Route>
-        </RoutesWithNotFound>
+        </Routes>
       </Suspense>
     </BrowserRouter>
   );
