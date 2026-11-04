@@ -1,0 +1,32 @@
+.sidebar-layout {
+  display: flex;
+  min-height: 90vh;
+  gap: var(--space-2);
+}
+
+.sidebar-layout-aside {
+  margin-top: 0;
+  margin-left: 0;
+  width: 200px;
+  padding: var(--space-4);
+  background: var(--color-chrome);
+}
+
+.sidebar-layout-label {
+  margin: 0 0 var(--space-3);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.sidebar-layout nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.sidebar-layout-content {
+  flex: 1;
+}
