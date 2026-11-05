@@ -76,5 +76,26 @@ module.exports = {
         "import/no-extraneous-dependencies": "off",
       },
     },
+    {
+      files: ["src/**/*.test.ts", "src/**/*.test.tsx", "src/setupTests.ts"],
+      rules: {
+        "import/no-extraneous-dependencies": [
+          "error",
+          { devDependencies: true },
+        ],
+      },
+    },
+    {
+      files: ["src/core/errors/*.ts", "src/infraestructure/errors/*.ts"],
+      rules: {
+        "max-classes-per-file": "off",
+      },
+    },
+    {
+      files: ["src/shared/logger/*.ts"],
+      rules: {
+        "no-console": "off",
+      },
+    },
   ],
 };
