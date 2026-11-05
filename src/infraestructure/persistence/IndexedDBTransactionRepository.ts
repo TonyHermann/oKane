@@ -73,43 +73,56 @@ export class IndexedDBTransactionRepository implements ITransactionRepository {
 
   async saveMany(transactions: Transaction[]): Promise<SaveManyResult> {
     const db = await openDB();
-    const result: SaveManyResult = { imported: 0, failed: [] };
+    const chunks = Array.from(
+      { length: Math.ceil(transactions.length / CHUNK_SIZE) },
+      (_, index) =>
+        transactions.slice(
+          index * CHUNK_SIZE,
+          index * CHUNK_SIZE + CHUNK_SIZE,
+        ),
+    );
 
-    for (let i = 0; i < transactions.length; i += CHUNK_SIZE) {
-      const chunk = transactions.slice(i, i + CHUNK_SIZE);
-      await this.saveChunk(chunk, db, result);
-    }
+    return chunks.reduce<Promise<SaveManyResult>>(
+      async (previous, chunk) => {
+        const result = await previous;
+        const chunkResult = await this.saveChunk(chunk, db);
 
-    return result;
+        result.imported += chunkResult.imported;
+        result.failed.push(...chunkResult.failed);
+
+        return result;
+      },
+      Promise.resolve<SaveManyResult>({ imported: 0, failed: [] }),
+    );
   }
 
   private saveChunk(
     chunk: Transaction[],
     db: IDBDatabase,
-    result: SaveManyResult,
-  ): Promise<void> {
+  ): Promise<SaveManyResult> {
     return new Promise((resolve) => {
+      const result: SaveManyResult = { imported: 0, failed: [] };
       const tx = db.transaction(this.storename, "readwrite");
       const store = tx.objectStore(this.storename);
 
       tx.onabort = () => {
         // Chunk entero falló → marcar todos como failed
-        for (const t of chunk) {
+        chunk.forEach((t) => {
           result.failed.push({
             transaction: t,
             error: new Error("Batch transaction aborted"),
           });
-        }
-        resolve();
+        });
+        resolve(result);
       };
 
-      tx.oncomplete = () => resolve();
+      tx.oncomplete = () => resolve(result);
 
-      for (const t of chunk) {
+      chunk.forEach((t) => {
         const request = store.add(t);
 
         request.onsuccess = () => {
-          result.imported++;
+          result.imported += 1;
         };
 
         request.onerror = (event) => {
@@ -119,7 +132,7 @@ export class IndexedDBTransactionRepository implements ITransactionRepository {
             error: new Error(request.error?.message || "Unknown save error"),
           });
         };
-      }
+      });
     });
   }
 
