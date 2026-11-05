@@ -29,9 +29,9 @@ export const CategorizationRulesPage = () => {
   const [appliedMessage, setAppliedMessage] = useState("");
 
   useEffect(() => {
-    void dispatch(loadCategories());
-    void dispatch(loadCategorizationRules());
-    void dispatch(loadTransactions());
+    dispatch(loadCategories());
+    dispatch(loadCategorizationRules());
+    dispatch(loadTransactions());
   }, [dispatch]);
 
   const descriptions = Array.from(
@@ -164,7 +164,7 @@ export const CategorizationRulesPage = () => {
             <button
               type="button"
               disabled={loading}
-              onClick={() => void handleApplyAll()}
+              onClick={handleApplyAll}
             >
               Aplicar reglas
             </button>
@@ -184,7 +184,9 @@ export const CategorizationRulesPage = () => {
                 </span>
                 <button
                   type="button"
-                  onClick={() => void dispatch(removeCategorizationRule(rule.id))}
+                  onClick={() => {
+                    dispatch(removeCategorizationRule(rule.id));
+                  }}
                 >
                   Eliminar
                 </button>
