@@ -9,19 +9,20 @@ export type ICsvMapping = {
   descriptionColumn: string;
 };
 
-export class TransactionMapper implements ITransactionMapper {
-  map(rows: ICsvRow[], mapping: ICsvMapping): Transaction[] {
-    return rows.map((row) => {
-      return this.mapOne(row, mapping);
-    });
-  }
+const mapOne = (row: ICsvRow, mapping: ICsvMapping): Transaction => {
+  return Transaction.Rehydrate({
+    id: crypto.randomUUID(),
+    date: CsvNormalizer.date(row[mapping.dateColumn]),
+    amount: CsvNormalizer.amount(row[mapping.amountColumn]),
+    description: row[mapping.descriptionColumn],
+  });
+};
 
-  mapOne(row: ICsvRow, mapping: ICsvMapping): Transaction {
-    return Transaction.Rehydrate({
-      id: crypto.randomUUID(),
-      date: CsvNormalizer.date(row[mapping.dateColumn]),
-      amount: CsvNormalizer.amount(row[mapping.amountColumn]),
-      description: row[mapping.descriptionColumn],
+export const transactionMapper: ITransactionMapper = {
+  map(rows, mapping) {
+    return rows.map((row) => {
+      return mapOne(row, mapping);
     });
-  }
-}
+  },
+  mapOne,
+};
