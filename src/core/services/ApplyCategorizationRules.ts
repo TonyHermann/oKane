@@ -64,10 +64,10 @@ export const planRuleApplication = (
     unchanged: [],
   };
 
-  for (const transaction of transactions) {
+  transactions.forEach((transaction) => {
     if (transaction.isManuallyCategorized) {
       plan.unchanged.push(transaction);
-      continue;
+      return;
     }
 
     const match = findMatchingRule(transaction.description, allRules);
@@ -83,19 +83,19 @@ export const planRuleApplication = (
         plan.toCategorize.push({ transaction, rule: match });
       }
 
-      continue;
+      return;
     }
 
     if (transaction.appliedRuleId === null) {
       plan.unchanged.push(transaction);
-      continue;
+      return;
     }
 
     // Inconsistent legacy state: a rule id survived without its category. There
     // is nothing to revert, so leave it alone until a rule matches again.
     if (transaction.categories === null) {
       plan.unchanged.push(transaction);
-      continue;
+      return;
     }
 
     const owner = allRules.find(
@@ -104,17 +104,17 @@ export const planRuleApplication = (
 
     if (owner === undefined) {
       plan.toRevert.push(transaction);
-      continue;
+      return;
     }
 
     // A disabled rule is a pause, not an undo: it keeps what it already applied.
     if (!owner.enabled) {
       plan.unchanged.push(transaction);
-      continue;
+      return;
     }
 
     plan.toRevert.push(transaction);
-  }
+  });
 
   return plan;
 };
