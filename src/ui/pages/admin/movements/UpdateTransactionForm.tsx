@@ -168,6 +168,7 @@ export const UpdateTransactionForm = ({
             return { label: cat.name, value: cat.id };
           })}
           disabled={Catloading}
+          placeholder="Selecciona una categoría"
           error={errors.categoryId}
           errorId="category-error"
           value={categoryId || ""}

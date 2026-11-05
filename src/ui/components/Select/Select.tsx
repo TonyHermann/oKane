@@ -1,4 +1,5 @@
 import type { ChangeEvent } from "react";
+import { FieldError } from "@/ui/components/FieldError/FieldError";
 
 interface SelectOption {
   value: string;
@@ -13,6 +14,7 @@ interface SelectProps {
   onChange: (event: ChangeEvent<HTMLSelectElement>) => void;
   value: string | null;
   disabled?: boolean;
+  placeholder?: string;
   error?: string[];
   errorId?: string;
 }
@@ -25,6 +27,7 @@ export const Select = ({
   onChange,
   disabled,
   value,
+  placeholder,
   error,
   errorId,
 }: SelectProps) => {
@@ -40,7 +43,7 @@ export const Select = ({
         aria-invalid={Boolean(error)}
         aria-describedby={error ? errorId : undefined}
       >
-        <option value="">Selecciona una categoría</option>
+        {placeholder && <option value="">{placeholder}</option>}
         {options.map((opt) => {
           return (
             <option key={opt.value} value={opt.value}>
@@ -50,7 +53,7 @@ export const Select = ({
         })}
       </select>
 
-      {error && <p id={errorId}>{error[0]}</p>}
+      <FieldError id={errorId} message={error?.[0]} />
     </>
   );
 };
