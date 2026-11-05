@@ -2,6 +2,21 @@ import { ValidationError } from "../errors/DomainErrors";
 
 export const DEFAULT_RAMP = "@%#*+=-:. "; // dark -> light
 
+export const BRAILLE_RAMP = "⣿⣷⡟⠟⠺⠋⣀⠁ ";
+
+export const ASCII_PRESETS = {
+  classic: DEFAULT_RAMP,
+  braille: BRAILLE_RAMP,
+} as const;
+
+export type AsciiPresetId = keyof typeof ASCII_PRESETS;
+
+export const DEFAULT_PRESET: AsciiPresetId = "classic";
+
+export const isAsciiPresetId = (value: string): value is AsciiPresetId => {
+  return Object.hasOwn(ASCII_PRESETS, value);
+};
+
 export type RGB = {
   r: number;
   g: number;

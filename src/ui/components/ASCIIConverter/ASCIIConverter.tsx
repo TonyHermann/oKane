@@ -1,12 +1,47 @@
-import { useEffect, useRef, useState, type RefObject } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type ChangeEvent,
+  type RefObject,
+} from "react";
+import z from "zod";
 import { FileDropZone } from "../importer/FileDropZone";
 import { DomainError, ValidationError } from "@/core/errors/DomainErrors";
-import { charFor, DEFAULT_RAMP, getBrightness } from "@/core/services/AsciiArt";
+import {
+  ASCII_PRESETS,
+  charFor,
+  DEFAULT_PRESET,
+  getBrightness,
+  isAsciiPresetId,
+  type AsciiPresetId,
+} from "@/core/services/AsciiArt";
+import { FieldError } from "@/ui/components/FieldError/FieldError";
+import { Select } from "@/ui/components/Select/Select";
 import { logger } from "@/shared/logger/Logger";
 import "./ASCIIConverter.css";
 
+const MIN_COLS = 20;
+const MAX_COLS = 300;
+const DEFAULT_COLS = "100";
+
+export const asciiConverterSchema = z.object({
+  cols: z.coerce
+    .number()
+    .refine(
+      (value) =>
+        Number.isInteger(value) && value >= MIN_COLS && value <= MAX_COLS,
+      `El ancho debe ser un entero entre ${MIN_COLS} y ${MAX_COLS}.`,
+    ),
+});
+
+const PRESET_OPTIONS: { value: AsciiPresetId; label: string }[] = [
+  { value: "classic", label: "Clásico" },
+  { value: "braille", label: "Braille" },
+];
+
 const ImageComponent = ({ img }: { img: HTMLImageElement }) => (
-  <img style={{ maxWidth: "100px" }} src={img.src} alt="foo" />
+  <img style={{ maxWidth: "100px" }} src={img.src} alt="Imagen seleccionada" />
 );
 
 interface RenderASCIIProps {
@@ -60,7 +95,17 @@ export const ASCIIConverter = () => {
   const [image, setImage] = useState<File | null>(null);
   const [loadedImage, setLoadedImage] = useState<HTMLImageElement | null>(null);
   const [ASCIIOutput, setASCIIOutput] = useState<string>("");
+  const [preset, setPreset] = useState<AsciiPresetId>(DEFAULT_PRESET);
+  const [colsInput, setColsInput] = useState(DEFAULT_COLS);
+  const [colsTouched, setColsTouched] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  const colsResult = asciiConverterSchema.safeParse({ cols: colsInput });
+  const colsError =
+    !colsResult.success && colsTouched
+      ? colsResult.error.issues[0]?.message
+      : undefined;
+  const canGenerate = Boolean(loadedImage) && colsResult.success;
 
   useEffect(() => {
     let cancelled = false;
@@ -96,13 +141,19 @@ export const ASCIIConverter = () => {
     setImage(file);
   };
 
+  const handlePresetChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    const { value } = event.target;
+
+    if (isAsciiPresetId(value)) setPreset(value);
+  };
+
   const handleGenerate = () => {
-    if (!loadedImage) return;
+    if (!loadedImage || !colsResult.success) return;
 
     const ascii = renderASCII({
       img: loadedImage,
-      cols: 200,
-      ramp: DEFAULT_RAMP,
+      cols: colsResult.data.cols,
+      ramp: ASCII_PRESETS[preset],
       canvas: canvasRef,
     });
 
@@ -137,10 +188,52 @@ export const ASCIIConverter = () => {
       )}
       <canvas className="hidden" ref={canvasRef} />
       {loadedImage && <ImageComponent img={loadedImage} />}
-      <button type="button" onClick={handleGenerate} disabled={!loadedImage}>
-        ¡Generar!
-      </button>
-      <div id="output">{ASCIIOutput}</div>
+      <div className="ascii-controls">
+        <div className="ascii-field">
+          <Select
+            id="ascii-preset"
+            name="preset"
+            label="Estilo"
+            options={PRESET_OPTIONS}
+            value={preset}
+            onChange={handlePresetChange}
+          />
+        </div>
+        <div className="ascii-field">
+          <label htmlFor="ascii-cols">Ancho</label>
+          <input
+            id="ascii-cols"
+            name="cols"
+            type="number"
+            inputMode="numeric"
+            min={MIN_COLS}
+            max={MAX_COLS}
+            value={colsInput}
+            onChange={(event) => setColsInput(event.target.value)}
+            onBlur={() => setColsTouched(true)}
+            aria-invalid={Boolean(colsError)}
+            aria-describedby={colsError ? "ascii-cols-error" : undefined}
+          />
+          <FieldError id="ascii-cols-error" message={colsError} />
+        </div>
+      </div>
+      <div className="ascii-actions">
+        <button type="button" onClick={handleGenerate} disabled={!canGenerate}>
+          ¡Generar!
+        </button>
+        <button type="button" disabled title="Próximamente">
+          Guardar ASCII Art
+        </button>
+      </div>
+      <section className="ascii-output" aria-label="Resultado ASCII">
+        {ASCIIOutput ? (
+          <pre className="ascii-output__art">{ASCIIOutput}</pre>
+        ) : (
+          <p className="ascii-output__empty">
+            Todavía no generaste ningún ASCII.
+          </p>
+        )}
+      </section>
     </>
   );
 };
