@@ -9,6 +9,7 @@
   }
 
   .table-scroll table {
+    /* TODO: [table-sticky-overlap] Give the sticky header an explicit z-index from the existing tokens so rows cannot paint above it. */
     thead {
       position: sticky;
       top: 0;
