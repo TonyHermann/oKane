@@ -5,6 +5,7 @@ import {
   type ReactNode,
 } from "react";
 import type { FallbackProps } from "./ErrorBoundaryTypes";
+import { logger } from "@/shared/logger/Logger";
 
 interface ErrorBoundaryState {
   hasError: boolean;
@@ -32,7 +33,7 @@ export class ErrorBoundary extends Component<
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-    console.error("ErrorBoundary caught an error: ", error, errorInfo);
+    logger.error(error, { componentStack: errorInfo.componentStack });
   }
 
   resetError = () => {

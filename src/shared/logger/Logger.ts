@@ -2,22 +2,22 @@ import { DomainError } from "../../core/errors/DomainErrors.js";
 import { PersistenceError } from "../../infraestructure/errors/PersistenceErrors.js";
 import type { ILogger } from "../../core/entities/Logger.js";
 
-export class ConsoleLogger implements ILogger {
-  // TODO: [notifications] Decide which user-actionable log events may publish through a notification port or event bus; keep diagnostic logging UI-independent.
-  private formatError(error: Error): string {
-    if (error instanceof DomainError) {
-      return `[${error.code}] ${error.message}`;
-    }
-
-    if (error instanceof PersistenceError) {
-      return `[${error.code}] ${error.message} | Operation: ${error.operation}`;
-    }
-
-    return error.message;
+const formatError = (error: Error): string => {
+  if (error instanceof DomainError) {
+    return `[${error.code}] ${error.message}`;
   }
 
-  error(error: Error, context?: any): void {
-    const formattedError = this.formatError(error);
+  if (error instanceof PersistenceError) {
+    return `[${error.code}] ${error.message} | Operation: ${error.operation}`;
+  }
+
+  return error.message;
+};
+
+// TODO: [notifications] Decide which user-actionable log events may publish through a notification port or event bus; keep diagnostic logging UI-independent.
+export const logger: ILogger = {
+  error(error: Error, context?: unknown): void {
+    const formattedError = formatError(error);
 
     console.group(`🚨 ERROR: ${formattedError}`);
     console.error("Error:", error);
@@ -37,16 +37,13 @@ export class ConsoleLogger implements ILogger {
     }
 
     console.groupEnd();
-  }
+  },
 
-  warn(message: string, context?: any): void {
+  warn(message: string, context?: unknown): void {
     console.warn(`⚠️  WARNING: ${message}`, context || "");
-  }
+  },
 
-  info(message: string, context?: any): void {
+  info(message: string, context?: unknown): void {
     console.info(`ℹ️  INFO: ${message}`, context || "");
-  }
-}
-
-// Singleton instance
-export const logger = new ConsoleLogger();
+  },
+};

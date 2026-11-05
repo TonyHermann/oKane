@@ -2,7 +2,7 @@ import { logger } from "../logger/Logger.js";
 import { DomainError } from "../../core/errors/DomainErrors.js";
 
 export class GlobalErrorHandler {
-  static handleError(error: Error, context?: any): void {
+  static handleError(error: Error, context?: unknown): void {
     if (error instanceof DomainError) {
       // Errores del dominio - generalmente esperados
       logger.warn(error.message, {
@@ -20,9 +20,15 @@ export class GlobalErrorHandler {
     }
   }
 
-  static handleAsyncError(promise: Promise<any>, context?: any): Promise<any> {
-    return promise.catch((error) => {
-      this.handleError(error, context);
+  static handleAsyncError<T>(
+    promise: Promise<T>,
+    context?: unknown,
+  ): Promise<T> {
+    return promise.catch((error: unknown) => {
+      this.handleError(
+        error instanceof Error ? error : new Error(String(error)),
+        context,
+      );
       throw error; // Re-throw for upstream handling
     });
   }
@@ -31,7 +37,7 @@ export class GlobalErrorHandler {
 // Para uso en UI/React components
 export function useErrorHandler() {
   return {
-    handleError: (error: Error, context?: any) => {
+    handleError: (error: Error, context?: unknown) => {
       GlobalErrorHandler.handleError(error, context);
 
       // Aquí podrías mostrar notificaciones al usuario

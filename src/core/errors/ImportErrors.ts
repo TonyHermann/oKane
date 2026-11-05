@@ -21,7 +21,7 @@ export class MissingRequiredColumnError extends DomainError {
 }
 
 export class InvalidMappingError extends DomainError {
-  constructor(message: string = "Invalid mapping", details?: any) {
+  constructor(message: string = "Invalid mapping", details?: unknown) {
     super(message, "INVALID_MAPPING", details);
     this.name = "InvalidMappingError";
   }

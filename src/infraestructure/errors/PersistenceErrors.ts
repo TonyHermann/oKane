@@ -4,6 +4,13 @@ import {
   DuplicateEntityError,
 } from "../../core/errors/DomainErrors.js";
 
+type PersistenceErrorContext = {
+  entity?: unknown;
+  field?: unknown;
+  value?: unknown;
+  id?: unknown;
+};
+
 // Errores específicos de persistencia
 export class PersistenceError extends DomainError {
   constructor(
@@ -46,7 +53,7 @@ export class IndexedDBErrorMapper {
   static mapError(
     error: DOMException | Error | null,
     operation: string,
-    context?: any,
+    context?: PersistenceErrorContext,
   ): PersistenceError {
     if (!error) {
       return new TransactionError(operation, new Error("Unknown error"));
@@ -57,31 +64,33 @@ export class IndexedDBErrorMapper {
 
     // Errores comunes de IndexedDB y su mapeo
     switch (errorName) {
-      case "ConstraintError":
+      case "ConstraintError": {
         const duplicateError = new DuplicateEntityError(
-          context?.entity || "Unknown",
-          context?.field || "Unknown",
-          context?.value || "Unknown",
+          String(context?.entity ?? "Unknown"),
+          String(context?.field ?? "Unknown"),
+          context?.value ?? "Unknown",
         );
         return new PersistenceError(
           duplicateError.message,
           operation,
           duplicateError,
         );
+      }
 
       case "QuotaExceededError":
         return new QuotaExceededError(error);
 
-      case "NotFoundError":
+      case "NotFoundError": {
         const notFoundError = new EntityNotFoundError(
-          context?.entity || "Unknown",
-          context?.id || "Unknown",
+          String(context?.entity ?? "Unknown"),
+          String(context?.id ?? "Unknown"),
         );
         return new PersistenceError(
           notFoundError.message,
           operation,
           notFoundError,
         );
+      }
 
       case "InvalidStateError":
       case "TransactionInactiveError":

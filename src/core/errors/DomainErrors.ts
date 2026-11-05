@@ -3,7 +3,7 @@ export class DomainError extends Error {
   constructor(
     message: string,
     public readonly code: string,
-    public readonly details?: any,
+    public readonly details?: unknown,
   ) {
     super(message);
     this.name = "DomainError";
@@ -28,7 +28,7 @@ export class ValidationError extends DomainError {
 }
 
 export class DuplicateEntityError extends DomainError {
-  constructor(entity: string, field: string, value: any) {
+  constructor(entity: string, field: string, value: unknown) {
     super(
       `${entity} with ${field} '${value}' already exists`,
       "DUPLICATE_ENTITY",
