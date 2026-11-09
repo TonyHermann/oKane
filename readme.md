@@ -51,12 +51,12 @@ npm run lint       # eslint
 
 Layers, in dependency order:
 
-| Layer | Responsibility |
-| --- | --- |
-| `src/core` | Entities and their invariants, pure domain services, use cases, repository interfaces. No React, no storage. |
-| `src/adapters` | Implementations that talk to the outside world. |
-| `src/infraestructure` | IndexedDB repositories. |
-| `src/ui` | React components, pages and the Redux store. |
+| Layer                 | Responsibility                                                                                               |
+| --------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `src/core`            | Entities and their invariants, pure domain services, use cases, repository interfaces. No React, no storage. |
+| `src/adapters`        | Implementations that talk to the outside world.                                                              |
+| `src/infraestructure` | IndexedDB repositories.                                                                                      |
+| `src/ui`              | React components, pages and the Redux store.                                                                 |
 
 Three decisions shape the rest:
 
@@ -83,7 +83,7 @@ The logo type uses Vahika by Raymond Larabie (CC0 1.0) and Noto Serif CJK JP (SI
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="public/brand/logo-lockup-vertical-inverse.png">
-    <img src="public/brand/logo-lockup-vertical.png" alt="oKane vertical lockup" width="220">
+    <img src="public/brand/logo-lockup-vertical.png" alt="oKane vertical lockup" width="150">
   </picture>
 </p>
 
