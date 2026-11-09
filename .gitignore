@@ -36,5 +36,8 @@ odd/
 
 # Documentación y contratos de agente (no son parte del producto)
 AGENTS.md
+!scripts/brand/AGENTS.md
 docs/
 .gga
+
+.brand-venv/
