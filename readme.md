@@ -1,3 +1,12 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="public/brand/logo-lockup-inverse.png">
+    <img src="public/brand/logo-lockup.png" alt="oKane — local-first personal finance" width="420">
+  </picture>
+</p>
+
+---
+
 # oKane
 
 A local-first personal finance app. Your transactions never leave your browser.
@@ -57,7 +66,7 @@ Three decisions shape the rest:
 
 ## Tests
 
-134 tests across 28 files: domain services and entities, Redux slices with their async thunks, and component behaviour through React Testing Library. Component tests query by role and visible text, so they fail when behaviour changes, not when markup is reorganised.
+141 tests across 30 files: domain services and entities, Redux slices with their async thunks, and component behaviour through React Testing Library. Component tests query by role and visible text, so they fail when behaviour changes, not when markup is reorganised.
 
 ## Status
 
@@ -66,6 +75,8 @@ Early but usable. `v0.0.x`: single user, single currency (EUR), Spanish UI. Not 
 ## Third-party assets
 
 XP.css (MIT) and the Asar typeface (SIL OFL 1.1) are bundled in this repository; the app makes no requests to third-party origins. See [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
+
+The logo type uses Vahika by Raymond Larabie (CC0 1.0) and Noto Serif CJK JP (SIL OFL 1.1). See [public/brand/CREDITS.md](public/brand/CREDITS.md). The Vahika font file is not redistributed; the wordmark is embedded as a raster with its PSD effects.
 
 ## License
 

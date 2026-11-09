@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>oKane — brand assets</title>
+  <style>
+    :root {
+      --bg: #f6f7fb;
+      --card: #ffffff;
+      --ink: #15171c;
+      --muted: #5b6270;
+      --line: #d9dde7;
+      --accent: #2455eb;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 40px 24px 64px;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+
+    .wrap { max-width: 1120px; margin: 0 auto; }
+
+    .eyebrow {
+      margin: 0 0 6px;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    h1 { margin: 0 0 10px; font-size: clamp(28px, 4vw, 44px); line-height: 1.1; }
+
+    .lead { max-width: 78ch; margin: 0 0 24px; color: var(--muted); font-size: 16px; }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 24px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.6fr) minmax(260px, 1fr);
+      gap: 24px;
+      align-items: center;
+    }
+
+    .hero-art {
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      border-radius: 10px;
+      background: #ffffff;
+    }
+
+    .hero-art img { display: block; width: 100%; max-width: 740px; height: auto; }
+
+    .hero h2 { margin: 0 0 8px; font-size: 20px; }
+
+    .hero p { margin: 0 0 16px; color: var(--muted); }
+
+    .links { display: flex; flex-wrap: wrap; gap: 8px; }
+
+    .links a,
+    .downloads a {
+      display: inline-block;
+      padding: 7px 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--ink);
+      font-size: 13px;
+      text-decoration: none;
+    }
+
+    .links a:hover,
+    .downloads a:hover { border-color: var(--accent); color: var(--accent); }
+
+    .section { margin-top: 40px; }
+
+    .section > h2 {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .size-row,
+    .mark-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 24px;
+    }
+
+    .size-row figure,
+    .mark-row figure { margin: 0; display: grid; gap: 8px; justify-items: start; }
+
+    .size-row img,
+    .mark-row img { display: block; max-width: 100%; height: auto; }
+
+    figcaption { color: var(--muted); font-family: var(--mono); font-size: 12px; }
+
+    .bg-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .bg-card {
+      display: grid;
+      place-items: center;
+      gap: 12px;
+      min-height: 190px;
+      margin: 0;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+    }
+
+    .bg-card img { display: block; max-width: 100%; height: auto; }
+
+    .bg-card p { margin: 0; color: var(--muted); font-size: 12px; }
+
+    .bg-light { background: #ffffff; }
+    .bg-tint { background: #f2faff; }
+    .bg-blue { background: #2455eb; }
+    .bg-dark { background: #101217; }
+    .bg-dark p { color: #a2a9b6; }
+
+    .bg-checker {
+      background-color: #ffffff;
+      background-image:
+        linear-gradient(45deg, #e5e7eb 25%, transparent 25%),
+        linear-gradient(-45deg, #e5e7eb 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #e5e7eb 75%),
+        linear-gradient(-45deg, transparent 75%, #e5e7eb 75%);
+      background-size: 16px 16px;
+      background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+    }
+
+    .clearspace {
+      display: inline-block;
+      padding: 32px;
+      border: 1px dashed var(--line);
+      border-radius: 10px;
+      background: #ffffff;
+    }
+
+    .clearspace img { display: block; width: 460px; max-width: 100%; height: auto; }
+
+    .note { margin: 12px 0 0; color: var(--muted); font-size: 14px; }
+
+    .note code {
+      padding: 1px 5px;
+      border-radius: 4px;
+      background: #eef1f6;
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .swatches {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+    }
+
+    .swatch {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #ffffff;
+    }
+
+    .swatch .chip { height: 56px; background: var(--c); }
+
+    .swatch .label {
+      padding: 8px 10px;
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .downloads {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 8px 16px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .downloads a { display: block; }
+
+    ul.rules { margin: 0; padding-left: 20px; color: var(--muted); }
+    ul.rules li { margin: 4px 0; }
+    ul.rules strong { color: var(--ink); }
+
+    .footer {
+      margin-top: 48px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    @media (max-width: 800px) {
+      body { padding: 28px 16px 48px; }
+      .hero { grid-template-columns: 1fr; }
+      .clearspace img { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <p class="eyebrow">oKane / brand</p>
+      <h1>Logo assets</h1>
+      <p class="lead">
+        Lockup, mark, inverse and monochrome. The star and おかね are vector. The wordmark
+        is the original raster from the PSD, kept as an embedded image because the layer
+        had filters and effects.
+      </p>
+    </header>
+
+    <section class="card hero">
+      <div class="hero-art">
+        <img src="logo-lockup.svg" alt="oKane logo lockup">
+      </div>
+      <div>
+        <h2>Primary lockup</h2>
+        <p>Use on light backgrounds. Minimum width: 320 px. Below that, use the mark.</p>
+        <div class="links">
+          <a href="logo-lockup.svg" download>Download SVG</a>
+          <a href="logo-lockup.png" download>Download PNG</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Sizes</h2>
+      <div class="size-row">
+        <figure>
+          <img src="logo-lockup.svg" width="512" alt="oKane lockup at 512 pixels">
+          <figcaption>512 px</figcaption>
+        </figure>
+        <figure>
+          <img src="logo-lockup.svg" width="256" alt="oKane lockup at 256 pixels">
+          <figcaption>256 px</figcaption>
+        </figure>
+        <figure>
+          <img src="logo-lockup.svg" width="128" alt="oKane lockup at 128 pixels">
+          <figcaption>128 px</figcaption>
+        </figure>
+        <figure>
+          <img src="logo-lockup.svg" width="64" alt="oKane lockup at 64 pixels">
+          <figcaption>64 px</figcaption>
+        </figure>
+        <figure>
+          <img src="logo-lockup.svg" width="32" alt="oKane lockup at 32 pixels">
+          <figcaption>32 px</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Backgrounds</h2>
+      <div class="bg-grid">
+        <figure class="bg-card bg-light">
+          <img src="logo-lockup.svg" alt="oKane lockup on white">
+          <p>Light</p>
+        </figure>
+        <figure class="bg-card bg-tint">
+          <img src="logo-lockup.svg" alt="oKane lockup on tinted background">
+          <p>Tint</p>
+        </figure>
+        <figure class="bg-card bg-blue">
+          <img src="logo-lockup-inverse.svg" alt="oKane inverse lockup on blue">
+          <p>XP blue / inverse</p>
+        </figure>
+        <figure class="bg-card bg-dark">
+          <img src="logo-lockup-inverse.svg" alt="oKane inverse lockup on dark">
+          <p>Dark / inverse</p>
+        </figure>
+        <figure class="bg-card bg-checker">
+          <img src="logo-lockup.png" alt="oKane transparent PNG">
+          <p>Transparent PNG</p>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Mark</h2>
+      <div class="mark-row">
+        <figure>
+          <img src="logo-mark.svg" width="128" alt="oKane mark at 128 pixels">
+          <figcaption>128 px</figcaption>
+        </figure>
+        <figure>
+          <img src="logo-mark.svg" width="64" alt="oKane mark at 64 pixels">
+          <figcaption>64 px</figcaption>
+        </figure>
+        <figure>
+          <img src="logo-mark.svg" width="32" alt="oKane mark at 32 pixels">
+          <figcaption>32 px</figcaption>
+        </figure>
+        <figure>
+          <img src="logo-mark.svg" width="16" alt="oKane mark at 16 pixels">
+          <figcaption>16 px</figcaption>
+        </figure>
+      </div>
+      <p class="note">Use the mark for favicons, app icons and spaces narrower than 320 px.</p>
+    </section>
+
+    <section class="section">
+      <h2>Monochrome</h2>
+      <div class="bg-grid">
+        <figure class="bg-card bg-light">
+          <img src="logo-lockup-monochrome.svg" alt="oKane monochrome black lockup">
+          <p>Black / light</p>
+        </figure>
+        <figure class="bg-card bg-dark">
+          <img src="logo-lockup-monochrome-white.svg" alt="oKane monochrome white lockup">
+          <p>White / dark</p>
+        </figure>
+      </div>
+      <div class="mark-row">
+        <figure>
+          <img src="logo-mark-monochrome.svg" width="64" alt="oKane monochrome black mark">
+          <figcaption>Black mark</figcaption>
+        </figure>
+        <figure>
+          <img src="logo-mark-monochrome-white.svg" width="64" alt="oKane monochrome white mark">
+          <figcaption>White mark</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Clear space</h2>
+      <div class="clearspace">
+        <img src="logo-lockup.svg" alt="oKane lockup with clear space">
+      </div>
+      <p class="note">Keep at least half the star height free around the lockup.</p>
+    </section>
+
+    <section class="section">
+      <h2>Palette</h2>
+      <div class="swatches">
+        <div class="swatch" style="--c:#000000"><div class="chip"></div><div class="label">#000000</div></div>
+        <div class="swatch" style="--c:#ffffff"><div class="chip"></div><div class="label">#ffffff</div></div>
+        <div class="swatch" style="--c:#f5f5f5"><div class="chip"></div><div class="label">#f5f5f5</div></div>
+        <div class="swatch" style="--c:#5c5c5c"><div class="chip"></div><div class="label">#5c5c5c</div></div>
+        <div class="swatch" style="--c:#909090"><div class="chip"></div><div class="label">#909090</div></div>
+        <div class="swatch" style="--c:#c9c9c9"><div class="chip"></div><div class="label">#c9c9c9</div></div>
+        <div class="swatch" style="--c:#ededed"><div class="chip"></div><div class="label">#ededed</div></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Type</h2>
+      <ul class="rules">
+        <li><strong>Wordmark:</strong> Vahika Regular (CC0), rasterized in the PSD with filters and effects; the original raster is embedded in the SVG.</li>
+        <li><strong>Japanese:</strong> Noto Serif CJK JP Black, converted to vector paths.</li>
+        <li><strong>Star:</strong> custom SVG, same geometry as the favicon.</li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <h2>Rules</h2>
+      <ul class="rules">
+        <li><strong>Do not stretch</strong> the lockup or the mark.</li>
+        <li><strong>Do not recolor</strong> the star gradient.</li>
+        <li><strong>Use inverse</strong> on dark or saturated backgrounds.</li>
+        <li><strong>Do not add</strong> shadows, glows or outlines.</li>
+        <li><strong>Minimum size:</strong> lockup 320 px wide, mark 16 px.</li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <h2>Downloads</h2>
+      <ul class="downloads">
+        <li><a href="logo-lockup.svg" download>logo-lockup.svg</a></li>
+        <li><a href="logo-lockup.png" download>logo-lockup.png</a></li>
+        <li><a href="logo-lockup-inverse.svg" download>logo-lockup-inverse.svg</a></li>
+        <li><a href="logo-lockup-monochrome.svg" download>logo-lockup-monochrome.svg</a></li>
+        <li><a href="logo-lockup-monochrome-white.svg" download>logo-lockup-monochrome-white.svg</a></li>
+        <li><a href="logo-mark.svg" download>logo-mark.svg</a></li>
+        <li><a href="logo-mark-monochrome.svg" download>logo-mark-monochrome.svg</a></li>
+        <li><a href="logo-mark-monochrome-white.svg" download>logo-mark-monochrome-white.svg</a></li>
+        <li><a href="logo-mark-512.png" download>logo-mark-512.png</a></li>
+        <li><a href="favicon.ico" download>favicon.ico</a></li>
+        <li><a href="apple-touch-icon.png" download>apple-touch-icon.png</a></li>
+        <li><a href="og-image.png" download>og-image.png</a></li>
+        <li><a href="CREDITS.md" download>CREDITS.md</a></li>
+      </ul>
+    </section>
+
+    <footer class="footer">
+      Generated from oKane_Logo_v9.psd. The editable PSD master stays outside the repository.
+      The lockup SVGs keep the original wordmark as an embedded raster; the star and Japanese text are vector.
+      logo-lockup.png is the exact raster master. Font credits: CREDITS.md.
+    </footer>
+  </div>
+</body>
+</html>
