@@ -1,6 +1,6 @@
 # oKane brand
 
-Source master: `oKane_Logo_v9.psd` (kept outside the repository).
+Source masters: `oKane_Logo_v9.psd` (horizontal) and `oKane_Logo_Vertical_v3.psd` (vertical), both kept outside the repository.
 Preview: `npm run dev` → `/brand/preview.html`.
 
 ## Assets
@@ -12,6 +12,11 @@ Preview: `npm run dev` → `/brand/preview.html`.
 | `public/brand/logo-lockup-inverse.svg` | Lockup for dark or saturated backgrounds. Uses a white silhouette of the original wordmark. |
 | `public/brand/logo-lockup-monochrome.svg` | One-color black lockup. Uses a black silhouette of the original wordmark. |
 | `public/brand/logo-lockup-monochrome-white.svg` | One-color white lockup. Uses a white silhouette of the original wordmark. |
+| `public/brand/logo-lockup-vertical.svg` | Vertical badge. Star and Japanese vector; wordmark raster from the vertical PSD. Transparent interior with a black rounded frame. |
+| `public/brand/logo-lockup-vertical.png` | Exact transparent raster at 716×933. |
+| `public/brand/logo-lockup-vertical-inverse.svg` | Vertical badge for dark backgrounds. White frame and white wordmark silhouette. |
+| `public/brand/logo-lockup-vertical-monochrome.svg` | One-color black vertical badge. |
+| `public/brand/logo-lockup-vertical-monochrome-white.svg` | One-color white vertical badge. |
 | `public/brand/logo-mark.svg` | Star mark, fully vector. Favicon and app icon. |
 | `public/brand/logo-mark-monochrome.svg` | Black star mark. |
 | `public/brand/logo-mark-monochrome-white.svg` | White star mark. |
@@ -47,18 +52,21 @@ Keep at least **half the star height** free around the lockup. At native size th
 
 ## Minimum sizes
 
-- Full lockup: **320 px wide**. Below that, use the mark.
+- Full horizontal lockup: **320 px wide**. Below that, use the mark.
+- Full vertical lockup: **240 px wide**.
 - Mark: **16 px** minimum.
 
 ## Usage
 
-- Use the primary lockup on light backgrounds.
+- Use the primary horizontal lockup for headers, README and wide spaces.
+- Use the vertical lockup for square or narrow spaces, mobile and badges.
 - Use the inverse lockup on dark or saturated backgrounds.
 - Use the monochrome versions when color is not available.
 - Do not stretch, rotate or recolor the logo.
 - Do not recolor the star gradient.
 - Do not add shadows, glows, strokes or other effects.
 - Do not place the light lockup on a busy or dark background.
+- The vertical frame has a transparent interior; it takes the color of the surface behind it.
 
 ## Licenses and publication
 
@@ -72,11 +80,12 @@ Keep at least **half the star height** free around the lockup. At native size th
 
 The pipeline used:
 
-1. Extract the PSD layers (`Background`, `oKane`, `favicon-star`, `おかね`).
-2. Rebuild the transparent lockup from the non-background layers.
+1. Extract the PSD layers from both masters (`oKane_Logo_v9.psd` and `oKane_Logo_Vertical_v3.psd`).
+2. Rebuild each transparent lockup from its non-background layers.
 3. Recreate the Japanese text as SVG paths with Noto Serif CJK JP Black.
-4. Keep the original wordmark as a transparent PNG/silhouette inside the SVG. Do not vectorize it: the PSD filters and effects are part of the design.
+4. Keep each original wordmark as a transparent PNG/silhouette inside its SVG. Do not vectorize it: the PSD filters and effects are part of the design.
 5. Render the mark from `public/favicon-star.svg` geometry.
-6. Export the raster sizes, favicon, touch icon and OG image.
+6. Draw the vertical rounded frame as a vector border.
+7. Export the raster sizes, favicon, touch icon and OG image.
 
-The exact PNG master is `logo-lockup.png`. The SVGs are hybrid: star and Japanese vector, original wordmark raster.
+The exact PNG masters are `logo-lockup.png` (horizontal) and `logo-lockup-vertical.png` (vertical). The SVGs are hybrid: star and Japanese vector, original wordmark raster.

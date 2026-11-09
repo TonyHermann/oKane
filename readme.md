@@ -78,6 +78,19 @@ XP.css (MIT) and the Asar typeface (SIL OFL 1.1) are bundled in this repository;
 
 The logo type uses Vahika by Raymond Larabie (CC0 1.0) and Noto Serif CJK JP (SIL OFL 1.1). See [public/brand/CREDITS.md](public/brand/CREDITS.md). The Vahika font file is not redistributed; the wordmark is embedded as a raster with its PSD effects.
 
+## Brand
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="public/brand/logo-lockup-vertical-inverse.png">
+    <img src="public/brand/logo-lockup-vertical.png" alt="oKane vertical lockup" width="220">
+  </picture>
+</p>
+
+Horizontal: [`logo-lockup.svg`](public/brand/logo-lockup.svg) · [`logo-lockup.png`](public/brand/logo-lockup.png)
+Vertical: [`logo-lockup-vertical.svg`](public/brand/logo-lockup-vertical.svg) · [`logo-lockup-vertical.png`](public/brand/logo-lockup-vertical.png)
+Preview: [`public/brand/preview.html`](public/brand/preview.html)
+
 ## License
 
 MIT — see [LICENSE](LICENSE).
