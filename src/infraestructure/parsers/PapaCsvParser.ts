@@ -3,7 +3,7 @@ import type { CsvParseResult, ICsvParser } from "@/core/services/ICsvParser";
 
 export const PapaCsvParser: ICsvParser = {
   async parse(content: string): Promise<CsvParseResult> {
-    // TODO: [import-currency] Normalize imported monetary values and currency codes such as EUR without losing the original value.
+    // TODO: [currency-import] Normalize imported monetary values and currency codes such as EUR without losing the original value.
     if (!content.trim()) {
       throw new Error("El archivo está vacio.");
     }
