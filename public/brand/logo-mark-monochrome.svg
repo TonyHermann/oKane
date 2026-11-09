@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-labelledby="mark-title mark-desc">
   <title id="mark-title">oKane mark</title>
-  <desc id="mark-desc">Monochrome star mark.</desc>
-  <g id="star" transform="translate(108.5 68) scale(7.25)"><path d="M16.00 3.00 L19.17 11.63 L28.36 11.98 L21.14 17.67 L23.64 26.52 L16.00 21.40 L8.36 26.52 L10.86 17.67 L3.64 11.98 L12.83 11.63 Z" fill="#000000" stroke="none"/></g>
+  <desc id="mark-desc">Silver star mark.</desc>
+  <path d="M16.00 3.00 L19.17 11.63 L28.36 11.98 L21.14 17.67 L23.64 26.52 L16.00 21.40 L8.36 26.52 L10.86 17.67 L3.64 11.98 L12.83 11.63 Z" fill="#000000"/>
 </svg>
