@@ -9,8 +9,8 @@ third-party origins.
 - **Version:** 0.2.6
 - **Upstream:** https://github.com/botoxparty/XP.css
 - **License:** MIT — Copyright 2020 Adam Hammad, Jordan Scales
-- **Bundled as:** `src/ui/styles/base/_xp.css` (unmodified) and the webfonts it
-  declares in `src/ui/styles/base/`: `ms_sans_serif.woff2`,
+- **Bundled as:** `src/ui/styles/vendor/_xp.css` (unmodified) and the webfonts it
+  declares in `src/ui/styles/vendor/`: `ms_sans_serif.woff2`,
   `ms_sans_serif_bold.woff2`, `PerfectDOSVGA437Win.woff2`.
 - Do not edit `_xp.css` locally. Keep upstream in sync so the file stays
   replaceable.
