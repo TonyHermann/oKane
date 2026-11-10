@@ -9,7 +9,7 @@ import {
 } from "./NavbarIcons";
 
 export const Navbar = () => {
-  // TODO: [theming] Replace the theme controls with a persisted, accessible theme system and a single source of truth for tokens.
+  // TODO: [theming] Replace the theme controls with a persisted, accessible theme system owned by /settings; the navbar only reflects the active theme.
   return (
     <nav>
       <div className="nav_left">

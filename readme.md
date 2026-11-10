@@ -13,6 +13,8 @@ A local-first personal finance app. Your transactions never leave your browser.
 
 oKane runs entirely in the browser and stores everything in IndexedDB: no account, no server, no telemetry. It started as a tool I needed to understand my own spending, and it is also the project where I practise the stack I want to work in.
 
+<!-- TODO: [public-repo-publication] Add real screenshots of the main flows to this README. -->
+
 ## What it does
 
 - **Transactions** — create, edit and delete movements, with a paginated table.

@@ -19,6 +19,7 @@ interface HandleChangeProps {
   event: ChangeEvent<HTMLSelectElement>;
 }
 
+// TODO: [import-column-mapping] Style the mapping block and reject two required fields mapped to the same CSV column.
 export const ColumnMapping = ({
   requiredColumns,
   availableColumns,
