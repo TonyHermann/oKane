@@ -8,7 +8,7 @@ export class CsvNormalizer {
   }
 
   static amount(value: string): number {
-    // TODO: [currency-aware-import] Preserve signed bank amounts and expose income/expense semantics for configurable presentation.
+    // TODO: [currency-import] Preserve signed bank amounts and expose income/expense semantics for configurable presentation.
     const cleaned = value
       .replace(/[^0-9.,-]/g, "") // saca símbolos ($, €, etc)
       .replace(/\.(?=.*\.)/g, "") // saca puntos de miles (1.234.56 → 1234.56)

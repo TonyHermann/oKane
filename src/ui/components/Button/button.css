@@ -23,5 +23,5 @@ button.button-sm.button-icon {
 }
 .button-icon:hover {
   box-shadow: none !important;
-  /* TODO: Fix this !important; */
+  /* TODO: [css-ownership-migration] Remove this !important by scoping the hover shadow override instead of escalating specificity. */
 }
