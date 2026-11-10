@@ -1,6 +1,14 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { I18nProvider } from "@/ui/i18n";
 import { ASCIIConverter } from "./ASCIIConverter";
+
+const renderConverter = () =>
+  render(
+    <I18nProvider>
+      <ASCIIConverter />
+    </I18nProvider>,
+  );
 
 class FakeImage {
   width = 100;
@@ -94,14 +102,14 @@ describe("ASCIIConverter", () => {
   });
 
   it("starts with the classic preset and a width of 100", () => {
-    render(<ASCIIConverter />);
+    renderConverter();
 
     expect(screen.getByLabelText("Estilo")).toHaveValue("classic");
     expect(screen.getByLabelText("Ancho")).toHaveValue(100);
   });
 
   it("generates braille output when the braille preset is selected", async () => {
-    render(<ASCIIConverter />);
+    renderConverter();
     await loadImage();
 
     fireEvent.change(screen.getByLabelText("Estilo"), {
@@ -116,7 +124,7 @@ describe("ASCIIConverter", () => {
   });
 
   it("shows an error and blocks generation when the width is out of range", async () => {
-    render(<ASCIIConverter />);
+    renderConverter();
     await loadImage();
 
     const colsInput = screen.getByLabelText("Ancho");

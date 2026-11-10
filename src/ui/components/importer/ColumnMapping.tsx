@@ -1,4 +1,5 @@
 import type { ChangeEvent } from "react";
+import { useTranslation } from "@/ui/i18n";
 
 export type RequiredColumn =
   | "dateColumn"
@@ -26,6 +27,7 @@ export const ColumnMapping = ({
   mapping,
   onChange,
 }: ColumnMappingProps) => {
+  const { t } = useTranslation();
   const handleChange = ({ requiredColumn, event }: HandleChangeProps) => {
     onChange({
       ...mapping,
@@ -35,7 +37,7 @@ export const ColumnMapping = ({
 
   return (
     <section>
-      <h4>Mapeo de columnas</h4>
+      <h4>{t("importer.columnMapping")}</h4>
       <div className="mapping_container">
         {requiredColumns.map((requiredColumn) => (
           <div key={requiredColumn}>
@@ -48,7 +50,7 @@ export const ColumnMapping = ({
               value={mapping[requiredColumn]}
               onChange={(event) => handleChange({ requiredColumn, event })}
             >
-              <option value="">Seleccionar columna...</option>
+              <option value="">{t("importer.selectColumn")}</option>
 
               {availableColumns.map((availableColumn) => (
                 <option key={availableColumn} value={availableColumn}>

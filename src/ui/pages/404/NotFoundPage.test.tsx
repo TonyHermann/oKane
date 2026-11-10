@@ -2,6 +2,7 @@ import { userEvent } from "@testing-library/user-event";
 import { render, screen } from "@testing-library/react";
 import { BrowserRouter, useNavigate } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
+import { I18nProvider } from "@/ui/i18n";
 import { NotFoundPage } from "./NotFoundPage";
 
 vi.mock("react-router-dom", async () => {
@@ -11,7 +12,12 @@ vi.mock("react-router-dom", async () => {
 
 describe("NotFoundPage", () => {
   it("Render heading and message", () => {
-    render(<NotFoundPage />, { wrapper: BrowserRouter });
+    render(
+      <I18nProvider>
+        <NotFoundPage />
+      </I18nProvider>,
+      { wrapper: BrowserRouter },
+    );
 
     expect(screen.getByText("¡Oops!")).toBeInTheDocument();
   });
@@ -20,7 +26,12 @@ describe("NotFoundPage", () => {
     const mockNavigate = vi.fn();
     vi.mocked(useNavigate).mockReturnValue(mockNavigate);
 
-    render(<NotFoundPage />, { wrapper: BrowserRouter });
+    render(
+      <I18nProvider>
+        <NotFoundPage />
+      </I18nProvider>,
+      { wrapper: BrowserRouter },
+    );
     await userEvent.click(screen.getByRole("button"));
 
     expect(mockNavigate).toHaveBeenCalledWith("/");

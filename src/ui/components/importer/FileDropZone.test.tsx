@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
+import { I18nProvider } from "@/ui/i18n";
 import { FileDropZone } from "./FileDropZone";
 
 // Helpers
@@ -21,7 +22,11 @@ describe("FileDropZone", () => {
     const csvFile = createMockFile(csv);
 
     const onFilesAccepted = vi.fn();
-    render(<FileDropZone onFilesAccepted={onFilesAccepted} />);
+    render(
+      <I18nProvider>
+        <FileDropZone onFilesAccepted={onFilesAccepted} />
+      </I18nProvider>,
+    );
 
     const dropZone = screen.getByTestId("dropzone");
 

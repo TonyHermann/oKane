@@ -1,5 +1,6 @@
 import { useCallback, useRef, type ReactNode } from "react";
 import { createPortal } from "react-dom";
+import { useTranslation } from "@/ui/i18n";
 import useModalContext from "./context/useModalContext";
 import useRestoreFocus from "./hooks/useRestoreFocus";
 import useLockBodyScroll from "./hooks/useLockBodyScroll";
@@ -13,6 +14,7 @@ interface ModalProps {
 
 const Modal = ({ children, onClose }: ModalProps) => {
   const { modal, closeModal } = useModalContext();
+  const { t } = useTranslation();
   const modalRef = useRef<HTMLDivElement>(null);
 
   const isOpen = modal !== null;
@@ -66,7 +68,7 @@ const Modal = ({ children, onClose }: ModalProps) => {
           <div className="title-bar-controls">
             <button
               type="button"
-              aria-label="Close"
+              aria-label={t("modal.close")}
               onClick={handleCloseModal}
               className="closeBtnXP"
             />
