@@ -34,7 +34,5 @@ openspec
 odd/
 .opencode/
 
-# Documentación y contratos de agente (no son parte del producto)
-AGENTS.md
-docs/
+# Local tooling (not part of the product)
 .gga
