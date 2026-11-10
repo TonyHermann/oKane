@@ -1,9 +1,8 @@
 import { useRef, useState, type ChangeEvent, type ReactNode } from "react";
 import "./FileDropZone.css";
-import { DomainError } from "@/core/errors/DomainErrors";
+import { useTranslation } from "@/ui/i18n";
 import { FileValidator } from "@/core/services/FileValidator";
 import { useDragging } from "@/ui/hooks/useDragging";
-import { useTranslation } from "@/ui/i18n";
 
 type Props = {
   onFilesAccepted: (files: File | Array<File>) => void | Promise<void>;
@@ -39,12 +38,9 @@ export const FileDropZone = ({
     return true;
   };
 
-  const reportError = (cause: unknown) => {
-    // Domain errors carry messages that were already localized at the throw
-    // site; anything else must not leak its raw message into the UI.
-    setError(
-      cause instanceof DomainError ? cause.message : t("importer.processError"),
-    );
+  const reportError = () => {
+    // Import failures must not leak raw domain or infrastructure messages.
+    setError(t("importer.processError"));
   };
 
   const handleChanges = (files: File | Array<File>) => {
@@ -63,10 +59,12 @@ export const FileDropZone = ({
     try {
       const result = onFilesAccepted(files);
       if (result instanceof Promise) {
-        result.catch(reportError);
+        result.catch(() => {
+          reportError();
+        });
       }
-    } catch (cause: unknown) {
-      reportError(cause);
+    } catch {
+      reportError();
       return;
     }
 
