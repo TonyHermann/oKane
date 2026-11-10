@@ -18,6 +18,7 @@ import {
   type CategoryState,
 } from "@/ui/store/slices/categorySlices";
 import { getCategoryLabel } from "./categoryLabel";
+import { useFormatters, type Formatters } from "@/ui/i18n";
 
 interface TransactionRowProps {
   row: TransactionState;
@@ -25,6 +26,7 @@ interface TransactionRowProps {
   handleEdit: (id: string) => void;
   handleRemove: (id: string) => void;
   categoryLabel: string;
+  formatters: Formatters;
 }
 
 const TransactionRow = ({
@@ -33,11 +35,9 @@ const TransactionRow = ({
   handleEdit,
   handleRemove,
   categoryLabel,
+  formatters,
 }: TransactionRowProps) => {
-  const formattedAmount = new Intl.NumberFormat("es-ES", {
-    style: "currency",
-    currency: "EUR",
-  }).format(row.amount);
+  const formattedAmount = formatters.currency.format(row.amount);
 
   return (
     <tr>
@@ -45,7 +45,7 @@ const TransactionRow = ({
       <td>{row.id.slice(0, 8)}…</td>
       <td>{row.description}</td>
       <td>{formattedAmount}</td>
-      <td>{new Date(row.date).toLocaleDateString()}</td>
+      <td>{formatters.date.format(new Date(row.date))}</td>
       {/* TODO: [transaction-category-selection] Resolve the stored category against the current category index and show "Categoría eliminada" for stale references. */}
       <td>{categoryLabel}</td>
       <td>
@@ -98,6 +98,7 @@ export const TransactionList = ({
 
   const dispatch = useAppDispatch();
   const { openModal } = useModalContext();
+  const formatters = useFormatters();
 
   const handleEdit = (id: string) => {
     const transaction = transactions.find((item) => item.id === id);
@@ -179,6 +180,7 @@ export const TransactionList = ({
                 handleEdit={handleEdit}
                 handleRemove={handleRemove}
                 categoryLabel={toCategoryLabel(transaction.categories)}
+                formatters={formatters}
               />
             )}
           </Table.Body>
