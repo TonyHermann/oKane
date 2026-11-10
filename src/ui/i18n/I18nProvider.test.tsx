@@ -1,6 +1,8 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { I18nProvider } from "./I18nProvider";
+import { en } from "./locales/en";
+import { es } from "./locales/es";
 import { useTranslation } from "./useTranslation";
 
 const Probe = () => {
@@ -14,7 +16,10 @@ const Probe = () => {
       </span>
       <span data-testid="locale">{locale}</span>
       <button type="button" onClick={() => setLocale("es")}>
-        change
+        switch to es
+      </button>
+      <button type="button" onClick={() => setLocale("en")}>
+        switch to en
       </button>
     </div>
   );
@@ -75,11 +80,12 @@ describe("I18nProvider", () => {
   });
 
   it("renders es messages and sets document.documentElement.lang to es", () => {
-    setNavigatorLanguage("en-US");
+    setNavigatorLanguage("es-AR");
 
     renderProbe();
 
     expect(screen.getByText("Inicio")).toBeInTheDocument();
+    expect(screen.getByTestId("locale")).toHaveTextContent("es");
     expect(document.documentElement.lang).toBe("es");
   });
 
@@ -94,8 +100,8 @@ describe("I18nProvider", () => {
   });
 
   it("falls back to es when the stored locale is unsupported", () => {
-    window.localStorage.setItem("okane.locale", "en");
-    setNavigatorLanguage("en-US");
+    window.localStorage.setItem("okane.locale", "fr");
+    setNavigatorLanguage("fr-FR");
 
     renderProbe();
 
@@ -105,17 +111,44 @@ describe("I18nProvider", () => {
   });
 
   it("writes the active locale to storage when setLocale is called", () => {
-    setNavigatorLanguage("en-US");
+    setNavigatorLanguage("es-AR");
 
     renderProbe();
-    fireEvent.click(screen.getByRole("button", { name: "change" }));
+    fireEvent.click(screen.getByRole("button", { name: "switch to es" }));
 
     expect(window.localStorage.getItem("okane.locale")).toBe("es");
     expect(screen.getByText("Inicio")).toBeInTheDocument();
   });
 
+  it("switching to en updates text, html lang and storage", () => {
+    setNavigatorLanguage("es-AR");
+
+    renderProbe();
+    fireEvent.click(screen.getByRole("button", { name: "switch to en" }));
+
+    expect(screen.getByText("Home")).toBeInTheDocument();
+    expect(screen.getByTestId("locale")).toHaveTextContent("en");
+    expect(document.documentElement.lang).toBe("en");
+    expect(window.localStorage.getItem("okane.locale")).toBe("en");
+  });
+
+  it("switching back to es restores Spanish", () => {
+    setNavigatorLanguage("es-AR");
+
+    renderProbe();
+    fireEvent.click(screen.getByRole("button", { name: "switch to en" }));
+    fireEvent.click(screen.getByRole("button", { name: "switch to es" }));
+
+    expect(screen.getByText("Inicio")).toBeInTheDocument();
+    expect(document.documentElement.lang).toBe("es");
+  });
+
+  it("en has the same own keys as es", () => {
+    expect(Object.keys(en).sort()).toEqual(Object.keys(es).sort());
+  });
+
   it("interpolates named parameters", () => {
-    setNavigatorLanguage("en-US");
+    setNavigatorLanguage("es-AR");
 
     renderProbe();
 

@@ -7,6 +7,8 @@ export const es = {
   "settings.title": "Configuración",
   "settings.general": "General",
   "settings.ascii": "Panel ASCII",
+  "settings.languageRegion": "Idioma y región",
+  "settings.language": "Idioma",
   "settings.backHome": "← Volver al inicio",
   "settings.general.placeholder": "Configuración general - en construcción 🚧",
   "common.rowCount": "{count} filas",

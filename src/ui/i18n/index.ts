@@ -1,3 +1,4 @@
+export { en } from "./locales/en";
 export { es } from "./locales/es";
 export type { MessageKey } from "./locales/es";
 export {

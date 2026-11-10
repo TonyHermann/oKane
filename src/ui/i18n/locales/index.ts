@@ -1,9 +1,10 @@
+import { en } from "./en";
 import { es, type MessageKey } from "./es";
 
-export { es };
+export { en, es };
 export type { MessageKey };
 
-export const SUPPORTED_LOCALES = ["es"] as const;
+export const SUPPORTED_LOCALES = ["es", "en"] as const;
 
 export type Locale = (typeof SUPPORTED_LOCALES)[number];
 
@@ -14,6 +15,7 @@ export const catalogs: Record<
   Partial<Record<MessageKey, string>>
 > = {
   es,
+  en,
 };
 
 export const isLocale = (value: unknown): value is Locale =>
