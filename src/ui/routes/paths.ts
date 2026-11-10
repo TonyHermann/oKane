@@ -8,5 +8,6 @@ export const PATHS = {
   SETTINGS: "/settings",
   SETTINGS_GENERAL: "/settings/general",
   SETTINGS_ASCII: "/settings/ascii",
+  SETTINGS_LANGUAGE: "/settings/language",
   BUDGET: "/budget",
 } as const;

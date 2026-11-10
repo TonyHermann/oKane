@@ -14,6 +14,7 @@ import type {
   CategoryState,
 } from "@/ui/store/slices/categorySlices";
 import { ModalProvider } from "../modal/context/modalContext";
+import { I18nProvider } from "@/ui/i18n";
 import { TransactionList } from "./TransactionList";
 
 const initialTransactionsState: TransactionsState = {
@@ -55,9 +56,11 @@ const makeStore = (
 
 const renderList = (state: PreloadedState) => {
   const Wrapper = ({ children }: { children: ReactNode }) => (
-    <ModalProvider>
-      <Provider store={makeStore(state)}>{children}</Provider>
-    </ModalProvider>
+    <I18nProvider>
+      <ModalProvider>
+        <Provider store={makeStore(state)}>{children}</Provider>
+      </ModalProvider>
+    </I18nProvider>
   );
 
   return render(<TransactionList />, { wrapper: Wrapper });

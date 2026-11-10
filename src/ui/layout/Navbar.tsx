@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { PATHS } from "../routes/paths";
+import { useTranslation } from "../i18n";
 import {
   HomeIcon,
   MoneyIcon,
@@ -10,6 +11,8 @@ import {
 
 export const Navbar = () => {
   // TODO: [theming] Replace the theme controls with a persisted, accessible theme system owned by /settings; the navbar only reflects the active theme.
+  const { t } = useTranslation();
+
   return (
     <nav>
       <div className="nav_left">
@@ -18,7 +21,7 @@ export const Navbar = () => {
       <div className="nav_right">
         <div className="changeThemeButton">
           <p className="changeThemeLabel">
-            <RefreshIcon /> Cambiar tema
+            <RefreshIcon /> {t("nav.changeTheme")}
           </p>
           <div className="themeColor gray" />
           <div className="themeColor orange" />
@@ -27,27 +30,27 @@ export const Navbar = () => {
         <div className="buttonWithIcon">
           <Link to={PATHS.HOME}>
             <HomeIcon />
-            スタートページ
+            {t("nav.home")}
           </Link>
         </div>
         <div className="buttonWithIcon">
           <Link to={PATHS.ADMIN_CATEGORIES}>
             <SlidersIcon />
-            Administrar
+            {t("nav.admin")}
           </Link>
         </div>
         <div className="buttonWithIcon">
           <Link to={PATHS.BUDGET}>
             <MoneyIcon />
-            Presupuesto
+            {t("nav.budget")}
           </Link>
         </div>
         <div className="buttonWithIcon">
           <Link
             to={PATHS.SETTINGS}
             className="iconOnly"
-            aria-label="Configuración"
-            title="Configuración"
+            aria-label={t("nav.settings")}
+            title={t("nav.settings")}
           >
             <SettingsIcon />
           </Link>
