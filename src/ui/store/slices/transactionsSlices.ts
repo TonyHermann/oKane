@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { ImportTransactionActions } from "@/adapters/ImportTransactionActions";
 import { transactionActions } from "@/adapters/TransactionActions";
+import type { AppErrorCode } from "@/core/errors/AppErrorCode";
 import type { CategoryState } from "./categorySlices";
 import { applyAllCategorizationRules } from "./categorizationRulesSlices";
 import {
@@ -25,7 +26,7 @@ export type TransactionState = CreateTransactionState & {
 export interface TransactionsState {
   items: TransactionState[];
   loading: boolean;
-  error: string | null;
+  error: AppErrorCode | null;
   loadedAt: number | null;
 }
 
@@ -115,9 +116,9 @@ const transactionsSlice = createSlice({
         state.items = action.payload.items;
         state.loadedAt = action.payload.loadedAt;
       })
-      .addCase(loadTransactions.rejected, (state, action) => {
+      .addCase(loadTransactions.rejected, (state) => {
         state.loading = false;
-        state.error = action.error.message ?? "Error al cargar transactions";
+        state.error = "DATA_LOAD_FAILED";
       })
       .addCase(saveTransaction.pending, (state) => {
         state.loading = true;
@@ -128,10 +129,9 @@ const transactionsSlice = createSlice({
         state.items.push(action.payload);
         if (state.loadedAt !== null) state.loadedAt = new Date().getTime();
       })
-      .addCase(saveTransaction.rejected, (state, action) => {
+      .addCase(saveTransaction.rejected, (state) => {
         state.loading = false;
-        state.error =
-          action.error.message ?? "Error al guardar una transaction.";
+        state.error = "DATA_SAVE_FAILED";
       })
       .addCase(updateTransaction.pending, (state) => {
         state.loading = true;
@@ -150,10 +150,9 @@ const transactionsSlice = createSlice({
 
         if (state.loadedAt !== null) state.loadedAt = new Date().getTime();
       })
-      .addCase(updateTransaction.rejected, (state, action) => {
+      .addCase(updateTransaction.rejected, (state) => {
         state.loading = false;
-        state.error =
-          action.error.message ?? "Error al editar una transaction.";
+        state.error = "DATA_UPDATE_FAILED";
       })
       .addCase(removeTransaction.pending, (state) => {
         state.loading = true;
@@ -164,10 +163,9 @@ const transactionsSlice = createSlice({
         state.items = state.items.filter((item) => item.id !== action.payload);
         if (state.loadedAt !== null) state.loadedAt = new Date().getTime();
       })
-      .addCase(removeTransaction.rejected, (state, action) => {
+      .addCase(removeTransaction.rejected, (state) => {
         state.loading = false;
-        state.error =
-          action.error.message ?? "Error al eliminar una transaction.";
+        state.error = "DATA_DELETE_FAILED";
       })
       .addCase(importTransactions.pending, (state) => {
         state.loading = true;
@@ -178,10 +176,9 @@ const transactionsSlice = createSlice({
         state.items.push(...action.payload.saved);
         if (state.loadedAt !== null) state.loadedAt = new Date().getTime();
       })
-      .addCase(importTransactions.rejected, (state, action) => {
+      .addCase(importTransactions.rejected, (state) => {
         state.loading = false;
-        state.error =
-          action.error.message ?? "Error al importar transacciones.";
+        state.error = "TRANSACTIONS_IMPORT_FAILED";
       })
       .addCase(applyAllCategorizationRules.fulfilled, (state, action) => {
         // Cross-slice reaction: applying rules mutates transactions in

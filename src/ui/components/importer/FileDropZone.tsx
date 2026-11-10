@@ -1,5 +1,6 @@
 import { useRef, useState, type ChangeEvent, type ReactNode } from "react";
 import "./FileDropZone.css";
+import { DomainError } from "@/core/errors/DomainErrors";
 import { FileValidator } from "@/core/services/FileValidator";
 import { useDragging } from "@/ui/hooks/useDragging";
 import { useTranslation } from "@/ui/i18n";
@@ -18,7 +19,7 @@ export const FileDropZone = ({
   children,
 }: Props) => {
   const { t } = useTranslation();
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [fileOrFiles, setFiles] = useState<File | Array<File> | null>(null);
   const elementRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -27,11 +28,11 @@ export const FileDropZone = ({
 
   const validateFile = (file: File): boolean => {
     if (maxFileSize && !isValidSize(maxFileSize, file.size)) {
-      setError(new Error(t("importer.fileTooLarge")));
+      setError(t("importer.fileTooLarge"));
       return false;
     }
     if (validFileTypes && !isValidType(validFileTypes, file.type)) {
-      setError(new Error(t("importer.invalidType")));
+      setError(t("importer.invalidType"));
       return false;
     }
     setError(null);
@@ -39,10 +40,10 @@ export const FileDropZone = ({
   };
 
   const reportError = (cause: unknown) => {
+    // Domain errors carry messages that were already localized at the throw
+    // site; anything else must not leak its raw message into the UI.
     setError(
-      cause instanceof Error
-        ? cause
-        : new Error(t("importer.processError")),
+      cause instanceof DomainError ? cause.message : t("importer.processError"),
     );
   };
 
@@ -97,7 +98,7 @@ export const FileDropZone = ({
         <p>{t("importer.dropHere")}</p>
         <p className="FileDropZone__hint">{t("importer.hint")}</p>
       </div>
-      {error && <div className="FileDropZone__error">{error.message}</div>}
+      {error && <div className="FileDropZone__error">{error}</div>}
       {fileOrFiles && (
         <div className="FileDropZone__files">
           {fileOrFiles instanceof Array

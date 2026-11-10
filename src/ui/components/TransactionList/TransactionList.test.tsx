@@ -182,7 +182,7 @@ describe("TransactionList", () => {
     expect(screen.getByText("Cargando…")).toBeInTheDocument();
   });
 
-  it("should render 'Error al cargar categorías' text on categories field if error !== null", () => {
+  it("should render the translated load error text on categories field if error !== null", () => {
     const categoriaActual: CategoryState = {
       id: "cat-1",
       name: "Comida (old)",
@@ -208,7 +208,7 @@ describe("TransactionList", () => {
     const categoriesState: CategoriesState = {
       items: [categoriaActual],
       loading: true,
-      error: "Error al cargar categorías, amigo!",
+      error: "DATA_LOAD_FAILED",
       loadedAt: null,
     };
 
@@ -219,7 +219,7 @@ describe("TransactionList", () => {
 
     expect(screen.queryByText("Comida (old)")).not.toBeInTheDocument();
     expect(
-      screen.getByText("Error al cargar categorías, amigo!"),
+      screen.getByText("No se pudieron cargar los datos."),
     ).toBeInTheDocument();
   });
 });

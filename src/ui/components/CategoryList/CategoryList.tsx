@@ -5,7 +5,7 @@ import { Button } from "../Button/Button";
 import { EditIcon } from "../Icons/EditIcon";
 import { RemoveIcon } from "../Icons/RemoveIcon";
 import { useAppDispatch, useAppSelector } from "@/ui/store/hooks";
-import { usePlural, useTranslation } from "@/ui/i18n";
+import { useErrorMessage, usePlural, useTranslation } from "@/ui/i18n";
 import {
   loadCategories,
   removeCategory,
@@ -59,6 +59,7 @@ const CategoryList = ({ onEdit }: CategoryListProps) => {
   const categories = useAppSelector((state) => state.categories.items);
   const loading = useAppSelector((state) => state.categories.loading);
   const error = useAppSelector((state) => state.categories.error);
+  const getErrorMessage = useErrorMessage();
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -80,9 +81,7 @@ const CategoryList = ({ onEdit }: CategoryListProps) => {
   if (error) {
     return (
       <div>
-        <p style={{ color: "red" }}>
-          {t("categories.error", { message: error })}
-        </p>
+        <p style={{ color: "red" }}>{getErrorMessage(error)}</p>
       </div>
     );
   }

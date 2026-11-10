@@ -41,12 +41,8 @@ export const CreateCategoryForm = () => {
     try {
       await dispatch(saveCategory({ name: result.data.name })).unwrap();
       closeModal();
-    } catch (error: unknown) {
-      setSubmitError(
-        error instanceof Error
-          ? error.message
-          : t("categories.form.saveError"),
-      );
+    } catch {
+      setSubmitError(t("categories.form.saveError"));
     }
   };
 

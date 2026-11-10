@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { CategoryActions } from "@/adapters/CategoryActions";
+import type { AppErrorCode } from "@/core/errors/AppErrorCode";
 import {
   createCategory,
   toCategory,
@@ -20,7 +21,7 @@ export interface CreateCategoryState {
 export interface CategoriesState {
   items: CategoryState[];
   loading: boolean;
-  error: string | null;
+  error: AppErrorCode | null;
   loadedAt: number | null;
 }
 
@@ -96,9 +97,9 @@ const categoriesSlice = createSlice({
         state.items = action.payload.items;
         state.loadedAt = action.payload.loadedAt;
       })
-      .addCase(loadCategories.rejected, (state, action) => {
+      .addCase(loadCategories.rejected, (state) => {
         state.loading = false;
-        state.error = action.error.message ?? "Error al cargar categorías.";
+        state.error = "DATA_LOAD_FAILED";
       })
       .addCase(saveCategory.pending, (state) => {
         state.loading = true;
@@ -109,9 +110,9 @@ const categoriesSlice = createSlice({
         state.items.push(action.payload);
         if (state.loadedAt !== null) state.loadedAt = new Date().getTime();
       })
-      .addCase(saveCategory.rejected, (state, action) => {
+      .addCase(saveCategory.rejected, (state) => {
         state.loading = false;
-        state.error = action.error.message ?? "Error al guardar una categoría.";
+        state.error = "DATA_SAVE_FAILED";
       })
       .addCase(updateCategory.pending, (state) => {
         state.loading = true;
@@ -129,9 +130,9 @@ const categoriesSlice = createSlice({
         }
         if (state.loadedAt !== null) state.loadedAt = new Date().getTime();
       })
-      .addCase(updateCategory.rejected, (state, action) => {
+      .addCase(updateCategory.rejected, (state) => {
         state.loading = false;
-        state.error = action.error.message ?? "Error al editar una categoría.";
+        state.error = "DATA_UPDATE_FAILED";
       })
       .addCase(removeCategory.pending, (state) => {
         state.loading = true;
@@ -142,10 +143,9 @@ const categoriesSlice = createSlice({
         state.items = state.items.filter((item) => item.id !== action.payload);
         if (state.loadedAt !== null) state.loadedAt = new Date().getTime();
       })
-      .addCase(removeCategory.rejected, (state, action) => {
+      .addCase(removeCategory.rejected, (state) => {
         state.loading = false;
-        state.error =
-          action.error.message ?? "Error al eliminar una categoría.";
+        state.error = "DATA_DELETE_FAILED";
       });
   },
 });

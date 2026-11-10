@@ -110,7 +110,7 @@ export const Importer = () => {
         </button>
       )}
 
-      {error && <p role="alert">{error.message}</p>}
+      {error && <p role="alert">{t("errors.importFailed")}</p>}
 
       {rows && rows.length > 0 && (
         <>

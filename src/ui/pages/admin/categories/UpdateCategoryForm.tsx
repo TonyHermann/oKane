@@ -44,12 +44,8 @@ export const UpdateCategoryForm = ({ category }: UpdateCategoryFormProps) => {
         updateCategory({ ...category, name: result.data.name }),
       ).unwrap();
       closeModal();
-    } catch (error: unknown) {
-      setSubmitError(
-        error instanceof Error
-          ? error.message
-          : t("categories.form.updateError"),
-      );
+    } catch {
+      setSubmitError(t("categories.form.updateError"));
     }
   };
 

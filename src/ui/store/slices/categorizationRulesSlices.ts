@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { CategorizationRuleActions } from "@/adapters/CategorizationRuleActions";
+import type { AppErrorCode } from "@/core/errors/AppErrorCode";
 import type { RuleApplicationPreview } from "@/core/use-cases/rules/PreviewRulesApplication";
 import {
   createCategorizationRule,
@@ -27,7 +28,7 @@ export interface CreateCategorizationRuleState {
 interface CategorizationRulesState {
   items: CategorizationRuleState[];
   loading: boolean;
-  error: string | null;
+  error: AppErrorCode | null;
   loadedAt: number | null;
 }
 
@@ -145,9 +146,9 @@ const categorizationRulesSlice = createSlice({
         state.items = action.payload.items;
         state.loadedAt = action.payload.loadedAt;
       })
-      .addCase(loadCategorizationRules.rejected, (state, action) => {
+      .addCase(loadCategorizationRules.rejected, (state) => {
         state.loading = false;
-        state.error = action.error.message ?? "Error al cargar las rules.";
+        state.error = "DATA_LOAD_FAILED";
       })
       .addCase(saveCategorizationRule.fulfilled, (state, action) => {
         state.loading = false;
@@ -158,9 +159,9 @@ const categorizationRulesSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(saveCategorizationRule.rejected, (state, action) => {
+      .addCase(saveCategorizationRule.rejected, (state) => {
         state.loading = false;
-        state.error = action.error.message ?? "Error al guardar la rule.";
+        state.error = "VALIDATION_FAILED";
       })
       .addCase(removeCategorizationRule.fulfilled, (state, action) => {
         state.loading = false;
@@ -171,9 +172,9 @@ const categorizationRulesSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(removeCategorizationRule.rejected, (state, action) => {
+      .addCase(removeCategorizationRule.rejected, (state) => {
         state.loading = false;
-        state.error = action.error.message ?? "Error al eliminar la rule.";
+        state.error = "DATA_DELETE_FAILED";
       })
       .addCase(applyAllCategorizationRules.pending, (state) => {
         state.loading = true;
@@ -182,9 +183,9 @@ const categorizationRulesSlice = createSlice({
       .addCase(applyAllCategorizationRules.fulfilled, (state) => {
         state.loading = false;
       })
-      .addCase(applyAllCategorizationRules.rejected, (state, action) => {
+      .addCase(applyAllCategorizationRules.rejected, (state) => {
         state.loading = false;
-        state.error = action.error.message ?? "Error al aplicar las rules.";
+        state.error = "RULES_APPLY_FAILED";
       });
   },
 });
