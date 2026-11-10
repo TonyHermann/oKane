@@ -44,6 +44,12 @@ const AsciiPage = lazy(() =>
   })),
 );
 
+const LanguagePage = lazy(() =>
+  import("../pages/settings/LanguagePage").then((m) => ({
+    default: m.LanguagePage,
+  })),
+);
+
 const BudgetPage = lazy(() =>
   import("../pages/budget/BudgetPage").then((m) => ({ default: m.BudgetPage })),
 );
@@ -134,6 +140,14 @@ export const AppRoutes = () => {
                 element={
                   <PageWrapper>
                     <AsciiPage />
+                  </PageWrapper>
+                }
+              />
+              <Route
+                path="language"
+                element={
+                  <PageWrapper>
+                    <LanguagePage />
                   </PageWrapper>
                 }
               />
