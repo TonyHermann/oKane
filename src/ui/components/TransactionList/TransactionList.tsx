@@ -158,7 +158,7 @@ export const TransactionList = ({ title }: TransactionListProps) => {
   const toCategoryLabel = (stored: CategoryState | null) => {
     if (categoriesError) return categoriesError;
     if (categoriesLoadedAt === null) return t("transactions.categoryLoading");
-    return getCategoryLabel(stored, categoriesById);
+    return getCategoryLabel(stored, categoriesById, t);
   };
 
   return (

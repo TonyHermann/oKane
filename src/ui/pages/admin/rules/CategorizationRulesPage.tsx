@@ -10,12 +10,15 @@ import {
   saveCategorizationRule,
 } from "@/ui/store/slices/categorizationRulesSlices";
 import { loadTransactions } from "@/ui/store/slices/transactionsSlices";
+import { usePlural, useTranslation } from "@/ui/i18n";
 import { ApplyRulesConfirmation } from "./ApplyRulesConfirmation";
 import "./CategorizationRulesPage.css";
 
 export const CategorizationRulesPage = () => {
   const dispatch = useAppDispatch();
   const { openModal, closeModal } = useModalContext();
+  const { t } = useTranslation();
+  const plural = usePlural();
   const categories = useAppSelector((state) => state.categories.items);
   const transactions = useAppSelector((state) => state.transactions.items);
   const { items: rules, loading, error } = useAppSelector(
@@ -73,7 +76,10 @@ export const CategorizationRulesPage = () => {
 
     if (applyAllCategorizationRules.fulfilled.match(result)) {
       setAppliedMessage(
-        `Se actualizaron ${result.payload.length} transacciones.`,
+        plural(
+          { one: "rules.applied.one", other: "rules.applied.other" },
+          result.payload.length,
+        ),
       );
     }
   };
@@ -84,7 +90,7 @@ export const CategorizationRulesPage = () => {
     if (!previewCategorizationRules.fulfilled.match(result)) return;
 
     openModal({
-      title: "Aplicar reglas de categorización",
+      title: t("rules.applyModalTitle"),
       content: (
         <ApplyRulesConfirmation
           preview={result.payload}
@@ -98,18 +104,20 @@ export const CategorizationRulesPage = () => {
   return (
     <div className="window categorization-rules-page">
       <div className="title-bar">
-        <div className="title-bar-text">Administrador de Rules</div>
+        <div className="title-bar-text">{t("rules.adminTitle")}</div>
       </div>
       <div className="window-body">
-        <p>Las rules se aplican en orden. Si coinciden varias, gana la primera.</p>
+        <p>{t("rules.description")}</p>
         <form className="categorization-rules-form" onSubmit={handleSubmit}>
-          <label htmlFor="rule-descriptions">Descripciones</label>
+          <label htmlFor="rule-descriptions">
+            {t("rules.descriptionsLabel")}
+          </label>
            <select
              id="rule-descriptions"
              value={selectedDescription}
              onChange={handleDescriptionChange}
            >
-             <option value="">Seleccioná una descripción</option>
+             <option value="">{t("rules.selectDescription")}</option>
              {availableDescriptions.map((description) => (
                <option key={description} value={description}>
                  {description}
@@ -119,14 +127,16 @@ export const CategorizationRulesPage = () => {
            {selectedDescriptions.length > 0 && (
              <div
                className="categorization-rules-selected-descriptions"
-               aria-label="Descripciones seleccionadas"
+               aria-label={t("rules.selectedDescriptionsAria")}
              >
                {selectedDescriptions.map((description) => (
                  <span className="categorization-rules-description-tag" key={description}>
                    <span>{description}</span>
                    <button
                      type="button"
-                     aria-label={`Quitar descripción ${description}`}
+                     aria-label={t("rules.removeDescriptionAria", {
+                       description,
+                     })}
                      onClick={() =>
                        setSelectedDescriptions((currentDescriptions) =>
                          currentDescriptions.filter((item) => item !== description),
@@ -139,13 +149,13 @@ export const CategorizationRulesPage = () => {
                ))}
              </div>
            )}
-          <label htmlFor="rule-category">Categoría</label>
+          <label htmlFor="rule-category">{t("rules.categoryLabel")}</label>
           <select
             id="rule-category"
             value={categoryId}
             onChange={(event) => setCategoryId(event.target.value)}
           >
-            <option value="">Seleccioná una categoría</option>
+            <option value="">{t("rules.selectCategory")}</option>
             {categories.map((category) => (
               <option key={category.id} value={category.id}>
                 {category.name}
@@ -159,14 +169,14 @@ export const CategorizationRulesPage = () => {
                 loading || selectedDescriptions.length === 0 || !categoryId
               }
             >
-              Añadir rule
+              {t("rules.addButton")}
             </button>
             <button
               type="button"
               disabled={loading}
               onClick={handleApplyAll}
             >
-              Aplicar reglas
+              {t("rules.applyButton")}
             </button>
           </div>
         </form>
@@ -174,7 +184,7 @@ export const CategorizationRulesPage = () => {
         {appliedMessage && <p className="categorization-rules-applied">{appliedMessage}</p>}
         {error && <p role="alert">{error}</p>}
         {rules.length === 0 ? (
-          <p>No hay rules registradas.</p>
+          <p>{t("rules.empty")}</p>
         ) : (
           <ol className="categorization-rules-list">
             {rules.map((rule) => (
@@ -188,7 +198,7 @@ export const CategorizationRulesPage = () => {
                     dispatch(removeCategorizationRule(rule.id));
                   }}
                 >
-                  Eliminar
+                  {t("common.remove")}
                 </button>
               </li>
             ))}
