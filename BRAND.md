@@ -2,6 +2,7 @@
 
 Source masters: `oKane_Logo_v9.psd` (horizontal) and `oKane_Logo_Vertical_v3.psd` (vertical), both kept outside the repository.
 Preview: `npm run dev` → `/brand/preview.html`.
+Automated build: `scripts/brand/AGENTS.md` (`npm run brand:bootstrap`, `npm run brand:build`, `npm run brand:check`).
 
 ## Assets
 
@@ -78,7 +79,15 @@ Keep at least **half the star height** free around the lockup. At native size th
 
 ## Regeneration
 
-The pipeline used:
+```bash
+npm run brand:bootstrap
+BRAND_PSD_HORIZONTAL="$HOME/Documentos/oKane_Logo_v9.psd" \
+BRAND_PSD_VERTICAL="$HOME/Documentos/oKane_Logo_Vertical_v3.psd" \
+npm run brand:build
+npm run brand:check
+```
+
+The contract is in `scripts/brand/AGENTS.md`. The pipeline does:
 
 1. Extract the PSD layers from both masters (`oKane_Logo_v9.psd` and `oKane_Logo_Vertical_v3.psd`).
 2. Rebuild each transparent lockup from its non-background layers.

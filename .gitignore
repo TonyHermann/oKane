@@ -36,3 +36,5 @@ odd/
 
 # Local tooling (not part of the product)
 .gga
+
+.brand-venv/

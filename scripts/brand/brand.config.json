@@ -1,0 +1,54 @@
+{
+  "outputDir": "public/brand",
+  "previewFile": "public/brand/preview.html",
+  "markTemplates": {
+    "full": "scripts/brand/templates/logo-mark.svg",
+    "black": "scripts/brand/templates/logo-mark-monochrome.svg",
+    "white": "scripts/brand/templates/logo-mark-monochrome-white.svg"
+  },
+  "japanese": {
+    "font": "env:BRAND_JP_FONT",
+    "fallbackFont": "/usr/share/fonts/opentype/noto/NotoSerifCJK-Black.ttc",
+    "fontIndex": 0
+  },
+  "raster": {
+    "markSizes": [512, 256, 128, 64, 48, 32, 16],
+    "faviconSizes": [16, 32, 48],
+    "appleTouchSize": 180,
+    "appleTouchMarkSize": 140,
+    "ogSize": [1200, 630],
+    "ogLockupSize": [900, 321],
+    "background": "#f6f7fb"
+  },
+  "targets": [
+    {
+      "key": "horizontal",
+      "psd": "env:BRAND_PSD_HORIZONTAL",
+      "output": "logo-lockup",
+      "canvas": [1050, 375],
+      "layers": {
+        "wordmark": "oKane",
+        "star": "favicon-star",
+        "japanese": "おかね"
+      },
+      "compositeLayers": ["oKane", "favicon-star", "おかね"]
+    },
+    {
+      "key": "vertical",
+      "psd": "env:BRAND_PSD_VERTICAL",
+      "output": "logo-lockup-vertical",
+      "canvas": [716, 933],
+      "layers": {
+        "wordmark": "oKane",
+        "star": "favicon-star",
+        "japanese": "おかね"
+      },
+      "compositeLayers": ["Rectangle 1", "oKane", "favicon-star", "おかね"],
+      "frame": {
+        "stroke": 16,
+        "radius": 40,
+        "inset": 8
+      }
+    }
+  ]
+}

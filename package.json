@@ -9,7 +9,10 @@
     "preview": "vite preview",
     "test": "vitest",
     "lint": "eslint src vite.config.ts vitest.config.ts --ext .ts,.tsx,.js,.jsx",
-    "typecheck": "tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.node.json --noEmit"
+    "typecheck": "tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.node.json --noEmit",
+    "brand:bootstrap": "python3 -m venv .brand-venv && .brand-venv/bin/pip install -r scripts/brand/requirements.txt",
+    "brand:build": "bash scripts/brand/build.sh",
+    "brand:check": "bash scripts/brand/build.sh --check"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.3",

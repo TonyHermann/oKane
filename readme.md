@@ -90,6 +90,7 @@ The logo type uses Vahika by Raymond Larabie (CC0 1.0) and Noto Serif CJK JP (SI
 Horizontal: [`logo-lockup.svg`](public/brand/logo-lockup.svg) · [`logo-lockup.png`](public/brand/logo-lockup.png)
 Vertical: [`logo-lockup-vertical.svg`](public/brand/logo-lockup-vertical.svg) · [`logo-lockup-vertical.png`](public/brand/logo-lockup-vertical.png)
 Preview: [`public/brand/preview.html`](public/brand/preview.html)
+Regenerate: [`scripts/brand/AGENTS.md`](scripts/brand/AGENTS.md) · `npm run brand:build`
 
 ## License
 
