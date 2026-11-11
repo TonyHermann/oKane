@@ -53,7 +53,7 @@ export const CreateCategoryForm = () => {
   return (
     <form onSubmit={handleSubmit}>
       <div>
-        <label htmlFor="Name">{t("categories.form.nameLabel")}</label>
+        <label htmlFor="name">{t("categories.form.nameLabel")}</label>
         <input
           type="text"
           id="name"
