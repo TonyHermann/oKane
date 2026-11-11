@@ -68,15 +68,14 @@ export const Importer = () => {
   };
 
   const handleFilesAccepted = async (files: File | Array<File>) => {
-    if (Array.isArray(files)) {
-      throw new ValidationError(t("importer.onlyOneFile"), "file");
-    }
+    const file = Array.isArray(files) ? files[0] : files;
+    if (!file) return;
 
     setError(null);
-    setFiles(files);
+    setFiles(file);
 
     try {
-      const content = await FileReaderService.readAsText(files);
+      const content = await FileReaderService.readAsText(file);
       const parsed = await PapaCsvParser.parse(content);
       setRows(parsed.rows);
     } catch (cause: unknown) {
@@ -102,6 +101,7 @@ export const Importer = () => {
         <FileDropZone
           onFilesAccepted={handleFilesAccepted}
           maxFileSize={200000}
+          maxFiles={1}
           validFileTypes={["text/csv", "text/plain"]}
         />
       ) : (

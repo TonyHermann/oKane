@@ -109,4 +109,21 @@ describe("Table", () => {
     expect(screen.getByText("Alpha")).toBeInTheDocument();
     expect(screen.getByText("Página 1 de 1")).toBeInTheDocument();
   });
+
+  it("gives each row checkbox a distinct accessible name", () => {
+    renderTable();
+
+    expect(
+      screen.getByRole("checkbox", { name: "Seleccionar todas las filas" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("checkbox", { name: "Seleccionar fila a" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("checkbox", { name: "Seleccionar fila b" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("checkbox", { name: "Seleccionar fila" }),
+    ).not.toBeInTheDocument();
+  });
 });

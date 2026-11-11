@@ -26,6 +26,7 @@ export const es = {
   "table.selected.one": "{count} fila seleccionada",
   "table.selected.other": "{count} filas seleccionadas",
   "table.selectRow": "Seleccionar fila",
+  "table.selectRowNamed": "Seleccionar fila {id}",
   "table.selectAll": "Seleccionar todas las filas",
   "modal.close": "Cerrar",
   "footer.developedBy": "Desarrollado por",

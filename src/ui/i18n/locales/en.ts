@@ -28,6 +28,7 @@ export const en: Record<MessageKey, string> = {
   "table.selected.one": "{count} row selected",
   "table.selected.other": "{count} rows selected",
   "table.selectRow": "Select row",
+  "table.selectRowNamed": "Select row {id}",
   "table.selectAll": "Select all rows",
   "modal.close": "Close",
   "footer.developedBy": "Developed by",
