@@ -1,8 +1,9 @@
 import type { ReactNode } from "react";
+import styles from "./Navbar.module.css";
 
 const Icon = ({ children }: { children: ReactNode }) => (
   <svg
-    className="nav-icon"
+    className={styles.navIcon}
     viewBox="0 0 24 24"
     aria-hidden="true"
     focusable="false"
