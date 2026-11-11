@@ -5,6 +5,7 @@ import { Button } from "../Button/Button";
 import { EditIcon } from "../Icons/EditIcon";
 import { RemoveIcon } from "../Icons/RemoveIcon";
 import { useAppDispatch, useAppSelector } from "@/ui/store/hooks";
+import { usePlural, useTranslation } from "@/ui/i18n";
 import {
   loadCategories,
   removeCategory,
@@ -19,6 +20,8 @@ interface CategoryRowProps {
 }
 
 const CategoryRow = ({ row, index, onEdit, onRemove }: CategoryRowProps) => {
+  const { t } = useTranslation();
+
   return (
     <>
       <Table.SelectRow row={row} index={index} />
@@ -30,14 +33,14 @@ const CategoryRow = ({ row, index, onEdit, onRemove }: CategoryRowProps) => {
             variant="icon"
             size="sm"
             icon={<EditIcon />}
-            label="Editar"
+            label={t("common.edit")}
             onClick={() => onEdit(row)}
           />
           <Button
             variant="icon"
             size="sm"
             icon={<RemoveIcon />}
-            label="Eliminar"
+            label={t("common.remove")}
             onClick={() => onRemove(row.id)}
           />
         </div>
@@ -51,6 +54,8 @@ interface CategoryListProps {
 }
 
 const CategoryList = ({ onEdit }: CategoryListProps) => {
+  const { t } = useTranslation();
+  const plural = usePlural();
   const categories = useAppSelector((state) => state.categories.items);
   const loading = useAppSelector((state) => state.categories.loading);
   const error = useAppSelector((state) => state.categories.error);
@@ -67,7 +72,7 @@ const CategoryList = ({ onEdit }: CategoryListProps) => {
   if (loading) {
     return (
       <div>
-        <Spinner size={32} label="Cargando categorias" />
+        <Spinner size={32} label={t("categories.loading")} />
       </div>
     );
   }
@@ -75,7 +80,9 @@ const CategoryList = ({ onEdit }: CategoryListProps) => {
   if (error) {
     return (
       <div>
-        <p style={{ color: "red" }}>Error: {error}</p>
+        <p style={{ color: "red" }}>
+          {t("categories.error", { message: error })}
+        </p>
       </div>
     );
   }
@@ -83,7 +90,7 @@ const CategoryList = ({ onEdit }: CategoryListProps) => {
   if (categories.length === 0) {
     return (
       <section>
-        <p>No hay categorias registradas.</p>
+        <p>{t("categories.empty")}</p>
       </section>
     );
   }
@@ -93,9 +100,9 @@ const CategoryList = ({ onEdit }: CategoryListProps) => {
       <Table rows={categories} getRowId={(row) => row.id}>
         <Table.Header>
           <Table.SelectColumn />
-          <th>ID</th>
-          <th>Nombre</th>
-          <th>Acciones</th>
+          <th>{t("categories.header.id")}</th>
+          <th>{t("categories.header.name")}</th>
+          <th>{t("categories.header.actions")}</th>
         </Table.Header>
         <Table.Body>
           {(row: CategoryState, index: number) => (
@@ -109,7 +116,12 @@ const CategoryList = ({ onEdit }: CategoryListProps) => {
             </tr>
           )}
         </Table.Body>
-        <Table.Footer>{categories.length} rows.</Table.Footer>
+        <Table.Footer>
+          {plural(
+            { one: "common.rows.one", other: "common.rows.other" },
+            categories.length,
+          )}
+        </Table.Footer>
       </Table>
     </div>
   );

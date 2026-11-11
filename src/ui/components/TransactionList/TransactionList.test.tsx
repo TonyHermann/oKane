@@ -102,6 +102,7 @@ describe("TransactionList", () => {
       categories: categoriesState,
     });
     expect(screen.getByText("Categoría eliminada")).toBeInTheDocument();
+    expect(screen.getByText("1 fila")).toBeInTheDocument();
   });
 
   it("should render the list item in the list with the current category name label on category column", () => {

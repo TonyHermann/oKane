@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import type { ICsvRow } from "@/core/services/ICsvParser";
+import { usePlural } from "@/ui/i18n";
 import { Table } from "../Table/Table";
 
 interface CsvTableProps {
@@ -12,6 +13,7 @@ export const CsvTable = ({
   rows,
   onSelectionChange,
 }: CsvTableProps) => {
+  const plural = usePlural();
   const rowIds = useRef(new WeakMap<object, string>());
   const nextRowId = useRef(0);
 
@@ -48,7 +50,9 @@ export const CsvTable = ({
             </tr>
           )}
       </Table.Body>
-      <Table.Footer>{rows.length} rows.</Table.Footer>
+      <Table.Footer>
+        {plural({ one: "common.rows.one", other: "common.rows.other" }, rows.length)}
+      </Table.Footer>
     </Table>
   );
 };

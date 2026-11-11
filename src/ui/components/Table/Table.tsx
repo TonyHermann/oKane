@@ -11,6 +11,7 @@ import {
   type ReactElement,
   type ReactNode,
 } from "react";
+import { usePlural, useTranslation } from "@/ui/i18n";
 import "./Table.css";
 import {
   TableProvider,
@@ -81,12 +82,18 @@ const TableBody = <T,>({ children }: TableBodyProps<T>) => {
 
 const TableFooter = <T,>({ children }: TableFooterProps) => {
   const { selectedRows } = useTableContext<T>();
+  const plural = usePlural();
 
   return (
     <tfoot>
       <tr>
         <td>{children}</td>
-        <td>{selectedRows.length} rows selected.</td>
+        <td>
+          {plural(
+            { one: "table.selected.one", other: "table.selected.other" },
+            selectedRows.length,
+          )}
+        </td>
       </tr>
     </tfoot>
   );
@@ -98,6 +105,7 @@ const TableToolbar = ({ children }: TableToolbarProps) => {
 
 const TableSelectRow = <T,>({ row, index }: TableSelectRowProps<T>) => {
   const { isSelected, toggleRow, getRowId, tableId } = useTableContext<T>();
+  const { t } = useTranslation();
 
   const id = getRowId(row, index);
 
@@ -108,6 +116,7 @@ const TableSelectRow = <T,>({ row, index }: TableSelectRowProps<T>) => {
           type="checkbox"
           checked={isSelected(row, index)}
           id={`${tableId}_select_${id}`}
+          aria-label={t("table.selectRowNamed", { id })}
           onChange={() => toggleRow(row, index)}
         />
         <label htmlFor={`${tableId}_select_${id}`}>~</label>
@@ -118,6 +127,7 @@ const TableSelectRow = <T,>({ row, index }: TableSelectRowProps<T>) => {
 
 const TableSelectColumn = () => {
   const { allSelected, toggleAll, tableId } = useTableContext();
+  const { t } = useTranslation();
   return (
     <th>
       <div className="field-row">
@@ -125,6 +135,7 @@ const TableSelectColumn = () => {
           type="checkbox"
           checked={allSelected}
           id={`${tableId}_select_all`}
+          aria-label={t("table.selectAll")}
           onChange={() => toggleAll()}
         />
         <label htmlFor={`${tableId}_select_all`}>~</label>
@@ -160,6 +171,7 @@ export const Table = <T,>({
   const nextGeneratedRowId = useRef(0);
 
   const tableId = useId();
+  const { t } = useTranslation();
 
   const normalizedPageSize =
     pageSize !== undefined && Number.isFinite(pageSize) && pageSize > 0
@@ -301,17 +313,23 @@ export const Table = <T,>({
   const toolbar = getElement(children, TableToolbar);
 
   const paginationControls = pagination ? (
-    <nav className="table-pagination" aria-label="Paginación de tabla">
+    <nav
+      className="table-pagination"
+      aria-label={t("table.pagination.label")}
+    >
       <button
         type="button"
         onClick={() => setPage((currentPage) => Math.max(0, currentPage - 1))}
         disabled={activePage === 0}
-        aria-label="Página anterior"
+        aria-label={t("table.pagination.previous")}
       >
-        Anterior
+        {t("table.pagination.previousText")}
       </button>
       <span aria-live="polite">
-        Página {activePage + 1} de {pageCount}
+        {t("table.pagination.page", {
+          page: activePage + 1,
+          pageCount,
+        })}
       </span>
       <button
         type="button"
@@ -319,9 +337,9 @@ export const Table = <T,>({
           setPage((currentPage) => Math.min(pageCount - 1, currentPage + 1))
         }
         disabled={activePage === pageCount - 1}
-        aria-label="Página siguiente"
+        aria-label={t("table.pagination.next")}
       >
-        Siguiente
+        {t("table.pagination.nextText")}
       </button>
     </nav>
   ) : null;

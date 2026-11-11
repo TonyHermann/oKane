@@ -18,7 +18,12 @@ import {
   type CategoryState,
 } from "@/ui/store/slices/categorySlices";
 import { getCategoryLabel } from "./categoryLabel";
-import { useFormatters, type Formatters } from "@/ui/i18n";
+import {
+  useFormatters,
+  usePlural,
+  useTranslation,
+  type Formatters,
+} from "@/ui/i18n";
 
 interface TransactionRowProps {
   row: TransactionState;
@@ -37,6 +42,7 @@ const TransactionRow = ({
   categoryLabel,
   formatters,
 }: TransactionRowProps) => {
+  const { t } = useTranslation();
   const formattedAmount = formatters.currency.format(row.amount);
 
   return (
@@ -54,7 +60,7 @@ const TransactionRow = ({
             variant="icon"
             size="sm"
             icon={<EditIcon />}
-            label="Editar"
+            label={t("common.edit")}
             onClick={() => {
               handleEdit(row.id);
             }}
@@ -63,7 +69,7 @@ const TransactionRow = ({
             variant="icon"
             size="sm"
             icon={<RemoveIcon />}
-            label="Eliminar"
+            label={t("common.remove")}
             onClick={() => {
               handleRemove(row.id);
             }}
@@ -78,9 +84,10 @@ export interface TransactionListProps {
   title?: string;
 }
 
-export const TransactionList = ({
-  title = "Transacciones",
-}: TransactionListProps) => {
+export const TransactionList = ({ title }: TransactionListProps) => {
+  const { t } = useTranslation();
+  const plural = usePlural();
+  const resolvedTitle = title ?? t("transactions.title");
   const transactions = useAppSelector((state) => state.transactions.items);
   const loading = useAppSelector((state) => state.transactions.loading);
   const error = useAppSelector((state) => state.transactions.error);
@@ -105,7 +112,7 @@ export const TransactionList = ({
     if (!transaction) return;
 
     openModal({
-      title: "Editar una transacción",
+      title: t("transactions.editModalTitle"),
       content: (
         <Modal.Body>
           <UpdateTransactionForm transaction={transaction} />
@@ -124,8 +131,8 @@ export const TransactionList = ({
 
   if (loading) {
     return (
-      <div role="status" aria-label="Cargando transacciones">
-        <Spinner size={32} label="Cargando transacciones…" />
+      <div role="status" aria-label={t("transactions.loadingAria")}>
+        <Spinner size={32} label={t("transactions.loading")} />
       </div>
     );
   }
@@ -133,7 +140,9 @@ export const TransactionList = ({
   if (error) {
     return (
       <div role="alert">
-        <p style={{ color: "red" }}>Error: {error}</p>
+        <p style={{ color: "red" }}>
+          {t("transactions.error", { message: error })}
+        </p>
       </div>
     );
   }
@@ -141,14 +150,14 @@ export const TransactionList = ({
   if (transactions.length === 0) {
     return (
       <section>
-        <p>No hay {title} registradas.</p>
+        <p>{t("transactions.empty", { title: resolvedTitle })}</p>
       </section>
     );
   }
 
   const toCategoryLabel = (stored: CategoryState | null) => {
     if (categoriesError) return categoriesError;
-    if (categoriesLoadedAt === null) return "Cargando…";
+    if (categoriesLoadedAt === null) return t("transactions.categoryLoading");
     return getCategoryLabel(stored, categoriesById);
   };
 
@@ -163,13 +172,13 @@ export const TransactionList = ({
         >
           <Table.Header>
             <Table.SelectColumn />
-            <th>ID</th>
+            <th>{t("transactions.header.id")}</th>
 
-            <th>Descripción</th>
-            <th>Importe</th>
-            <th>Fecha</th>
-            <th>Categoría</th>
-            <th>Acciones</th>
+            <th>{t("transactions.header.description")}</th>
+            <th>{t("transactions.header.amount")}</th>
+            <th>{t("transactions.header.date")}</th>
+            <th>{t("transactions.header.category")}</th>
+            <th>{t("transactions.header.actions")}</th>
           </Table.Header>
           <Table.Body>
             {(transaction: TransactionState, index: number) => (
@@ -184,7 +193,12 @@ export const TransactionList = ({
               />
             )}
           </Table.Body>
-          <Table.Footer>{transactions.length} rows.</Table.Footer>
+          <Table.Footer>
+            {plural(
+              { one: "common.rows.one", other: "common.rows.other" },
+              transactions.length,
+            )}
+          </Table.Footer>
         </Table>
       </div>
     </section>

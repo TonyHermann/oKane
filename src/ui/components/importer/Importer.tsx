@@ -10,6 +10,7 @@ import { PapaCsvParser } from "@/infraestructure/parsers/PapaCsvParser";
 import { CsvSchema } from "@/core/entities/Import/CsvSchema";
 import { logger } from "@/shared/logger/Logger";
 import type { ICsvRow } from "@/core/services/ICsvParser";
+import { useTranslation } from "@/ui/i18n";
 import { useAppDispatch } from "@/ui/store/hooks";
 import { importTransactions } from "@/ui/store/slices/transactionsSlices";
 import { CsvTable } from "../CsvTable/CsvTable";
@@ -21,6 +22,7 @@ type FormValues = {
 
 export const Importer = () => {
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
   const { handleSubmit } = useForm<FormValues>();
   const [fileOrFiles, setFiles] = useState<File | null>(null);
   const [rows, setRows] = useState<ICsvRow[] | null>(null);
@@ -41,11 +43,11 @@ export const Importer = () => {
   const onSubmit: SubmitHandler<FormValues> = async () => {
     try {
       if (!fileOrFiles) {
-        throw new ValidationError("No file selected.", "file");
+        throw new ValidationError(t("importer.noFileSelected"), "file");
       }
 
       if (!selectedRows) {
-        throw new ValidationError("No rows selected", "rows");
+        throw new ValidationError(t("importer.noRowsSelected"), "rows");
       }
 
       const schema = new CsvSchema(["date", "amount", "description"]);
@@ -66,15 +68,14 @@ export const Importer = () => {
   };
 
   const handleFilesAccepted = async (files: File | Array<File>) => {
-    if (Array.isArray(files)) {
-      throw new ValidationError("Only one file is supported.", "file");
-    }
+    const file = Array.isArray(files) ? files[0] : files;
+    if (!file) return;
 
     setError(null);
-    setFiles(files);
+    setFiles(file);
 
     try {
-      const content = await FileReaderService.readAsText(files);
+      const content = await FileReaderService.readAsText(file);
       const parsed = await PapaCsvParser.parse(content);
       setRows(parsed.rows);
     } catch (cause: unknown) {
@@ -100,11 +101,12 @@ export const Importer = () => {
         <FileDropZone
           onFilesAccepted={handleFilesAccepted}
           maxFileSize={200000}
+          maxFiles={1}
           validFileTypes={["text/csv", "text/plain"]}
         />
       ) : (
         <button type="button" onClick={handleRemoveFile}>
-          Subir otro archivo
+          {t("importer.uploadAnother")}
         </button>
       )}
 
@@ -112,7 +114,7 @@ export const Importer = () => {
 
       {rows && rows.length > 0 && (
         <>
-          <h4>Previsualización</h4>
+          <h4>{t("importer.preview")}</h4>
 
           <CsvTable
             headers={rows[0]}
@@ -128,7 +130,7 @@ export const Importer = () => {
         </>
       )}
 
-      <button type="submit">Subir</button>
+      <button type="submit">{t("importer.submit")}</button>
     </form>
   );
 };
