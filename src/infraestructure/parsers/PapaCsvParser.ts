@@ -1,11 +1,12 @@
 import Papa from "papaparse";
 import type { CsvParseResult, ICsvParser } from "@/core/services/ICsvParser";
+import { CsvParseError, EmptyFileError } from "@/core/errors/ImportErrors";
 
 export const PapaCsvParser: ICsvParser = {
   async parse(content: string): Promise<CsvParseResult> {
     // TODO: [currency-import] Normalize imported monetary values and currency codes such as EUR without losing the original value.
     if (!content.trim()) {
-      throw new Error("El archivo está vacio.");
+      throw new EmptyFileError();
     }
 
     return new Promise((resolve, reject) => {
@@ -17,7 +18,9 @@ export const PapaCsvParser: ICsvParser = {
         complete: (results) => {
           if (results.errors.length > 0) {
             reject(
-              new Error(`Error al parsear CSV: ${results.errors[0].message}`),
+              new CsvParseError(
+                `Error al parsear CSV: ${results.errors[0].message}`,
+              ),
             );
             return;
           }
@@ -28,7 +31,7 @@ export const PapaCsvParser: ICsvParser = {
           resolve({ headers, rows });
         },
         error: (error: Error) => {
-          reject(new Error(`Error al parsear CSV: ${error.message}`));
+          reject(new CsvParseError(`Error al parsear CSV: ${error.message}`));
         },
       });
     });

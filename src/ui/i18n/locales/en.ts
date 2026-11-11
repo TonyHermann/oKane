@@ -46,6 +46,13 @@ export const en: Record<MessageKey, string> = {
   "errors.applyRulesFailed": "The rules could not be applied.",
   "errors.validationFailed": "The data is invalid.",
   "errors.unknown": "An unexpected error occurred.",
+  "errors.importEmptyFile": "The file is empty.",
+  "errors.importParseFailed":
+    "The CSV could not be parsed. Check the format and quoting.",
+  "errors.importFileReadFailed": "The file could not be read.",
+  "errors.importInvalidSchema": "The CSV structure is invalid.",
+  "errors.importMissingColumn": "The required column \"{column}\" is missing.",
+  "errors.importInvalidMapping": "The column mapping is invalid.",
   "notFound.title": "Oops!",
   "notFound.body": "It looks like you landed on a page that does not exist.",
   "notFound.imageAlt": "404 not found",

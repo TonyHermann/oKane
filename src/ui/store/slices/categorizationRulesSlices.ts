@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { CategorizationRuleActions } from "@/adapters/CategorizationRuleActions";
 import type { AppErrorCode } from "@/core/errors/AppErrorCode";
+import { ValidationError } from "@/core/errors/DomainErrors";
+import { resolveErrorCode, toErrorCode } from "@/core/errors/toErrorCode";
 import type { RuleApplicationPreview } from "@/core/use-cases/rules/PreviewRulesApplication";
 import {
   createCategorizationRule,
@@ -58,10 +60,16 @@ export const loadCategorizationRules = createAsyncThunk<
   { state: RootState }
 >(
   "categorizationRules/load",
-  async () => ({
-    items: (await CategorizationRuleActions.getAll()).map(toRuleState),
-    loadedAt: new Date().getTime(),
-  }),
+  async (_arg, { rejectWithValue }) => {
+    try {
+      return {
+        items: (await CategorizationRuleActions.getAll()).map(toRuleState),
+        loadedAt: new Date().getTime(),
+      };
+    } catch (error) {
+      return rejectWithValue(toErrorCode(error));
+    }
+  },
   {
     condition(arg, { getState }) {
       const { loading, loadedAt } = getState().categorizationRules;
@@ -75,42 +83,59 @@ export const loadCategorizationRules = createAsyncThunk<
 export const saveCategorizationRule = createAsyncThunk(
   "categorizationRules/save",
   async (state: CreateCategorizationRuleState, thunkApi) => {
-    const category = (thunkApi.getState() as RootState).categories.items.find(
-      (item) => item.id === state.categoryId,
-    );
+    try {
+      const category = (thunkApi.getState() as RootState).categories.items.find(
+        (item) => item.id === state.categoryId,
+      );
 
-    if (!category) throw new Error("La categoría seleccionada no existe.");
+      if (!category) {
+        throw new ValidationError("The selected category does not exist.");
+      }
 
-    const conditionValues = state.conditionValues
-      .map((value) => value.trim())
-      .filter((value) => value !== "");
+      const conditionValues = state.conditionValues
+        .map((value) => value.trim())
+        .filter((value) => value !== "");
 
-    if (conditionValues.length === 0)
-      throw new Error("La rule necesita al menos una descripción.");
+      if (conditionValues.length === 0) {
+        throw new ValidationError(
+          "The rule needs at least one description.",
+        );
+      }
 
-    const rule = createCategorizationRule({
-      order:
-        Math.max(
-          0,
-          ...(thunkApi.getState() as RootState).categorizationRules.items.map(
-            (item) => item.order,
-          ),
-        ) + 1,
-      condition: {
-        type: RULE_CONDITION_TYPES.DESCRIPTION_CONTAINS,
-        values: conditionValues,
-      },
-      category: Category.Rehydrate(category),
-    });
+      const rule = createCategorizationRule({
+        order:
+          Math.max(
+            0,
+            ...(thunkApi.getState() as RootState).categorizationRules.items.map(
+              (item) => item.order,
+            ),
+          ) + 1,
+        condition: {
+          type: RULE_CONDITION_TYPES.DESCRIPTION_CONTAINS,
+          values: conditionValues,
+        },
+        category: Category.Rehydrate(category),
+      });
 
-    await CategorizationRuleActions.save(rule);
-    return toRuleState(rule);
+      await CategorizationRuleActions.save(rule);
+      return toRuleState(rule);
+    } catch (error) {
+      return thunkApi.rejectWithValue(toErrorCode(error));
+    }
   },
 );
 
 export const applyAllCategorizationRules = createAsyncThunk(
   "categorizationRules/applyAll",
-  async () => (await CategorizationRuleActions.applyAll()).map(toTransactionState),
+  async (_arg, { rejectWithValue }) => {
+    try {
+      return (await CategorizationRuleActions.applyAll()).map(
+        toTransactionState,
+      );
+    } catch (error) {
+      return rejectWithValue(toErrorCode(error));
+    }
+  },
 );
 
 // The preview crosses the Redux action boundary, so it must carry plain
@@ -120,14 +145,24 @@ export const previewCategorizationRules = createAsyncThunk<
   void
 >(
   "categorizationRules/preview",
-  async () => CategorizationRuleActions.preview(),
+  async (_arg, { rejectWithValue }) => {
+    try {
+      return await CategorizationRuleActions.preview();
+    } catch (error) {
+      return rejectWithValue(toErrorCode(error));
+    }
+  },
 );
 
 export const removeCategorizationRule = createAsyncThunk(
   "categorizationRules/remove",
-  async (id: string) => {
-    await CategorizationRuleActions.delete(id);
-    return id;
+  async (id: string, { rejectWithValue }) => {
+    try {
+      await CategorizationRuleActions.delete(id);
+      return id;
+    } catch (error) {
+      return rejectWithValue(toErrorCode(error));
+    }
   },
 );
 
@@ -146,9 +181,9 @@ const categorizationRulesSlice = createSlice({
         state.items = action.payload.items;
         state.loadedAt = action.payload.loadedAt;
       })
-      .addCase(loadCategorizationRules.rejected, (state) => {
+      .addCase(loadCategorizationRules.rejected, (state, action) => {
         state.loading = false;
-        state.error = "DATA_LOAD_FAILED";
+        state.error = resolveErrorCode(action.payload, "DATA_LOAD_FAILED");
       })
       .addCase(saveCategorizationRule.fulfilled, (state, action) => {
         state.loading = false;
@@ -159,9 +194,9 @@ const categorizationRulesSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(saveCategorizationRule.rejected, (state) => {
+      .addCase(saveCategorizationRule.rejected, (state, action) => {
         state.loading = false;
-        state.error = "VALIDATION_FAILED";
+        state.error = resolveErrorCode(action.payload, "DATA_SAVE_FAILED");
       })
       .addCase(removeCategorizationRule.fulfilled, (state, action) => {
         state.loading = false;
@@ -172,9 +207,9 @@ const categorizationRulesSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(removeCategorizationRule.rejected, (state) => {
+      .addCase(removeCategorizationRule.rejected, (state, action) => {
         state.loading = false;
-        state.error = "DATA_DELETE_FAILED";
+        state.error = resolveErrorCode(action.payload, "DATA_DELETE_FAILED");
       })
       .addCase(applyAllCategorizationRules.pending, (state) => {
         state.loading = true;
@@ -183,9 +218,9 @@ const categorizationRulesSlice = createSlice({
       .addCase(applyAllCategorizationRules.fulfilled, (state) => {
         state.loading = false;
       })
-      .addCase(applyAllCategorizationRules.rejected, (state) => {
+      .addCase(applyAllCategorizationRules.rejected, (state, action) => {
         state.loading = false;
-        state.error = "RULES_APPLY_FAILED";
+        state.error = resolveErrorCode(action.payload, "RULES_APPLY_FAILED");
       });
   },
 });

@@ -13,6 +13,15 @@ const Probe = () => {
       <span data-testid="load">{getErrorMessage("DATA_LOAD_FAILED")}</span>
       <span data-testid="apply">{getErrorMessage("RULES_APPLY_FAILED")}</span>
       <span data-testid="unknown">{getErrorMessage("UNKNOWN")}</span>
+      <span data-testid="parse">
+        {getErrorMessage({ code: "IMPORT_PARSE_FAILED" })}
+      </span>
+      <span data-testid="missing-column">
+        {getErrorMessage({
+          code: "IMPORT_MISSING_COLUMN",
+          params: { column: "date" },
+        })}
+      </span>
       <span data-testid="none">{getErrorMessage(null)}</span>
       <button type="button" onClick={() => setLocale("en")}>
         switch to en
@@ -41,6 +50,12 @@ describe("useErrorMessage", () => {
     expect(screen.getByTestId("unknown")).toHaveTextContent(
       "Ocurrió un error inesperado.",
     );
+    expect(screen.getByTestId("parse")).toHaveTextContent(
+      "No se pudo interpretar el CSV. Revisa el formato y las comillas.",
+    );
+    expect(screen.getByTestId("missing-column")).toHaveTextContent(
+      "Falta la columna obligatoria «date».",
+    );
     expect(screen.getByTestId("none")).toBeEmptyDOMElement();
   });
 
@@ -57,6 +72,12 @@ describe("useErrorMessage", () => {
     );
     expect(screen.getByTestId("unknown")).toHaveTextContent(
       "An unexpected error occurred.",
+    );
+    expect(screen.getByTestId("parse")).toHaveTextContent(
+      "The CSV could not be parsed. Check the format and quoting.",
+    );
+    expect(screen.getByTestId("missing-column")).toHaveTextContent(
+      'The required column "date" is missing.',
     );
     expect(screen.getByTestId("none")).toBeEmptyDOMElement();
   });

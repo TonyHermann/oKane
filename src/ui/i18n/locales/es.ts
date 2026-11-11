@@ -44,6 +44,14 @@ export const es = {
   "errors.applyRulesFailed": "No se pudieron aplicar las reglas.",
   "errors.validationFailed": "Los datos no son válidos.",
   "errors.unknown": "Ocurrió un error inesperado.",
+  "errors.importEmptyFile": "El archivo está vacío.",
+  "errors.importParseFailed":
+    "No se pudo interpretar el CSV. Revisa el formato y las comillas.",
+  "errors.importFileReadFailed": "No se pudo leer el archivo.",
+  "errors.importInvalidSchema": "La estructura del CSV no es válida.",
+  "errors.importMissingColumn":
+    "Falta la columna obligatoria «{column}».",
+  "errors.importInvalidMapping": "El mapeo de columnas no es válido.",
   "notFound.title": "¡Oops!",
   "notFound.body": "Parece que has aterrizado en una página que no existe.",
   "notFound.imageAlt": "404 no encontrado",

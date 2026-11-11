@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { ImportTransactionActions } from "@/adapters/ImportTransactionActions";
 import { transactionActions } from "@/adapters/TransactionActions";
 import type { AppErrorCode } from "@/core/errors/AppErrorCode";
+import { resolveErrorCode, toErrorCode } from "@/core/errors/toErrorCode";
 import type { CategoryState } from "./categorySlices";
 import { applyAllCategorizationRules } from "./categorizationRulesSlices";
 import {
@@ -43,13 +44,17 @@ export const loadTransactions = createAsyncThunk<
   { state: RootState }
 >(
   "transactions/loadTransactions",
-  async () => {
-    const transactions = await transactionActions.getAll();
+  async (_arg, { rejectWithValue }) => {
+    try {
+      const transactions = await transactionActions.getAll();
 
-    const transactionsState = transactions.map((transaction) => {
-      return toTransactionState(transaction);
-    });
-    return { items: transactionsState, loadedAt: new Date().getTime() };
+      const transactionsState = transactions.map((transaction) => {
+        return toTransactionState(transaction);
+      });
+      return { items: transactionsState, loadedAt: new Date().getTime() };
+    } catch (error) {
+      return rejectWithValue(toErrorCode(error));
+    }
   },
   {
     condition(arg, { getState }) {
@@ -63,41 +68,60 @@ export const loadTransactions = createAsyncThunk<
 
 export const importTransactions = createAsyncThunk(
   "transactions/importTransactions",
-  async (input: Parameters<typeof ImportTransactionActions.importCsv>[0]) => {
-    const result = await ImportTransactionActions.importCsv(input);
+  async (
+    input: Parameters<typeof ImportTransactionActions.importCsv>[0],
+    { rejectWithValue },
+  ) => {
+    try {
+      const result = await ImportTransactionActions.importCsv(input);
 
-    return {
-      saved: result.saved.map(toTransactionState),
-      imported: result.imported,
-      failed: result.failed.length,
-      total: result.total,
-    };
+      return {
+        saved: result.saved.map(toTransactionState),
+        imported: result.imported,
+        failed: result.failed.length,
+        total: result.total,
+      };
+    } catch (error) {
+      return rejectWithValue(toErrorCode(error));
+    }
   },
 );
 
 export const saveTransaction = createAsyncThunk(
   "transactions/saveTransaction",
-  async (transaction: CreateTransactionState) => {
-    const newTransaction = createTransaction(transaction);
-    await transactionActions.save(newTransaction);
-    return toTransactionState(newTransaction);
+  async (transaction: CreateTransactionState, { rejectWithValue }) => {
+    try {
+      const newTransaction = createTransaction(transaction);
+      await transactionActions.save(newTransaction);
+      return toTransactionState(newTransaction);
+    } catch (error) {
+      return rejectWithValue(toErrorCode(error));
+    }
   },
 );
 
 export const updateTransaction = createAsyncThunk(
   "transaction/updateTransaction",
-  async (transaction: TransactionState) => {
-    const transactionEntity = toTransaction(transaction);
-    await transactionActions.update(transactionEntity);
-    return toTransactionState(transactionEntity);
+  async (transaction: TransactionState, { rejectWithValue }) => {
+    try {
+      const transactionEntity = toTransaction(transaction);
+      await transactionActions.update(transactionEntity);
+      return toTransactionState(transactionEntity);
+    } catch (error) {
+      return rejectWithValue(toErrorCode(error));
+    }
   },
 );
 
 export const removeTransaction = createAsyncThunk(
   "transaction/removeTransaction",
-  async (id: string) => {
-    await transactionActions.delete(id);
-    return id;
+  async (id: string, { rejectWithValue }) => {
+    try {
+      await transactionActions.delete(id);
+      return id;
+    } catch (error) {
+      return rejectWithValue(toErrorCode(error));
+    }
   },
 );
 
@@ -116,9 +140,9 @@ const transactionsSlice = createSlice({
         state.items = action.payload.items;
         state.loadedAt = action.payload.loadedAt;
       })
-      .addCase(loadTransactions.rejected, (state) => {
+      .addCase(loadTransactions.rejected, (state, action) => {
         state.loading = false;
-        state.error = "DATA_LOAD_FAILED";
+        state.error = resolveErrorCode(action.payload, "DATA_LOAD_FAILED");
       })
       .addCase(saveTransaction.pending, (state) => {
         state.loading = true;
@@ -129,9 +153,9 @@ const transactionsSlice = createSlice({
         state.items.push(action.payload);
         if (state.loadedAt !== null) state.loadedAt = new Date().getTime();
       })
-      .addCase(saveTransaction.rejected, (state) => {
+      .addCase(saveTransaction.rejected, (state, action) => {
         state.loading = false;
-        state.error = "DATA_SAVE_FAILED";
+        state.error = resolveErrorCode(action.payload, "DATA_SAVE_FAILED");
       })
       .addCase(updateTransaction.pending, (state) => {
         state.loading = true;
@@ -150,9 +174,9 @@ const transactionsSlice = createSlice({
 
         if (state.loadedAt !== null) state.loadedAt = new Date().getTime();
       })
-      .addCase(updateTransaction.rejected, (state) => {
+      .addCase(updateTransaction.rejected, (state, action) => {
         state.loading = false;
-        state.error = "DATA_UPDATE_FAILED";
+        state.error = resolveErrorCode(action.payload, "DATA_UPDATE_FAILED");
       })
       .addCase(removeTransaction.pending, (state) => {
         state.loading = true;
@@ -163,9 +187,9 @@ const transactionsSlice = createSlice({
         state.items = state.items.filter((item) => item.id !== action.payload);
         if (state.loadedAt !== null) state.loadedAt = new Date().getTime();
       })
-      .addCase(removeTransaction.rejected, (state) => {
+      .addCase(removeTransaction.rejected, (state, action) => {
         state.loading = false;
-        state.error = "DATA_DELETE_FAILED";
+        state.error = resolveErrorCode(action.payload, "DATA_DELETE_FAILED");
       })
       .addCase(importTransactions.pending, (state) => {
         state.loading = true;
@@ -176,9 +200,12 @@ const transactionsSlice = createSlice({
         state.items.push(...action.payload.saved);
         if (state.loadedAt !== null) state.loadedAt = new Date().getTime();
       })
-      .addCase(importTransactions.rejected, (state) => {
+      .addCase(importTransactions.rejected, (state, action) => {
         state.loading = false;
-        state.error = "TRANSACTIONS_IMPORT_FAILED";
+        state.error = resolveErrorCode(
+          action.payload,
+          "TRANSACTIONS_IMPORT_FAILED",
+        );
       })
       .addCase(applyAllCategorizationRules.fulfilled, (state, action) => {
         // Cross-slice reaction: applying rules mutates transactions in

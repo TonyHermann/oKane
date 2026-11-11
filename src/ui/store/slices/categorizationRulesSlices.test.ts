@@ -243,6 +243,21 @@ describe("categorization rules slice errors", () => {
     );
   });
 
+  it("stores the save error code when persistence fails while saving a rule", async () => {
+    const store = createTestStore();
+    vi.mocked(CategorizationRuleActions.save).mockRejectedValue(
+      new Error("offline"),
+    );
+
+    await store.dispatch(
+      saveCategorizationRule({ categoryId: "cat-1", conditionValues: ["x"] }),
+    );
+
+    expect(store.getState().categorizationRules.error).toBe(
+      "DATA_SAVE_FAILED",
+    );
+  });
+
   it("stores the apply-rules error code when applying fails", async () => {
     const store = createTestStore();
     vi.mocked(CategorizationRuleActions.applyAll).mockRejectedValue(

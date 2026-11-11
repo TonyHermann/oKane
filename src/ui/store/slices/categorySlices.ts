@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { CategoryActions } from "@/adapters/CategoryActions";
 import type { AppErrorCode } from "@/core/errors/AppErrorCode";
+import { resolveErrorCode, toErrorCode } from "@/core/errors/toErrorCode";
 import {
   createCategory,
   toCategory,
@@ -38,13 +39,17 @@ export const loadCategories = createAsyncThunk<
   { state: RootState }
 >(
   "categories/loadCategories",
-  async () => {
-    const categories = await CategoryActions.getAll();
+  async (_arg, { rejectWithValue }) => {
+    try {
+      const categories = await CategoryActions.getAll();
 
-    return {
-      items: categories.map(toCategoryState),
-      loadedAt: new Date().getTime(),
-    };
+      return {
+        items: categories.map(toCategoryState),
+        loadedAt: new Date().getTime(),
+      };
+    } catch (error) {
+      return rejectWithValue(toErrorCode(error));
+    }
   },
   {
     condition(arg, { getState }) {
@@ -58,27 +63,39 @@ export const loadCategories = createAsyncThunk<
 
 export const saveCategory = createAsyncThunk(
   "categories/saveCategory",
-  async (state: CreateCategoryState) => {
-    const newCategory = createCategory(state);
-    await CategoryActions.save(newCategory);
-    return toCategoryState(newCategory);
+  async (state: CreateCategoryState, { rejectWithValue }) => {
+    try {
+      const newCategory = createCategory(state);
+      await CategoryActions.save(newCategory);
+      return toCategoryState(newCategory);
+    } catch (error) {
+      return rejectWithValue(toErrorCode(error));
+    }
   },
 );
 
 export const updateCategory = createAsyncThunk(
   "categories/updateCategory",
-  async (state: CategoryState) => {
-    const categoryEntity = toCategory(state);
-    await CategoryActions.update(categoryEntity);
-    return toCategoryState(categoryEntity);
+  async (state: CategoryState, { rejectWithValue }) => {
+    try {
+      const categoryEntity = toCategory(state);
+      await CategoryActions.update(categoryEntity);
+      return toCategoryState(categoryEntity);
+    } catch (error) {
+      return rejectWithValue(toErrorCode(error));
+    }
   },
 );
 
 export const removeCategory = createAsyncThunk(
   "categories/removeCategory",
-  async (id: string) => {
-    await CategoryActions.delete(id);
-    return id;
+  async (id: string, { rejectWithValue }) => {
+    try {
+      await CategoryActions.delete(id);
+      return id;
+    } catch (error) {
+      return rejectWithValue(toErrorCode(error));
+    }
   },
 );
 
@@ -97,9 +114,9 @@ const categoriesSlice = createSlice({
         state.items = action.payload.items;
         state.loadedAt = action.payload.loadedAt;
       })
-      .addCase(loadCategories.rejected, (state) => {
+      .addCase(loadCategories.rejected, (state, action) => {
         state.loading = false;
-        state.error = "DATA_LOAD_FAILED";
+        state.error = resolveErrorCode(action.payload, "DATA_LOAD_FAILED");
       })
       .addCase(saveCategory.pending, (state) => {
         state.loading = true;
@@ -110,9 +127,9 @@ const categoriesSlice = createSlice({
         state.items.push(action.payload);
         if (state.loadedAt !== null) state.loadedAt = new Date().getTime();
       })
-      .addCase(saveCategory.rejected, (state) => {
+      .addCase(saveCategory.rejected, (state, action) => {
         state.loading = false;
-        state.error = "DATA_SAVE_FAILED";
+        state.error = resolveErrorCode(action.payload, "DATA_SAVE_FAILED");
       })
       .addCase(updateCategory.pending, (state) => {
         state.loading = true;
@@ -130,9 +147,9 @@ const categoriesSlice = createSlice({
         }
         if (state.loadedAt !== null) state.loadedAt = new Date().getTime();
       })
-      .addCase(updateCategory.rejected, (state) => {
+      .addCase(updateCategory.rejected, (state, action) => {
         state.loading = false;
-        state.error = "DATA_UPDATE_FAILED";
+        state.error = resolveErrorCode(action.payload, "DATA_UPDATE_FAILED");
       })
       .addCase(removeCategory.pending, (state) => {
         state.loading = true;
@@ -143,9 +160,9 @@ const categoriesSlice = createSlice({
         state.items = state.items.filter((item) => item.id !== action.payload);
         if (state.loadedAt !== null) state.loadedAt = new Date().getTime();
       })
-      .addCase(removeCategory.rejected, (state) => {
+      .addCase(removeCategory.rejected, (state, action) => {
         state.loading = false;
-        state.error = "DATA_DELETE_FAILED";
+        state.error = resolveErrorCode(action.payload, "DATA_DELETE_FAILED");
       });
   },
 });
