@@ -1,6 +1,8 @@
+import styles from "./Footer.module.css";
+
 export const Footer = () => {
   return (
-    <footer className="glass">
+    <footer className={styles.footer}>
       <div>
         <p>
           Developed by

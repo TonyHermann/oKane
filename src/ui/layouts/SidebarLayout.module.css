@@ -1,0 +1,43 @@
+.sidebarLayout {
+  display: flex;
+  min-height: 90vh;
+  gap: var(--space-2);
+}
+
+.aside {
+  box-shadow: var(--shadow-window);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  -webkit-font-smoothing: antialiased;
+  margin-top: 0;
+  margin-left: 0;
+  width: 200px;
+  background: var(--color-surface-xp) !important;
+}
+
+.label {
+  margin: 0 0 var(--space-3);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+/* Keeps the generic `nav` baseline this sidebar inherited before the shell
+   moved to CSS Modules. */
+.nav {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-2);
+  height: auto;
+  background-color: var(--color-chrome);
+  padding: 0 var(--space-4);
+  border: solid 1px var(--color-border-strong);
+}
+
+.content {
+  flex: 1;
+}

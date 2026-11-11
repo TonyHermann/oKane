@@ -27,6 +27,16 @@
 
   .table-pagination {
     flex: 0 0 auto;
+    /* Preserve the generic nav baseline inherited before the shell moved to
+       CSS Modules. */
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 20px;
+    padding: 0 var(--space-4);
+    border: solid 1px var(--color-border-strong);
+    background-color: var(--color-chrome);
   }
 }
 
