@@ -1,0 +1,36 @@
+html {
+  width: 100%;
+  scroll-behavior: smooth;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* TODO: [layout-shell] Move the html/body layout hacks below into a layout-scoped class. */
+body {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-style: normal;
+  background-color: var(--color-surface);
+  margin: 0;
+  height: 100%;
+  width: 1260px;
+  background-image: url(../../assets/images/background.png);
+}
+
+#root {
+  background: var(--color-tint);
+}
+
+.main-layout {
+  /* Own graph-paper grid, drawn with gradients: no image to load or license. */
+  background-image:
+    linear-gradient(to right, rgb(0 0 0 / 7%) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(0 0 0 / 7%) 1px, transparent 1px);
+  background-size: 24px 24px;
+  padding: var(--space-3);
+}
+
+a {
+  color: var(--color-accent);
+}

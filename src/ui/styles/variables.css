@@ -1,4 +1,5 @@
-:root {
+:root,
+[data-theme="light"] {
   /* ── Colors ───────────────────────────────────────── */
   --color-accent: #2455eb; /* links, panel accent */
   --color-accent-strong: #003399; /* dropzone border */
