@@ -4,7 +4,6 @@ import { type MessageKey, useTranslation } from "@/ui/i18n";
 import { FileValidator } from "@/core/services/FileValidator";
 import { logger } from "@/shared/logger/Logger";
 import { useDragging } from "@/ui/hooks/useDragging";
-import { logger } from "@/shared/logger/Logger";
 
 type Props = {
   onFilesAccepted: (files: File | Array<File>) => void | Promise<void>;
@@ -43,7 +42,9 @@ export const FileDropZone = ({
 
   const { isValidType, isValidSize } = FileValidator;
 
-  const validateFiles = (files: File | Array<File>): FileDropZoneError | null => {
+  const validateFiles = (
+    files: File | Array<File>,
+  ): FileDropZoneError | null => {
     const fileList = files instanceof File ? [files] : files;
 
     if (fileList.length > maxFiles) {
