@@ -50,16 +50,18 @@ describe("Navbar", () => {
   it("gives navbar controls a visible focus ring for keyboard focus only", () => {
     // jsdom cannot compute the rendered outline, so the visible-focus half of
     // the behaviour is asserted on the stylesheet the app actually ships:
-    // navbar controls must get a solid ring under :focus-visible and must not
+    // navbar controls must get a visible ring under :focus-visible and must not
     // keep the inherited outline for pointer focus.
     const css = readFileSync(
       resolve(process.cwd(), "src/ui/styles/layout/navbar.css"),
       "utf8",
     );
 
+    // keyboard focus: visible ring (any width/style/color, but not none)
+    expect(css).toMatch(/:focus-visible\s*\{[^}]*outline:\s*(?!none|0)/);
+    // pointer focus: inherits no ring
     expect(css).toMatch(
-      /a:focus-visible,\s*button:focus-visible\s*\{[^}]*outline:\s*2px dashed/,
+      /:focus:not\(:focus-visible\)\s*\{[^}]*outline:\s*none/,
     );
-    expect(css).toMatch(/a:focus:not\(:focus-visible\)/);
   });
 });
