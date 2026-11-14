@@ -10,7 +10,7 @@ import {
   saveCategorizationRule,
 } from "@/ui/store/slices/categorizationRulesSlices";
 import { loadTransactions } from "@/ui/store/slices/transactionsSlices";
-import { usePlural, useTranslation } from "@/ui/i18n";
+import { useErrorMessage, usePlural, useTranslation } from "@/ui/i18n";
 import { ApplyRulesConfirmation } from "./ApplyRulesConfirmation";
 import "./CategorizationRulesPage.css";
 
@@ -19,6 +19,7 @@ export const CategorizationRulesPage = () => {
   const { openModal, closeModal } = useModalContext();
   const { t } = useTranslation();
   const plural = usePlural();
+  const getErrorMessage = useErrorMessage();
   const categories = useAppSelector((state) => state.categories.items);
   const transactions = useAppSelector((state) => state.transactions.items);
   const { items: rules, loading, error } = useAppSelector(
@@ -182,7 +183,7 @@ export const CategorizationRulesPage = () => {
         </form>
 
         {appliedMessage && <p className="categorization-rules-applied">{appliedMessage}</p>}
-        {error && <p role="alert">{error}</p>}
+        {error && <p role="alert">{getErrorMessage(error)}</p>}
         {rules.length === 0 ? (
           <p>{t("rules.empty")}</p>
         ) : (

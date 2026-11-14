@@ -4,13 +4,17 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { FileDropZone } from "./FileDropZone";
 
 import { ValidationError } from "@/core/errors/DomainErrors";
+import {
+  toImportErrorDescriptor,
+  type ImportErrorDescriptor,
+} from "@/core/errors/ImportErrorDescriptor";
 import { FileReaderService } from "@/infraestructure/files/FileReaderService";
 
 import { PapaCsvParser } from "@/infraestructure/parsers/PapaCsvParser";
 import { CsvSchema } from "@/core/entities/Import/CsvSchema";
 import { logger } from "@/shared/logger/Logger";
 import type { ICsvRow } from "@/core/services/ICsvParser";
-import { useTranslation } from "@/ui/i18n";
+import { useErrorMessage, useTranslation } from "@/ui/i18n";
 import { useAppDispatch } from "@/ui/store/hooks";
 import { importTransactions } from "@/ui/store/slices/transactionsSlices";
 import { CsvTable } from "../CsvTable/CsvTable";
@@ -23,11 +27,12 @@ type FormValues = {
 export const Importer = () => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
+  const getErrorMessage = useErrorMessage();
   const { handleSubmit } = useForm<FormValues>();
   const [fileOrFiles, setFiles] = useState<File | null>(null);
   const [rows, setRows] = useState<ICsvRow[] | null>(null);
   const [selectedRows, setSelectedRows] = useState<ICsvRow[] | null>(null);
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<ImportErrorDescriptor | null>(null);
   const requiredColumns = [
     "dateColumn",
     "amountColumn",
@@ -69,7 +74,7 @@ export const Importer = () => {
 
   const handleFilesAccepted = async (files: File | Array<File>) => {
     if (Array.isArray(files)) {
-      throw new ValidationError(t("importer.onlyOneFile"), "file");
+      throw new ValidationError("Only one file is supported.", "file");
     }
 
     setError(null);
@@ -81,7 +86,7 @@ export const Importer = () => {
       setRows(parsed.rows);
     } catch (cause: unknown) {
       const err = cause instanceof Error ? cause : new Error(String(cause));
-      setError(err);
+      setError(toImportErrorDescriptor(cause));
       logger.error(err, "Import failed");
     }
   };
@@ -110,7 +115,7 @@ export const Importer = () => {
         </button>
       )}
 
-      {error && <p role="alert">{error.message}</p>}
+      {error && <p role="alert">{getErrorMessage(error)}</p>}
 
       {rows && rows.length > 0 && (
         <>

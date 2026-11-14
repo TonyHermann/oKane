@@ -175,7 +175,7 @@ describe("transactions slice cache", () => {
     const state = store.getState().transactions;
     expect(state.items).toHaveLength(1);
     expect(state.loadedAt).toBe(loadedAt);
-    expect(state.error).toBe("offline");
+    expect(state.error).toBe("DATA_LOAD_FAILED");
   });
 });
 
@@ -319,7 +319,7 @@ describe("transactions slice write-through", () => {
     const state = store.getState().transactions;
     expect(state.items).toHaveLength(1);
     expect(state.loadedAt).toBe(loadedAt);
-    expect(state.error).toBe("boom");
+    expect(state.error).toBe("DATA_DELETE_FAILED");
   });
 });
 
@@ -378,6 +378,19 @@ describe("transactions slice import write-through", () => {
     const state = store.getState().transactions;
     expect(state.items).toHaveLength(3);
     expect(state.loadedAt).toBe(T1);
+  });
+
+  it("stores the import error code when importing fails", async () => {
+    const store = createTestStore();
+    vi.mocked(ImportTransactionActions.importCsv).mockRejectedValue(
+      new Error("invalid csv"),
+    );
+
+    await store.dispatch(importTransactions(importInput()));
+
+    expect(store.getState().transactions.error).toBe(
+      "TRANSACTIONS_IMPORT_FAILED",
+    );
   });
 });
 

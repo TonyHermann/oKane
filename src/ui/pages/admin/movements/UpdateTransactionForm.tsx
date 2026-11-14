@@ -92,12 +92,8 @@ export const UpdateTransactionForm = ({
         }),
       ).unwrap();
       closeModal();
-    } catch (error: unknown) {
-      setSubmitError(
-        error instanceof Error
-          ? error.message
-          : t("transactions.form.updateError"),
-      );
+    } catch {
+      setSubmitError(t("transactions.form.updateError"));
     }
   };
 
