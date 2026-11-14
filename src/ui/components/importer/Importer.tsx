@@ -73,9 +73,8 @@ export const Importer = () => {
   };
 
   const handleFilesAccepted = async (files: File | Array<File>) => {
-    if (Array.isArray(files)) {
-      throw new ValidationError("Only one file is supported.", "file");
-    }
+    const file = Array.isArray(files) ? files[0] : files;
+    if (!file) return;
 
     setError(null);
     setFiles(file);
