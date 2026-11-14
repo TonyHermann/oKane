@@ -57,7 +57,9 @@ describe("Navbar", () => {
       "utf8",
     );
 
-    expect(css).toMatch(/a:focus-visible,\s*button:focus-visible\s*\{[^}]*outline:\s*2px solid/);
+    expect(css).toMatch(
+      /a:focus-visible,\s*button:focus-visible\s*\{[^}]*outline:\s*2px dashed/,
+    );
     expect(css).toMatch(/a:focus:not\(:focus-visible\)/);
   });
 });
