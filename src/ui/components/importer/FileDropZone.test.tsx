@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
-import { I18nProvider, useTranslation } from "@/ui/i18n";
+import { I18nProvider } from "@/ui/i18n";
 import { FileDropZone } from "./FileDropZone";
 
 // Helpers
@@ -10,18 +10,25 @@ const createMockFile = (
   type: string = "text/csv",
 ): File => {
   const blob = new Blob([content], { type });
-  return new File([blob], filename);
+  return new File([blob], filename, { type });
 };
 
-const LocaleSwitcher = () => {
-  const { setLocale } = useTranslation();
-
-  return (
-    <button type="button" onClick={() => setLocale("en")}>
-      switch to en
-    </button>
+const renderDropZone = (props: {
+  onFilesAccepted: (files: File | Array<File>) => void | Promise<void>;
+  maxFileSize?: number;
+  maxFiles?: number;
+  validFileTypes?: string[];
+}) =>
+  render(
+    <I18nProvider>
+      <FileDropZone
+        onFilesAccepted={props.onFilesAccepted}
+        maxFileSize={props.maxFileSize}
+        maxFiles={props.maxFiles}
+        validFileTypes={props.validFileTypes}
+      />
+    </I18nProvider>,
   );
-};
 
 describe("FileDropZone", () => {
   it("should accept file via drop", async () => {
@@ -32,11 +39,7 @@ describe("FileDropZone", () => {
     const csvFile = createMockFile(csv);
 
     const onFilesAccepted = vi.fn();
-    render(
-      <I18nProvider>
-        <FileDropZone onFilesAccepted={onFilesAccepted} />
-      </I18nProvider>,
-    );
+    renderDropZone({ onFilesAccepted });
 
     const dropZone = screen.getByTestId("dropzone");
 
@@ -47,57 +50,89 @@ describe("FileDropZone", () => {
     expect(onFilesAccepted).toHaveBeenCalledWith(csvFile);
   });
 
-  it("should accept file via input click", async () => {});
-
-  it("should reject non csv filetype", async () => {});
-
-  it("should display current selected file name", async () => {});
-
-  it("should call onFilesAccepted callback with file", async () => {});
-
-  it("re-translates a visible error when the locale changes", () => {
+  it("reports the only-one-file validation when more than one file is dropped", () => {
     const onFilesAccepted = vi.fn();
-    render(
-      <I18nProvider>
-        <FileDropZone onFilesAccepted={onFilesAccepted} maxFileSize={1} />
-        <LocaleSwitcher />
-      </I18nProvider>,
+    renderDropZone({ onFilesAccepted });
+
+    fireEvent.drop(screen.getByTestId("dropzone"), {
+      dataTransfer: {
+        files: [createMockFile("a"), createMockFile("b", "second.csv")],
+      },
+    });
+
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "Solo se admite un archivo.",
     );
+    expect(onFilesAccepted).not.toHaveBeenCalled();
+  });
+
+  it("uses the maxFiles count in the validation message", () => {
+    const onFilesAccepted = vi.fn();
+    renderDropZone({ onFilesAccepted, maxFiles: 3 });
+
+    fireEvent.drop(screen.getByTestId("dropzone"), {
+      dataTransfer: {
+        files: [
+          createMockFile("a"),
+          createMockFile("b", "b.csv"),
+          createMockFile("c", "c.csv"),
+          createMockFile("d", "d.csv"),
+        ],
+      },
+    });
+
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "Solo se admiten 3 archivos.",
+    );
+    expect(onFilesAccepted).not.toHaveBeenCalled();
+  });
+
+  it("reports the invalid-type validation for a rejected MIME type", () => {
+    const onFilesAccepted = vi.fn();
+    renderDropZone({
+      onFilesAccepted,
+      validFileTypes: ["text/csv"],
+    });
+
+    fireEvent.drop(screen.getByTestId("dropzone"), {
+      dataTransfer: {
+        files: [createMockFile("plain", "notes.txt", "text/plain")],
+      },
+    });
+
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "El archivo que has ingresado, no es de un tipo válido.",
+    );
+    expect(onFilesAccepted).not.toHaveBeenCalled();
+  });
+
+  it("reports the file-too-large validation for an oversized file", () => {
+    const onFilesAccepted = vi.fn();
+    renderDropZone({
+      onFilesAccepted,
+      maxFileSize: 4,
+    });
 
     fireEvent.drop(screen.getByTestId("dropzone"), {
       dataTransfer: { files: [createMockFile("too large")] },
     });
 
-    expect(
-      screen.getByText(
-        "El archivo que has ingresado, supera el límite de peso.",
-      ),
-    ).toBeInTheDocument();
-
-    fireEvent.click(screen.getByRole("button", { name: "switch to en" }));
-
-    expect(
-      screen.getByText(
-        "The file you entered exceeds the maximum allowed size.",
-      ),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "El archivo que has ingresado, supera el límite de peso.",
+    );
+    expect(onFilesAccepted).not.toHaveBeenCalled();
   });
 
-  it("reports that only one file is supported when several are dropped", () => {
-    const onFilesAccepted = vi.fn();
-    render(
-      <I18nProvider>
-        <FileDropZone onFilesAccepted={onFilesAccepted} />
-      </I18nProvider>,
-    );
+  it("shows the generic process message without leaking an unknown cause", async () => {
+    const onFilesAccepted = vi.fn().mockRejectedValue(new Error("boom"));
+    renderDropZone({ onFilesAccepted });
 
     fireEvent.drop(screen.getByTestId("dropzone"), {
-      dataTransfer: {
-        files: [createMockFile("first"), createMockFile("second")],
-      },
+      dataTransfer: { files: [createMockFile("a")] },
     });
 
-    expect(screen.getByText("Solo se admite un archivo.")).toBeInTheDocument();
-    expect(onFilesAccepted).not.toHaveBeenCalled();
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "No se pudo procesar el archivo.",
+    );
   });
 });

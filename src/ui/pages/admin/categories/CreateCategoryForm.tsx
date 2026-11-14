@@ -1,16 +1,19 @@
-import { useState, type SubmitEvent } from "react";
+import { useMemo, useState, type SubmitEvent } from "react";
 import z from "zod";
 import { useAppDispatch } from "@/ui/store/hooks";
 import { saveCategory } from "@/ui/store/slices/categorySlices";
 import useModalContext from "@/ui/components/modal/context/useModalContext";
+import { useTranslation } from "@/ui/i18n";
+import type { Translate } from "@/ui/i18n/I18nProvider";
 
-export const createCategorySchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(1, "El nombre es obligatorio")
-    .max(100, "El nombre no puede tener más de 100 carácteres"),
-});
+export const createCategorySchema = (t: Translate) =>
+  z.object({
+    name: z
+      .string()
+      .trim()
+      .min(1, t("categories.form.nameRequired"))
+      .max(100, t("categories.form.nameMax")),
+  });
 
 export const CreateCategoryForm = () => {
   const [name, setName] = useState("");
@@ -18,11 +21,13 @@ export const CreateCategoryForm = () => {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const dispatch = useAppDispatch();
   const { closeModal } = useModalContext();
+  const { t } = useTranslation();
+  const schema = useMemo(() => createCategorySchema(t), [t]);
 
   const handleSubmit = async (event: SubmitEvent) => {
     event.preventDefault();
 
-    const result = createCategorySchema.safeParse({
+    const result = schema.safeParse({
       name,
     });
 
@@ -36,17 +41,15 @@ export const CreateCategoryForm = () => {
     try {
       await dispatch(saveCategory({ name: result.data.name })).unwrap();
       closeModal();
-    } catch (error: unknown) {
-      setSubmitError(
-        error instanceof Error ? error.message : "No se pudo guardar la categoría.",
-      );
+    } catch {
+      setSubmitError(t("categories.form.saveError"));
     }
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <div>
-        <label htmlFor="Name">Nombre</label>
+        <label htmlFor="name">{t("categories.form.nameLabel")}</label>
         <input
           type="text"
           id="name"
@@ -65,7 +68,7 @@ export const CreateCategoryForm = () => {
       </div>
       {submitError && <p role="alert">{submitError}</p>}
 
-      <button type="submit">Crear categoría</button>
+      <button type="submit">{t("categories.form.submit")}</button>
     </form>
   );
 };

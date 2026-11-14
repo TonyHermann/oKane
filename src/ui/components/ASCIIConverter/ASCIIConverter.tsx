@@ -1,5 +1,6 @@
 import {
   useEffect,
+  useMemo,
   useRef,
   useState,
   type ChangeEvent,
@@ -19,6 +20,7 @@ import {
 import { FieldError } from "@/ui/components/FieldError/FieldError";
 import { Select } from "@/ui/components/Select/Select";
 import { useTranslation } from "@/ui/i18n";
+import type { Translate } from "@/ui/i18n/I18nProvider";
 import { logger } from "@/shared/logger/Logger";
 import "./ASCIIConverter.css";
 
@@ -26,15 +28,16 @@ const MIN_COLS = 20;
 const MAX_COLS = 300;
 const DEFAULT_COLS = "100";
 
-export const asciiConverterSchema = z.object({
-  cols: z.coerce
-    .number()
-    .refine(
-      (value) =>
-        Number.isInteger(value) && value >= MIN_COLS && value <= MAX_COLS,
-      `El ancho debe ser un entero entre ${MIN_COLS} y ${MAX_COLS}.`,
-    ),
-});
+export const asciiConverterSchema = (t: Translate) =>
+  z.object({
+    cols: z.coerce
+      .number()
+      .refine(
+        (value) =>
+          Number.isInteger(value) && value >= MIN_COLS && value <= MAX_COLS,
+        t("ascii.widthError", { min: MIN_COLS, max: MAX_COLS }),
+      ),
+  });
 
 const ImageComponent = ({ img, alt }: { img: HTMLImageElement; alt: string }) => (
   <img style={{ maxWidth: "100px" }} src={img.src} alt={alt} />
@@ -96,13 +99,14 @@ export const ASCIIConverter = () => {
   const [colsInput, setColsInput] = useState(DEFAULT_COLS);
   const [colsTouched, setColsTouched] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const schema = useMemo(() => asciiConverterSchema(t), [t]);
 
   const presetOptions: { value: AsciiPresetId; label: string }[] = [
     { value: "classic", label: t("ascii.preset.classic") },
     { value: "braille", label: t("ascii.preset.braille") },
   ];
 
-  const colsResult = asciiConverterSchema.safeParse({ cols: colsInput });
+  const colsResult = schema.safeParse({ cols: colsInput });
   const colsError =
     !colsResult.success && colsTouched
       ? colsResult.error.issues[0]?.message

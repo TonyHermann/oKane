@@ -19,6 +19,7 @@ import {
 } from "@/ui/store/slices/categorySlices";
 import { getCategoryLabel } from "./categoryLabel";
 import {
+  useErrorMessage,
   useFormatters,
   usePlural,
   useTranslation,
@@ -106,6 +107,7 @@ export const TransactionList = ({ title }: TransactionListProps) => {
   const dispatch = useAppDispatch();
   const { openModal } = useModalContext();
   const formatters = useFormatters();
+  const getErrorMessage = useErrorMessage();
 
   const handleEdit = (id: string) => {
     const transaction = transactions.find((item) => item.id === id);
@@ -140,9 +142,7 @@ export const TransactionList = ({ title }: TransactionListProps) => {
   if (error) {
     return (
       <div role="alert">
-        <p style={{ color: "red" }}>
-          {t("transactions.error", { message: error })}
-        </p>
+        <p style={{ color: "red" }}>{getErrorMessage(error)}</p>
       </div>
     );
   }
@@ -156,9 +156,9 @@ export const TransactionList = ({ title }: TransactionListProps) => {
   }
 
   const toCategoryLabel = (stored: CategoryState | null) => {
-    if (categoriesError) return categoriesError;
+    if (categoriesError) return getErrorMessage(categoriesError);
     if (categoriesLoadedAt === null) return t("transactions.categoryLoading");
-    return getCategoryLabel(stored, categoriesById);
+    return getCategoryLabel(stored, categoriesById, t);
   };
 
   return (

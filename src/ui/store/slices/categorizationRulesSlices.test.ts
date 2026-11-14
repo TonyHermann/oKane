@@ -9,6 +9,7 @@ import { Category } from "@/core/entities/Category";
 import type { RuleApplicationPreview } from "@/core/use-cases/rules/PreviewRulesApplication";
 import categoriesReducer from "./categorySlices";
 import categorizationRulesReducer, {
+  applyAllCategorizationRules,
   loadCategorizationRules,
   previewCategorizationRules,
   removeCategorizationRule,
@@ -208,5 +209,65 @@ describe("categorization rules slice cache", () => {
     const state = store.getState().categorizationRules;
     expect(state.items).toEqual(before.items);
     expect(state.loadedAt).toBe(before.loadedAt);
+    expect(state.error).toBe("DATA_DELETE_FAILED");
+  });
+});
+
+describe("categorization rules slice errors", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("stores the load error code when loading fails", async () => {
+    const store = createTestStore();
+    vi.mocked(CategorizationRuleActions.getAll).mockRejectedValue(
+      new Error("offline"),
+    );
+
+    await store.dispatch(loadCategorizationRules());
+
+    expect(store.getState().categorizationRules.error).toBe(
+      "DATA_LOAD_FAILED",
+    );
+  });
+
+  it("stores the validation error code when saving fails", async () => {
+    const store = createTestStore();
+
+    await store.dispatch(
+      saveCategorizationRule({ categoryId: "missing", conditionValues: ["x"] }),
+    );
+
+    expect(store.getState().categorizationRules.error).toBe(
+      "VALIDATION_FAILED",
+    );
+  });
+
+  it("stores the save error code when persistence fails while saving a rule", async () => {
+    const store = createTestStore();
+    vi.mocked(CategorizationRuleActions.save).mockRejectedValue(
+      new Error("offline"),
+    );
+
+    await store.dispatch(
+      saveCategorizationRule({ categoryId: "cat-1", conditionValues: ["x"] }),
+    );
+
+    expect(store.getState().categorizationRules.error).toBe(
+      "DATA_SAVE_FAILED",
+    );
+  });
+
+  it("stores the apply-rules error code when applying fails", async () => {
+    const store = createTestStore();
+    vi.mocked(CategorizationRuleActions.applyAll).mockRejectedValue(
+      new Error("offline"),
+    );
+
+    await store.dispatch(applyAllCategorizationRules());
+
+    expect(store.getState().categorizationRules.error).toBe(
+      "RULES_APPLY_FAILED",
+    );
   });
 });

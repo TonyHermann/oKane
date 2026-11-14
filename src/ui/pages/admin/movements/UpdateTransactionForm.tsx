@@ -1,4 +1,4 @@
-import { useEffect, useState, type SubmitEvent } from "react";
+import { useEffect, useMemo, useState, type SubmitEvent } from "react";
 import z from "zod";
 import { useAppDispatch, useAppSelector } from "@/ui/store/hooks";
 import useModalContext from "@/ui/components/modal/context/useModalContext";
@@ -7,17 +7,20 @@ import type { TransactionState } from "@/ui/store/slices/transactionsSlices";
 import { Select } from "@/ui/components/Select/Select";
 import { loadCategories } from "@/ui/store/slices/categorySlices";
 import { resolveAppliedRuleIdAfterEdit } from "@/core/entities/Transaction";
+import { useTranslation } from "@/ui/i18n";
+import type { Translate } from "@/ui/i18n/I18nProvider";
 
-export const updateTransactionSchema = z.object({
-  description: z
-    .string()
-    .trim()
-    .min(2, "La descripción es obligatoria.")
-    .max(100, "La descripción no puede tener más de 100 carácteres."),
-  amount: z.number().max(999999, "El monto no puede ser superior a 999999"),
-  date: z.date(),
-  categoryId: z.string(),
-});
+export const updateTransactionSchema = (t: Translate) =>
+  z.object({
+    description: z
+      .string()
+      .trim()
+      .min(2, t("transactions.form.descriptionRequired"))
+      .max(100, t("transactions.form.descriptionMax")),
+    amount: z.number().max(999999, t("transactions.form.amountMax")),
+    date: z.date(),
+    categoryId: z.string(),
+  });
 
 interface UpdateTransactionFromProps {
   transaction: TransactionState;
@@ -48,11 +51,13 @@ export const UpdateTransactionForm = ({
 
   const dispatch = useAppDispatch();
   const { closeModal } = useModalContext();
+  const { t } = useTranslation();
+  const schema = useMemo(() => updateTransactionSchema(t), [t]);
 
   const handleSubmit = async (event: SubmitEvent) => {
     event.preventDefault();
 
-    const result = updateTransactionSchema.safeParse({
+    const result = schema.safeParse({
       description,
       amount: Number(amount),
       date: new Date(`${date}T00:00:00`),
@@ -87,12 +92,8 @@ export const UpdateTransactionForm = ({
         }),
       ).unwrap();
       closeModal();
-    } catch (error: unknown) {
-      setSubmitError(
-        error instanceof Error
-          ? error.message
-          : "No se pudo editar la transacción.",
-      );
+    } catch {
+      setSubmitError(t("transactions.form.updateError"));
     }
   };
 
@@ -103,7 +104,9 @@ export const UpdateTransactionForm = ({
   return (
     <form onSubmit={handleSubmit}>
       <div>
-        <label htmlFor="transaction-description">Descripción</label>
+        <label htmlFor="transaction-description">
+          {t("transactions.header.description")}
+        </label>
         <input
           id="transaction-description"
           name="description"
@@ -124,7 +127,9 @@ export const UpdateTransactionForm = ({
         )}
       </div>
       <div>
-        <label htmlFor="transaction-amount">Importe</label>
+        <label htmlFor="transaction-amount">
+          {t("transactions.header.amount")}
+        </label>
         <input
           id="transaction-amount"
           name="amount"
@@ -142,7 +147,7 @@ export const UpdateTransactionForm = ({
         {errors.amount && <p id="amount-error">{errors.amount[0]}</p>}
       </div>
       <div>
-        <label htmlFor="transaction-date">Fecha</label>
+        <label htmlFor="transaction-date">{t("transactions.header.date")}</label>
         <input
           id="transaction-date"
           name="date"
@@ -159,16 +164,18 @@ export const UpdateTransactionForm = ({
         {errors.date && <p id="date-error">{errors.date[0]}</p>}
       </div>
       <div>
-        <label htmlFor="transaction-categories">Categoría</label>
+        <label htmlFor="transaction-categories">
+          {t("transactions.header.category")}
+        </label>
         <Select
           id="transaction-categories"
-          label="Categoría"
+          label={t("transactions.header.category")}
           name="categoryId"
           options={categories.map((cat) => {
             return { label: cat.name, value: cat.id };
           })}
           disabled={Catloading}
-          placeholder="Selecciona una categoría"
+          placeholder={t("transactions.form.selectCategory")}
           error={errors.categoryId}
           errorId="category-error"
           value={categoryId || ""}
@@ -181,7 +188,7 @@ export const UpdateTransactionForm = ({
       </div>
 
       {submitError && <p role="alert">{submitError}</p>}
-      <button type="submit">Guardar cambios</button>
+      <button type="submit">{t("common.saveChanges")}</button>
     </form>
   );
 };

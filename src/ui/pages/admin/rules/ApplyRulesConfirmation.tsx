@@ -1,5 +1,6 @@
 import Modal from "@/ui/components/modal/Modal";
 import type { RuleApplicationPreview } from "@/core/use-cases/rules/PreviewRulesApplication";
+import { usePlural, useTranslation } from "@/ui/i18n";
 
 interface ApplyRulesConfirmationProps {
   preview: RuleApplicationPreview;
@@ -12,6 +13,8 @@ export const ApplyRulesConfirmation = ({
   onConfirm,
   onCancel,
 }: ApplyRulesConfirmationProps) => {
+  const { t } = useTranslation();
+  const plural = usePlural();
   const {
     enabledRules,
     totalRules,
@@ -25,38 +28,37 @@ export const ApplyRulesConfirmation = ({
     <>
       <Modal.Body>
         <p>
-          Se van a evaluar {enabledRules} reglas habilitadas (de {totalRules} en
-          total) contra {totalTransactions} transacciones.
+          {t("rules.confirm.summary", {
+            enabledRules,
+            totalRules,
+            totalTransactions,
+          })}
         </p>
         <ul>
-          <li>
-            Se categorizan: {toCategorize} — las que coinciden con una regla. Si
-            coinciden varias, gana la primera según el orden.
-          </li>
-          <li>
-            Se revierten: {toRevert} — tenían categoría de una regla que ya no
-            existe o cuya condición cambió. Vuelven a quedar sin categoría.
-          </li>
-          <li>
-            Sin cambios: {unchanged} — incluye todo lo puesto a mano y lo de
-            reglas pausadas.
-          </li>
+          <li>{t("rules.confirm.toCategorize", { count: toCategorize })}</li>
+          <li>{t("rules.confirm.toRevert", { count: toRevert })}</li>
+          <li>{t("rules.confirm.unchanged", { count: unchanged })}</li>
         </ul>
         {toRevert > 0 && (
           <p role="alert">
             <strong>
-              Atención: esta acción quita la categoría a {toRevert}{" "}
-              transacciones.
+              {plural(
+                {
+                  one: "rules.confirm.warning.one",
+                  other: "rules.confirm.warning.other",
+                },
+                toRevert,
+              )}
             </strong>
           </p>
         )}
       </Modal.Body>
       <Modal.Footer>
         <button type="button" onClick={onCancel}>
-          Cancelar
+          {t("common.cancel")}
         </button>
         <button type="button" onClick={onConfirm}>
-          Confirmar
+          {t("common.confirm")}
         </button>
       </Modal.Footer>
     </>

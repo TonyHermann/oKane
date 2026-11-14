@@ -4,13 +4,15 @@ import { CreateCategoryForm } from "./CreateCategoryForm";
 import { UpdateCategoryForm } from "./UpdateCategoryForm";
 import Modal from "@/ui/components/modal/Modal";
 import type { CategoryState } from "@/ui/store/slices/categorySlices";
+import { useTranslation } from "@/ui/i18n";
 
 export const CategoriesPage = () => {
   const { openModal } = useModalContext();
+  const { t } = useTranslation();
 
   const openCreateModal = () => {
     openModal({
-      title: "Crear una categoría",
+      title: t("categories.createModalTitle"),
       content: (
         <Modal.Body>
           <CreateCategoryForm />
@@ -21,7 +23,7 @@ export const CategoriesPage = () => {
 
   const openUpdateModal = (category: CategoryState) => {
     openModal({
-      title: "Editar una categoría",
+      title: t("categories.editModalTitle"),
       content: (
         <Modal.Body>
           <UpdateCategoryForm category={category} />
@@ -33,7 +35,7 @@ export const CategoriesPage = () => {
   return (
     <div className="window">
       <div className="title-bar">
-        <div className="title-bar-text">Administrador de Categorías</div>
+        <div className="title-bar-text">{t("categories.adminTitle")}</div>
       </div>
       <div className="window-body">
         <div
@@ -46,7 +48,7 @@ export const CategoriesPage = () => {
           }}
         >
           <button type="button" onClick={openCreateModal}>
-            Añadir una categoría
+            {t("categories.addButton")}
           </button>
         </div>
         <hr style={{ margin: "12px 0" }} />
