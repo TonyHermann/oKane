@@ -78,10 +78,10 @@ export const Importer = () => {
     }
 
     setError(null);
-    setFiles(files);
+    setFiles(file);
 
     try {
-      const content = await FileReaderService.readAsText(files);
+      const content = await FileReaderService.readAsText(file);
       const parsed = await PapaCsvParser.parse(content);
       setRows(parsed.rows);
     } catch (cause: unknown) {
@@ -107,6 +107,7 @@ export const Importer = () => {
         <FileDropZone
           onFilesAccepted={handleFilesAccepted}
           maxFileSize={200000}
+          maxFiles={1}
           validFileTypes={["text/csv", "text/plain"]}
         />
       ) : (

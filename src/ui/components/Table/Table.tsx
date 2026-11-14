@@ -116,7 +116,7 @@ const TableSelectRow = <T,>({ row, index }: TableSelectRowProps<T>) => {
           type="checkbox"
           checked={isSelected(row, index)}
           id={`${tableId}_select_${id}`}
-          aria-label={t("table.selectRow")}
+          aria-label={t("table.selectRowNamed", { id })}
           onChange={() => toggleRow(row, index)}
         />
         <label htmlFor={`${tableId}_select_${id}`}>~</label>

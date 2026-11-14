@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
-import { I18nProvider } from "@/ui/i18n";
+import { I18nProvider, useTranslation } from "@/ui/i18n";
 import { FileDropZone } from "./FileDropZone";
 
 // Helpers

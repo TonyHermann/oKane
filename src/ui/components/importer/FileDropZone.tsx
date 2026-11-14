@@ -2,6 +2,7 @@ import { useRef, useState, type ChangeEvent, type ReactNode } from "react";
 import "./FileDropZone.css";
 import { type MessageKey, useTranslation } from "@/ui/i18n";
 import { FileValidator } from "@/core/services/FileValidator";
+import { logger } from "@/shared/logger/Logger";
 import { useDragging } from "@/ui/hooks/useDragging";
 import { logger } from "@/shared/logger/Logger";
 
