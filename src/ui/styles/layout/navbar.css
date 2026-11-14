@@ -8,13 +8,6 @@ nav {
   height: 20px;
   border: solid 1px var(--color-border-strong);
   align-items: center;
-  /* Keyboard focus: the vendor sheet (base/_xp.css) gives every link the same
-     1px dotted outline on any :focus, clicks included, and it is easy to miss
-     on the chrome. Navbar controls drop that inherited outline and get an
-     intentional ring only for keyboard focus, so pointer use shows no ring.
-     --color-accent keeps over 3:1 contrast against the chrome and the page
-     surface. Applies to links, the icon-only settings link, and buttons
-     (the theme controls) alike. */
   a:focus:not(:focus-visible),
   button:focus:not(:focus-visible) {
     outline: none;
