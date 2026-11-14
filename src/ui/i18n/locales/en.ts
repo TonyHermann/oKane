@@ -63,6 +63,7 @@ export const en: Record<MessageKey, string> = {
   "importer.noFileSelected": "No file selected.",
   "importer.noRowsSelected": "No rows selected.",
   "importer.onlyOneFile": "Only one file is supported.",
+  "importer.tooManyFiles": "Only {count} files are supported.",
   "importer.uploadAnother": "Upload another file",
   "importer.preview": "Preview",
   "importer.submit": "Upload",

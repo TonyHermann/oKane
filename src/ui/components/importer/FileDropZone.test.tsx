@@ -66,6 +66,27 @@ describe("FileDropZone", () => {
     expect(onFilesAccepted).not.toHaveBeenCalled();
   });
 
+  it("uses the maxFiles count in the validation message", () => {
+    const onFilesAccepted = vi.fn();
+    renderDropZone({ onFilesAccepted, maxFiles: 3 });
+
+    fireEvent.drop(screen.getByTestId("dropzone"), {
+      dataTransfer: {
+        files: [
+          createMockFile("a"),
+          createMockFile("b", "b.csv"),
+          createMockFile("c", "c.csv"),
+          createMockFile("d", "d.csv"),
+        ],
+      },
+    });
+
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "Solo se admiten 3 archivos.",
+    );
+    expect(onFilesAccepted).not.toHaveBeenCalled();
+  });
+
   it("reports the invalid-type validation for a rejected MIME type", () => {
     const onFilesAccepted = vi.fn();
     renderDropZone({

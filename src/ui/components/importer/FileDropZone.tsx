@@ -13,12 +13,14 @@ type Props = {
   children?: ReactNode;
 };
 
-type FileDropZoneError = "tooLarge" | "invalidType" | "onlyOne" | "process";
+type FileDropZoneError = "tooLarge" | "invalidType" | "tooMany" | "process";
 
-const ERROR_MESSAGES: Record<FileDropZoneError, MessageKey> = {
+const FIXED_ERROR_MESSAGES: Record<
+  Exclude<FileDropZoneError, "tooMany">,
+  MessageKey
+> = {
   tooLarge: "importer.fileTooLarge",
   invalidType: "importer.invalidType",
-  onlyOne: "importer.onlyOneFile",
   process: "importer.processError",
 };
 
@@ -44,7 +46,7 @@ export const FileDropZone = ({
     const fileList = files instanceof File ? [files] : files;
 
     if (fileList.length > maxFiles) {
-      return "onlyOne";
+      return "tooMany";
     }
 
     if (
@@ -62,6 +64,16 @@ export const FileDropZone = ({
     }
 
     return null;
+  };
+
+  const getErrorText = (value: FileDropZoneError): string => {
+    if (value === "tooMany") {
+      return maxFiles === 1
+        ? t("importer.onlyOneFile")
+        : t("importer.tooManyFiles", { count: maxFiles });
+    }
+
+    return t(FIXED_ERROR_MESSAGES[value]);
   };
 
   const reportProcessError = (cause: unknown) => {
@@ -118,7 +130,7 @@ export const FileDropZone = ({
       </div>
       {error && (
         <div className="FileDropZone__error" role="alert">
-          {t(ERROR_MESSAGES[error])}
+          {getErrorText(error)}
         </div>
       )}
       {fileOrFiles && (

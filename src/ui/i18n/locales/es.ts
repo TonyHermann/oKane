@@ -62,6 +62,7 @@ export const es = {
   "importer.noFileSelected": "No has seleccionado ningún archivo.",
   "importer.noRowsSelected": "No has seleccionado ninguna fila.",
   "importer.onlyOneFile": "Solo se admite un archivo.",
+  "importer.tooManyFiles": "Solo se admiten {count} archivos.",
   "importer.uploadAnother": "Subir otro archivo",
   "importer.preview": "Previsualización",
   "importer.submit": "Subir",
