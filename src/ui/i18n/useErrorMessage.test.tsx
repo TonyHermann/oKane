@@ -23,6 +23,12 @@ const Probe = () => {
         })}
       </span>
       <span data-testid="none">{getErrorMessage(null)}</span>
+      <span data-testid="foreign-code">
+        {getErrorMessage("NOT_A_CODE" as never)}
+      </span>
+      <span data-testid="foreign-descriptor">
+        {getErrorMessage({ code: "NOT_A_CODE" } as never)}
+      </span>
       <button type="button" onClick={() => setLocale("en")}>
         switch to en
       </button>
@@ -57,6 +63,12 @@ describe("useErrorMessage", () => {
       "Falta la columna obligatoria «date».",
     );
     expect(screen.getByTestId("none")).toBeEmptyDOMElement();
+    expect(screen.getByTestId("foreign-code")).toHaveTextContent(
+      "Ocurrió un error inesperado.",
+    );
+    expect(screen.getByTestId("foreign-descriptor")).toHaveTextContent(
+      "Ocurrió un error inesperado.",
+    );
   });
 
   it("maps codes to English messages after switching locale", () => {

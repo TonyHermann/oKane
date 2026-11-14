@@ -1,4 +1,5 @@
 import {
+  isAppErrorCode,
   type AppErrorCode,
   type AppErrorDescriptor,
 } from "@/core/errors/AppErrorCode";
@@ -24,6 +25,11 @@ const ERROR_KEYS: Record<AppErrorCode, MessageKey> = {
 
 export type ErrorMessageInput = AppErrorCode | AppErrorDescriptor | null;
 
+// Old persisted state or a foreign code can reach the UI at runtime; fall back
+// to the generic message instead of translating an undefined key.
+const keyFor = (code: string): MessageKey =>
+  isAppErrorCode(code) ? ERROR_KEYS[code] : "errors.unknown";
+
 export const useErrorMessage = () => {
   const { t } = useTranslation();
 
@@ -31,9 +37,9 @@ export const useErrorMessage = () => {
     if (!input) return "";
 
     if (typeof input === "string") {
-      return t(ERROR_KEYS[input]);
+      return t(keyFor(input));
     }
 
-    return t(ERROR_KEYS[input.code], input.params);
+    return t(keyFor(input.code), input.params);
   };
 };
