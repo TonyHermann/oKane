@@ -1,4 +1,7 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
 import { I18nProvider } from "@/ui/i18n";
@@ -28,5 +31,37 @@ describe("Navbar", () => {
       screen.getByRole("link", { name: "Configuración" }),
     ).toBeInTheDocument();
     expect(screen.getByText("Cambiar tema")).toBeInTheDocument();
+  });
+
+  it("moves focus through every navigation link in order with the keyboard", async () => {
+    const user = userEvent.setup();
+    renderNavbar();
+
+    await user.tab();
+    expect(screen.getByRole("link", { name: "Inicio" })).toHaveFocus();
+    await user.tab();
+    expect(screen.getByRole("link", { name: "Administrar" })).toHaveFocus();
+    await user.tab();
+    expect(screen.getByRole("link", { name: "Presupuesto" })).toHaveFocus();
+    await user.tab();
+    expect(screen.getByRole("link", { name: "Configuración" })).toHaveFocus();
+  });
+
+  it("gives navbar controls a visible focus ring for keyboard focus only", () => {
+    // jsdom cannot compute the rendered outline, so the visible-focus half of
+    // the behaviour is asserted on the stylesheet the app actually ships:
+    // navbar controls must get a visible ring under :focus-visible and must not
+    // keep the inherited outline for pointer focus.
+    const css = readFileSync(
+      resolve(process.cwd(), "src/ui/styles/layout/navbar.css"),
+      "utf8",
+    );
+
+    // keyboard focus: visible ring (any width/style/color, but not none)
+    expect(css).toMatch(/:focus-visible\s*\{[^}]*outline:\s*(?!none|0)/);
+    // pointer focus: inherits no ring
+    expect(css).toMatch(
+      /:focus:not\(:focus-visible\)\s*\{[^}]*outline:\s*none/,
+    );
   });
 });

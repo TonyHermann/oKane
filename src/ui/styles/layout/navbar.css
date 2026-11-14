@@ -8,7 +8,15 @@ nav {
   height: 20px;
   border: solid 1px var(--color-border-strong);
   align-items: center;
-  /* TODO: [navbar-focus-state] Replace the inherited click outline with an intentional :focus-visible ring; keyboard focus must stay visible. */
+  a:focus:not(:focus-visible),
+  button:focus:not(:focus-visible) {
+    outline: none;
+  }
+  a:focus-visible,
+  button:focus-visible {
+    outline: 2px dashed var(--color-accent);
+    outline-offset: 1px;
+  }
   .nav-icon {
     width: 1em;
     height: 1em;
