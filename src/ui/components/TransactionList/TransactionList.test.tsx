@@ -223,13 +223,3 @@ describe("TransactionList", () => {
     ).toBeInTheDocument();
   });
 });
-
-// 2. Test "Cargando…". categories.loadedAt === null → la celda de categoría muestra "Cargando…".
-// 3. Test "Error al cargar categorías". categories.error con valor → la celda muestra ese texto.
-// Criterios (valen para los dos tests, declarados antes de que escribas):
-// - Cubren una sola rama cada uno; el assert apunta al texto de esa rama.
-// - Deterministas. Sin setTimeout, sin esperas arbitrarias, sin sleep. Si el test depende de timing, no cuenta.
-// - Aislan la persistencia siguiendo la convención del repo. No mockees useAppSelector / useAppDispatch.
-// - Sin any y sin duplicar tipos: los tipos se importan de las slices.
-// - npx vitest run src/ui/components/TransactionList verde y npm run typecheck sin errores nuevos.
-// - No tocás la lógica de TransactionList.tsx al final. No commiteás.
