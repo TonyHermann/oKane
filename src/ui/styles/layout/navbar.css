@@ -14,8 +14,8 @@ nav {
   }
   a:focus-visible,
   button:focus-visible {
-    outline: 2px solid var(--color-accent);
-    outline-offset: 2px;
+    outline: 2px dashed var(--color-accent);
+    outline-offset: 1px;
   }
   .nav-icon {
     width: 1em;
