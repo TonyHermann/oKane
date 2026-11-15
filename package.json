@@ -12,6 +12,7 @@
     "typecheck": "tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.node.json --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "ci": "npm run format:check && npm run lint && npm run typecheck && npx vitest run && npm run build",
     "brand:bootstrap": "python3 -m venv .brand-venv && .brand-venv/bin/pip install -r scripts/brand/requirements.txt",
     "brand:build": "bash scripts/brand/build.sh",
     "brand:check": "bash scripts/brand/build.sh --check"

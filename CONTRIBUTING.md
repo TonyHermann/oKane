@@ -74,11 +74,14 @@ Rules:
 ## Before pushing
 
 ```bash
+npm run format:check
 npm run lint
 npm run typecheck
 npx vitest run
 npm run build
 ```
+
+`npm run ci` runs the same set in that order.
 
 `npm test` runs Vitest in watch mode, so it hangs in CI and in scripts. Use `npx vitest run` (or `npm test -- --run`) for a single execution.
 
