@@ -141,7 +141,9 @@ export const UpdateTransactionForm = ({
         {errors.amount && <p id="amount-error">{errors.amount[0]}</p>}
       </div>
       <div>
-        <label htmlFor="transaction-date">{t("transactions.header.date")}</label>
+        <label htmlFor="transaction-date">
+          {t("transactions.header.date")}
+        </label>
         <input
           id="transaction-date"
           name="date"

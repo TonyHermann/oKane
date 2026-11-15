@@ -8,11 +8,7 @@ export {
   catalogs,
 } from "./locales";
 export type { Locale } from "./locales";
-export {
-  I18nProvider,
-  I18nContext,
-  LOCALE_STORAGE_KEY,
-} from "./I18nProvider";
+export { I18nProvider, I18nContext, LOCALE_STORAGE_KEY } from "./I18nProvider";
 export type { I18nValue, TranslationParams } from "./I18nProvider";
 export { useTranslation } from "./useTranslation";
 export { useErrorMessage } from "./useErrorMessage";

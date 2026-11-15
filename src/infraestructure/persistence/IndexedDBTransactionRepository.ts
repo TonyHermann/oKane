@@ -76,10 +76,7 @@ export class IndexedDBTransactionRepository implements ITransactionRepository {
     const chunks = Array.from(
       { length: Math.ceil(transactions.length / CHUNK_SIZE) },
       (_, index) =>
-        transactions.slice(
-          index * CHUNK_SIZE,
-          index * CHUNK_SIZE + CHUNK_SIZE,
-        ),
+        transactions.slice(index * CHUNK_SIZE, index * CHUNK_SIZE + CHUNK_SIZE),
     );
 
     return chunks.reduce<Promise<SaveManyResult>>(

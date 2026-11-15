@@ -13,13 +13,13 @@ const conditionValues = (rule: CategorizationRule): string[] => {
 const isValidRule = (rule: CategorizationRule): boolean => {
   return Boolean(
     rule &&
-      rule.enabled &&
-      Number.isFinite(rule.order) &&
-      rule.condition?.type === "description_contains" &&
-      conditionValues(rule).length > 0 &&
-      rule.category?.id &&
-      typeof rule.category.name === "string" &&
-      rule.category.name.trim(),
+    rule.enabled &&
+    Number.isFinite(rule.order) &&
+    rule.condition?.type === "description_contains" &&
+    conditionValues(rule).length > 0 &&
+    rule.category?.id &&
+    typeof rule.category.name === "string" &&
+    rule.category.name.trim(),
   );
 };
 

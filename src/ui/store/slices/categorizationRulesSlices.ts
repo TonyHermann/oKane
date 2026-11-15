@@ -41,7 +41,9 @@ const initialState: CategorizationRulesState = {
   loadedAt: null,
 };
 
-const toRuleState = (rule: Awaited<ReturnType<typeof CategorizationRuleActions.getAll>>[number]) => ({
+const toRuleState = (
+  rule: Awaited<ReturnType<typeof CategorizationRuleActions.getAll>>[number],
+) => ({
   id: rule.id,
   order: rule.order,
   enabled: rule.enabled,
@@ -97,9 +99,7 @@ export const saveCategorizationRule = createAsyncThunk(
         .filter((value) => value !== "");
 
       if (conditionValues.length === 0) {
-        throw new ValidationError(
-          "The rule needs at least one description.",
-        );
+        throw new ValidationError("The rule needs at least one description.");
       }
 
       const rule = createCategorizationRule({
@@ -143,16 +143,13 @@ export const applyAllCategorizationRules = createAsyncThunk(
 export const previewCategorizationRules = createAsyncThunk<
   RuleApplicationPreview,
   void
->(
-  "categorizationRules/preview",
-  async (_arg, { rejectWithValue }) => {
-    try {
-      return await CategorizationRuleActions.preview();
-    } catch (error) {
-      return rejectWithValue(toErrorCode(error));
-    }
-  },
-);
+>("categorizationRules/preview", async (_arg, { rejectWithValue }) => {
+  try {
+    return await CategorizationRuleActions.preview();
+  } catch (error) {
+    return rejectWithValue(toErrorCode(error));
+  }
+});
 
 export const removeCategorizationRule = createAsyncThunk(
   "categorizationRules/remove",

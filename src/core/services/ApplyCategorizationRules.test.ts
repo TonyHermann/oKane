@@ -5,7 +5,10 @@ import {
   type CategorizationRule,
 } from "@/core/entities/CategorizationRule";
 import { Transaction } from "@/core/entities/Transaction";
-import { findMatchingRule, planRuleApplication } from "./ApplyCategorizationRules";
+import {
+  findMatchingRule,
+  planRuleApplication,
+} from "./ApplyCategorizationRules";
 
 const category = (name: string) => Category.Create({ name });
 
@@ -246,10 +249,9 @@ describe("planRuleApplication", () => {
     const plain = transaction("Supermarket");
     const transactions = [plain];
 
-    const plan = planRuleApplication(
-      transactions,
-      [rule(1, ["super"], category("Food"))],
-    );
+    const plan = planRuleApplication(transactions, [
+      rule(1, ["super"], category("Food")),
+    ]);
 
     expect(plan.toCategorize[0].transaction).toBe(plain);
     expect(plain.categoryId).toBeNull();

@@ -3,9 +3,7 @@ import type { ICategorizationRuleRepository } from "../../core/repositories/ICat
 import { openDB } from "./IndexedDB.js";
 import { logger } from "../../shared/logger/Logger.js";
 
-export class IndexedDBCategorizationRuleRepository
-  implements ICategorizationRuleRepository
-{
+export class IndexedDBCategorizationRuleRepository implements ICategorizationRuleRepository {
   private readonly storeName = "categorizationRules";
 
   async save(rule: CategorizationRule): Promise<void> {
@@ -36,7 +34,9 @@ export class IndexedDBCategorizationRuleRepository
         const request = store.add(rule);
 
         request.onsuccess = () => {
-          logger.info("Categorization rule saved successfully", { id: rule.id });
+          logger.info("Categorization rule saved successfully", {
+            id: rule.id,
+          });
           resolve();
         };
 

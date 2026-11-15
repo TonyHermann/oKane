@@ -32,11 +32,7 @@ describe("toImportErrorDescriptor", () => {
       new InvalidMappingError(),
       { code: "IMPORT_INVALID_MAPPING" },
     ],
-    [
-      "unknown cause",
-      new Error("boom"),
-      { code: "IMPORT_PARSE_FAILED" },
-    ],
+    ["unknown cause", new Error("boom"), { code: "IMPORT_PARSE_FAILED" }],
   ])("maps %s", (_label, cause, expected) => {
     expect(toImportErrorDescriptor(cause)).toEqual(expected);
   });

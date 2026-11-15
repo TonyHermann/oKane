@@ -67,17 +67,11 @@ const TableBody = <T,>({ children }: TableBodyProps<T>) => {
 
   if (typeof children === "function") {
     return (
-      <tbody>
-        {visibleRows.map(({ row, index }) => children(row, index))}
-      </tbody>
+      <tbody>{visibleRows.map(({ row, index }) => children(row, index))}</tbody>
     );
   }
 
-  return (
-    <tbody>
-      {children}
-    </tbody>
-  );
+  return <tbody>{children}</tbody>;
 };
 
 const TableFooter = <T,>({ children }: TableFooterProps) => {
@@ -313,10 +307,7 @@ export const Table = <T,>({
   const toolbar = getElement(children, TableToolbar);
 
   const paginationControls = pagination ? (
-    <nav
-      className="table-pagination"
-      aria-label={t("table.pagination.label")}
-    >
+    <nav className="table-pagination" aria-label={t("table.pagination.label")}>
       <button
         type="button"
         onClick={() => setPage((currentPage) => Math.max(0, currentPage - 1))}

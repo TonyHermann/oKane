@@ -21,7 +21,8 @@ export const toImportErrorDescriptor = (
   error: unknown,
 ): ImportErrorDescriptor => {
   if (error instanceof MissingRequiredColumnError) {
-    const column = typeof error.details === "string" ? error.details : undefined;
+    const column =
+      typeof error.details === "string" ? error.details : undefined;
 
     return column
       ? { code: "IMPORT_MISSING_COLUMN", params: { column } }

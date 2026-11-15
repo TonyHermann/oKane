@@ -52,7 +52,7 @@ export const en: Record<MessageKey, string> = {
     "The CSV could not be parsed. Check the format and quoting.",
   "errors.importFileReadFailed": "The file could not be read.",
   "errors.importInvalidSchema": "The CSV structure is invalid.",
-  "errors.importMissingColumn": "The required column \"{column}\" is missing.",
+  "errors.importMissingColumn": 'The required column "{column}" is missing.',
   "errors.importInvalidMapping": "The column mapping is invalid.",
   "notFound.title": "Oops!",
   "notFound.body": "It looks like you landed on a page that does not exist.",
@@ -100,8 +100,7 @@ export const en: Record<MessageKey, string> = {
   "categories.form.nameLabel": "Name",
   "categories.form.nameRequired": "Name is required",
   "categories.form.nameMax": "Name cannot be longer than 100 characters",
-  "categories.form.nameMaxUpdate":
-    "Name cannot be longer than 100 characters",
+  "categories.form.nameMaxUpdate": "Name cannot be longer than 100 characters",
   "categories.form.submit": "Create category",
   "categories.form.saveError": "The category could not be saved.",
   "categories.form.updateError": "The category could not be edited.",

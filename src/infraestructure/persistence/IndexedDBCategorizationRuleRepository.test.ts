@@ -83,7 +83,10 @@ describe("IndexedDBCategorizationRuleRepository.findAll", () => {
       storedRuleFixture({
         id: "rule-1",
         order: 1,
-        condition: { type: "description_contains", values: ["groceries", "food"] },
+        condition: {
+          type: "description_contains",
+          values: ["groceries", "food"],
+        },
       }),
       storedRuleFixture({
         id: "rule-2",

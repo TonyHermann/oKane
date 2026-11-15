@@ -8,7 +8,11 @@ export const Footer = () => {
       <div>
         <p>
           {t("footer.developedBy")}
-          <a href="https://github.com/TonyHermann/" target="_blank" rel="noreferrer">
+          <a
+            href="https://github.com/TonyHermann/"
+            target="_blank"
+            rel="noreferrer"
+          >
             @TonyHermann
           </a>
           ~竹

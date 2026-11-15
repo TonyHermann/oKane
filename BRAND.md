@@ -6,38 +6,38 @@ Automated build: `scripts/brand/AGENTS.md` (`npm run brand:bootstrap`, `npm run 
 
 ## Assets
 
-| File | Use |
-| --- | --- |
-| `public/brand/logo-lockup.svg` | Primary lockup on light backgrounds. Star and Japanese are vector; the wordmark is the original raster from the PSD, so its filters and effects are preserved. |
-| `public/brand/logo-lockup.png` | Exact transparent raster at 1050×375. Use when a PNG is required. |
-| `public/brand/logo-lockup-inverse.svg` | Lockup for dark or saturated backgrounds. Uses a white silhouette of the original wordmark. |
-| `public/brand/logo-lockup-monochrome.svg` | One-color black lockup. Uses a black silhouette of the original wordmark. |
-| `public/brand/logo-lockup-monochrome-white.svg` | One-color white lockup. Uses a white silhouette of the original wordmark. |
-| `public/brand/logo-lockup-vertical.svg` | Vertical badge. Star and Japanese vector; wordmark raster from the vertical PSD. Transparent interior with a black rounded frame. |
-| `public/brand/logo-lockup-vertical.png` | Exact transparent raster at 716×933. |
-| `public/brand/logo-lockup-vertical-inverse.svg` | Vertical badge for dark backgrounds. White frame and white wordmark silhouette. |
-| `public/brand/logo-lockup-vertical-monochrome.svg` | One-color black vertical badge. |
-| `public/brand/logo-lockup-vertical-monochrome-white.svg` | One-color white vertical badge. |
-| `public/brand/logo-mark.svg` | Star mark, fully vector. Favicon and app icon. |
-| `public/brand/logo-mark-monochrome.svg` | Black star mark. |
-| `public/brand/logo-mark-monochrome-white.svg` | White star mark. |
-| `public/brand/logo-mark-512.png` … `logo-mark-16.png` | Raster mark sizes. |
-| `public/brand/favicon.ico` | 16/32/48 favicon. |
-| `public/brand/apple-touch-icon.png` | 180×180 touch icon. |
-| `public/brand/og-image.png` | 1200×630 social preview. |
-| `public/brand/CREDITS.md` | Font and license references. |
+| File                                                     | Use                                                                                                                                                            |
+| -------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `public/brand/logo-lockup.svg`                           | Primary lockup on light backgrounds. Star and Japanese are vector; the wordmark is the original raster from the PSD, so its filters and effects are preserved. |
+| `public/brand/logo-lockup.png`                           | Exact transparent raster at 1050×375. Use when a PNG is required.                                                                                              |
+| `public/brand/logo-lockup-inverse.svg`                   | Lockup for dark or saturated backgrounds. Uses a white silhouette of the original wordmark.                                                                    |
+| `public/brand/logo-lockup-monochrome.svg`                | One-color black lockup. Uses a black silhouette of the original wordmark.                                                                                      |
+| `public/brand/logo-lockup-monochrome-white.svg`          | One-color white lockup. Uses a white silhouette of the original wordmark.                                                                                      |
+| `public/brand/logo-lockup-vertical.svg`                  | Vertical badge. Star and Japanese vector; wordmark raster from the vertical PSD. Transparent interior with a black rounded frame.                              |
+| `public/brand/logo-lockup-vertical.png`                  | Exact transparent raster at 716×933.                                                                                                                           |
+| `public/brand/logo-lockup-vertical-inverse.svg`          | Vertical badge for dark backgrounds. White frame and white wordmark silhouette.                                                                                |
+| `public/brand/logo-lockup-vertical-monochrome.svg`       | One-color black vertical badge.                                                                                                                                |
+| `public/brand/logo-lockup-vertical-monochrome-white.svg` | One-color white vertical badge.                                                                                                                                |
+| `public/brand/logo-mark.svg`                             | Star mark, fully vector. Favicon and app icon.                                                                                                                 |
+| `public/brand/logo-mark-monochrome.svg`                  | Black star mark.                                                                                                                                               |
+| `public/brand/logo-mark-monochrome-white.svg`            | White star mark.                                                                                                                                               |
+| `public/brand/logo-mark-512.png` … `logo-mark-16.png`    | Raster mark sizes.                                                                                                                                             |
+| `public/brand/favicon.ico`                               | 16/32/48 favicon.                                                                                                                                              |
+| `public/brand/apple-touch-icon.png`                      | 180×180 touch icon.                                                                                                                                            |
+| `public/brand/og-image.png`                              | 1200×630 social preview.                                                                                                                                       |
+| `public/brand/CREDITS.md`                                | Font and license references.                                                                                                                                   |
 
 ## Palette
 
-| Token | Value | Use |
-| --- | --- | --- |
-| Ink | `#000000` | Wordmark and Japanese on light backgrounds. |
-| Paper | `#ffffff` | Wordmark outline and light surfaces. |
-| Inverse text | `#f5f5f5` | Wordmark and Japanese on dark backgrounds. |
-| Star outline | `#5c5c5c` | Star edge. |
-| Star dark | `#909090` | Gradient end. |
-| Star mid | `#c9c9c9` | Gradient middle. |
-| Star light | `#ededed` | Gradient highlight. |
+| Token        | Value     | Use                                         |
+| ------------ | --------- | ------------------------------------------- |
+| Ink          | `#000000` | Wordmark and Japanese on light backgrounds. |
+| Paper        | `#ffffff` | Wordmark outline and light surfaces.        |
+| Inverse text | `#f5f5f5` | Wordmark and Japanese on dark backgrounds.  |
+| Star outline | `#5c5c5c` | Star edge.                                  |
+| Star dark    | `#909090` | Gradient end.                               |
+| Star mid     | `#c9c9c9` | Gradient middle.                            |
+| Star light   | `#ededed` | Gradient highlight.                         |
 
 ## Typography
 

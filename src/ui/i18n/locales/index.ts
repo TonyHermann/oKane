@@ -10,10 +10,7 @@ export type Locale = (typeof SUPPORTED_LOCALES)[number];
 
 export const DEFAULT_LOCALE: Locale = "es";
 
-export const catalogs: Record<
-  Locale,
-  Partial<Record<MessageKey, string>>
-> = {
+export const catalogs: Record<Locale, Partial<Record<MessageKey, string>>> = {
   es,
   en,
 };

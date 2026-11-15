@@ -107,7 +107,6 @@ export const FileDropZone = ({
   };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    // eslint-disable-next-line prefer-destructuring
     const files = e.currentTarget.files;
     if (!files || files.length === 0) return;
     const toPass = files.length > 1 ? Array.from(files) : files[0];

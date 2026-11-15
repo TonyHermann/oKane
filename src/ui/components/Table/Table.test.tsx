@@ -57,8 +57,12 @@ describe("Table", () => {
     expect(screen.getByText("Beta")).toBeInTheDocument();
     expect(screen.queryByText("Gamma")).not.toBeInTheDocument();
     expect(screen.getByRole("table").parentElement).toHaveClass("table-scroll");
-    expect(screen.getByRole("navigation").parentElement).toHaveClass("table-container");
-    expect(screen.getByRole("button", { name: "Página anterior" })).toBeDisabled();
+    expect(screen.getByRole("navigation").parentElement).toHaveClass(
+      "table-container",
+    );
+    expect(
+      screen.getByRole("button", { name: "Página anterior" }),
+    ).toBeDisabled();
 
     fireEvent.click(screen.getByRole("button", { name: "Página siguiente" }));
 
@@ -78,7 +82,9 @@ describe("Table", () => {
       { wrapper },
     );
 
-    expect(screen.getByText("All rows are rendered by the caller.")).toBeInTheDocument();
+    expect(
+      screen.getByText("All rows are rendered by the caller."),
+    ).toBeInTheDocument();
     expect(screen.queryByRole("navigation")).not.toBeInTheDocument();
   });
 

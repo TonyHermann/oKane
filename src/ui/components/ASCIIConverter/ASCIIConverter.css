@@ -34,8 +34,8 @@
 .ascii-output__art {
   margin: 0;
   width: max-content;
-  font-family: "DejaVu Sans Mono", "Noto Sans Mono", "Liberation Mono",
-    monospace;
+  font-family:
+    "DejaVu Sans Mono", "Noto Sans Mono", "Liberation Mono", monospace;
   font-size: 6px;
   line-height: 6px;
   letter-spacing: 0;
