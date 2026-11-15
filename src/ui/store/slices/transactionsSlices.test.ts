@@ -3,7 +3,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { CategorizationRuleActions } from "@/adapters/CategorizationRuleActions";
 import { ImportTransactionActions } from "@/adapters/ImportTransactionActions";
 import { transactionActions } from "@/adapters/TransactionActions";
-import { Category } from "@/core/entities/Category";
 import { CsvSchema } from "@/core/entities/Import/CsvSchema";
 import { Transaction } from "@/core/entities/Transaction";
 import categoriesReducer, { type CategoryState } from "./categorySlices";
@@ -57,7 +56,7 @@ const entityFixture = (
     amount: 100,
     date: FIXED_DATE,
     description: "Café",
-    categories: null,
+    categoryId: null,
     ...overrides,
   });
 
@@ -67,7 +66,7 @@ const createTransactionInput = (
   amount: 250,
   date: FIXED_DATE,
   description: "Nueva transacción",
-  categories: null,
+  categoryId: null,
   ...overrides,
 });
 
@@ -188,7 +187,7 @@ describe("transactions slice write-through", () => {
     vi.useRealTimers();
   });
 
-  it("does not share the category object with the categories slice", async () => {
+  it("stores the category as an id and leaves the categories slice untouched", async () => {
     vi.useFakeTimers();
 
     const cat1 = { id: "cat-1", name: "Comida", created_at: FIXED_DATE };
@@ -203,7 +202,7 @@ describe("transactions slice write-through", () => {
         amount: 999,
         date: FIXED_DATE,
         description: "Café",
-        categories: cat1,
+        categoryId: cat1.id,
         appliedRuleId: null,
       }),
     );
@@ -213,7 +212,7 @@ describe("transactions slice write-through", () => {
     const state = store.getState().transactions;
     expect(state.items).toHaveLength(1);
     expect(categoriesState.items).toHaveLength(1);
-    expect(state.items[0].categories).not.toBe(categoriesState.items[0]);
+    expect(state.items[0].categoryId).toBe(cat1.id);
   });
 
   it("appends a saved transaction and keeps the collection loaded", async () => {
@@ -274,7 +273,7 @@ describe("transactions slice write-through", () => {
         amount: 999,
         date: FIXED_DATE,
         description: "Café",
-        categories: null,
+        categoryId: null,
         appliedRuleId: null,
       }),
     );
@@ -409,11 +408,7 @@ describe("transactions slice apply-rules write-through", () => {
       amount: 100,
       date: FIXED_DATE,
       description: "Café",
-      categories: Category.Rehydrate({
-        id: "cat-food",
-        name: "Food",
-        created_at: FIXED_DATE,
-      }),
+      categoryId: "cat-food",
     });
 
   it("replaces the cached transaction and advances the timestamp", async () => {
@@ -433,7 +428,7 @@ describe("transactions slice apply-rules write-through", () => {
     const state = store.getState().transactions;
     expect(state.items).toHaveLength(1);
     expect(state.items[0].id).toBe("tx-1");
-    expect(state.items[0].categories?.name).toBe("Food");
+    expect(state.items[0].categoryId).toBe("cat-food");
     expect(state.loadedAt).toBe(T1);
   });
 
@@ -446,11 +441,7 @@ describe("transactions slice apply-rules write-through", () => {
         amount: 100,
         date: FIXED_DATE,
         description: "Café",
-        categories: Category.Rehydrate({
-          id: "cat-food",
-          name: "Food",
-          created_at: FIXED_DATE,
-        }),
+        categoryId: "cat-food",
         appliedRuleId: "rule-1",
       }),
     ]);
@@ -511,11 +502,7 @@ describe("action payloads stay serializable", () => {
       amount: 100,
       date: FIXED_DATE,
       description: "Café",
-      categories: Category.Rehydrate({
-        id: "cat-food",
-        name: "Food",
-        created_at: FIXED_DATE,
-      }),
+      categoryId: "cat-food",
     });
 
   const importInput = () => ({
@@ -553,9 +540,6 @@ describe("action payloads stay serializable", () => {
     expect(action.payload.length).toBeGreaterThan(0);
     action.payload.forEach((item) => {
       expect(isPlainObject(item)).toBe(true);
-      if (item.categories) {
-        expect(isPlainObject(item.categories)).toBe(true);
-      }
     });
   });
 
@@ -576,9 +560,6 @@ describe("action payloads stay serializable", () => {
     expect(action.payload.saved.length).toBeGreaterThan(0);
     action.payload.saved.forEach((item) => {
       expect(isPlainObject(item)).toBe(true);
-      if (item.categories) {
-        expect(isPlainObject(item.categories)).toBe(true);
-      }
     });
   });
 });

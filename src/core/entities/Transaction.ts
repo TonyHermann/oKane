@@ -1,12 +1,11 @@
 import { ValidationError } from "../errors/DomainErrors";
-import type { Category } from "./Category";
 import type { CategorizationRule } from "./CategorizationRule";
 
 export type CreateTransactionProps = {
   amount: number;
   date: number;
   description: string;
-  categories?: Category | null;
+  categoryId?: string | null;
 };
 
 export type TransactionProps = CreateTransactionProps & {
@@ -23,7 +22,7 @@ export class Transaction {
 
   public readonly description: string;
 
-  public readonly categories: Category | null;
+  public readonly categoryId: string | null;
 
   public readonly appliedRuleId: string | null;
 
@@ -55,7 +54,7 @@ export class Transaction {
     this.amount = props.amount;
     this.date = props.date;
     this.description = props.description;
-    this.categories = props.categories ? props.categories : null;
+    this.categoryId = props.categoryId ?? null;
     this.appliedRuleId = props.appliedRuleId ?? null;
   }
 
@@ -75,11 +74,11 @@ export class Transaction {
   }
 
   get isManuallyCategorized(): boolean {
-    return this.categories !== null && this.appliedRuleId === null;
+    return this.categoryId !== null && this.appliedRuleId === null;
   }
 
   withCategoryFromRule(rule: CategorizationRule): Transaction {
-    return this.withCategory(rule.category, rule.id);
+    return this.withCategory(rule.category.id, rule.id);
   }
 
   /**
@@ -94,7 +93,7 @@ export class Transaction {
   }
 
   private withCategory(
-    category: Category | null,
+    categoryId: string | null,
     appliedRuleId: string | null,
   ): Transaction {
     return new Transaction({
@@ -102,7 +101,7 @@ export class Transaction {
       amount: this.amount,
       date: this.date,
       description: this.description,
-      categories: category,
+      categoryId,
       appliedRuleId,
     });
   }

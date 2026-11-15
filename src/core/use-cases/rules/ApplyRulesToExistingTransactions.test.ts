@@ -40,8 +40,9 @@ describe("ApplyRulesToExistingTransactions", () => {
         updatedTransactions.push(transaction);
       }),
     } as unknown as ITransactionRepository;
+    const food = Category.Create({ name: "Food" });
     const ruleRepository = {
-      findAll: vi.fn(async () => [rule(1, ["super"], Category.Create({ name: "Food" }))]),
+      findAll: vi.fn(async () => [rule(1, ["super"], food)]),
     } as unknown as ICategorizationRuleRepository;
 
     const updated = await ApplyRulesToExistingTransactions(
@@ -51,11 +52,11 @@ describe("ApplyRulesToExistingTransactions", () => {
 
     expect(updated).toHaveLength(1);
     expect(updated[0].id).toBe(supermarket.id);
-    expect(updated[0].categories?.name).toBe("Food");
+    expect(updated[0].categoryId).toBe(food.id);
     expect(updatedTransactions).toHaveLength(1);
     expect(updatedTransactions[0].id).toBe(supermarket.id);
     expect(updatedTransactions[0]).not.toBe(supermarket);
-    expect(updatedTransactions[0].categories?.name).toBe("Food");
+    expect(updatedTransactions[0].categoryId).toBe(food.id);
   });
 
   it("returns the updated transactions when several match", async () => {
@@ -139,7 +140,7 @@ describe("ApplyRulesToExistingTransactions", () => {
 
     expect(updated).toHaveLength(1);
     expect(updated[0].id).toBe(categorized.id);
-    expect(updated[0].categories).toBeNull();
+    expect(updated[0].categoryId).toBeNull();
     expect(updated[0].appliedRuleId).toBeNull();
     expect(update).toHaveBeenCalledTimes(1);
   });

@@ -71,9 +71,9 @@ describe("ImportTransactions categorization", () => {
     expect(result).toMatchObject({ imported: 2, total: 2, failed: [] });
     expect(result.saved).toHaveLength(2);
     expect(result.saved[0].description).toBe("Supermarket");
-    expect(saved[0].categories?.name).toBe("Food");
+    expect(saved[0].categoryId).toBe(food.id);
     expect(saved[0].appliedRuleId).toBe("rule-1");
-    expect(saved[1].categories).toBeNull();
+    expect(saved[1].categoryId).toBeNull();
     expect(saved[1].appliedRuleId).toBeNull();
   });
 
@@ -126,7 +126,7 @@ describe("ImportTransactions categorization", () => {
       mapping,
     });
 
-    expect(saved[0].categories?.name).toBe("Food");
+    expect(saved[0].categoryId).toBe(food.id);
     expect(saved[0].appliedRuleId).toBe("rule-1");
   });
 
@@ -167,7 +167,7 @@ describe("ImportTransactions categorization", () => {
       mapping,
     });
 
-    expect(saved[0].categories?.name).toBe("Food");
+    expect(saved[0].categoryId).toBe(food.id);
     expect(saved[0].appliedRuleId).toBe("rule-deleted");
   });
 });

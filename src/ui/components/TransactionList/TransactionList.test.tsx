@@ -79,7 +79,7 @@ describe("TransactionList", () => {
       amount: 12.5,
       date: Date.now(),
       description: "Supermercado",
-      categories: staleCategory,
+      categoryId: staleCategory.id,
       appliedRuleId: null,
     };
 
@@ -117,7 +117,7 @@ describe("TransactionList", () => {
       amount: 12.5,
       date: Date.now(),
       description: "Supermercado",
-      categories: categoriaActual,
+      categoryId: categoriaActual.id,
       appliedRuleId: null,
     };
 
@@ -155,7 +155,7 @@ describe("TransactionList", () => {
       amount: 12.5,
       date: Date.now(),
       description: "Supermercado",
-      categories: categoriaActual,
+      categoryId: categoriaActual.id,
       appliedRuleId: null,
     };
 
@@ -194,7 +194,7 @@ describe("TransactionList", () => {
       amount: 12.5,
       date: Date.now(),
       description: "Supermercado",
-      categories: categoriaActual,
+      categoryId: categoriaActual.id,
       appliedRuleId: null,
     };
 

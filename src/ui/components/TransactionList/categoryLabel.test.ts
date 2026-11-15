@@ -23,18 +23,18 @@ describe("getCategoryLabel", () => {
   });
 
   it("returns the current category name when the category still exists", () => {
-    const storedCategory = category({ name: "Nombre antiguo" });
     const currentCategory = category({ name: "Comida" });
     const categoriesById = new Map([[currentCategory.id, currentCategory]]);
 
-    expect(getCategoryLabel(storedCategory, categoriesById, t)).toBe("Comida");
+    expect(getCategoryLabel(currentCategory.id, categoriesById, t)).toBe(
+      "Comida",
+    );
   });
 
   it("returns Categoría eliminada when the stored category no longer exists", () => {
-    const storedCategory = category();
     const categoriesById = new Map<string, CategoryState>();
 
-    expect(getCategoryLabel(storedCategory, categoriesById, t)).toBe(
+    expect(getCategoryLabel("cat-missing", categoriesById, t)).toBe(
       "Categoría eliminada",
     );
   });

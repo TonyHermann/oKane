@@ -3,7 +3,6 @@ import type {
   CreateTransactionState,
   TransactionState,
 } from "../slices/transactionsSlices";
-import { toCategory } from "./toCategory";
 
 export const createTransaction = (
   state: CreateTransactionState,
@@ -12,7 +11,7 @@ export const createTransaction = (
     amount: state.amount,
     description: state.description,
     date: state.date,
-    categories: state.categories ? toCategory(state.categories) : null,
+    categoryId: state.categoryId,
   });
 };
 
@@ -22,7 +21,7 @@ export const toTransaction = (state: TransactionState): Transaction => {
     amount: state.amount,
     description: state.description,
     date: state.date,
-    categories: state.categories ? toCategory(state.categories) : null,
+    categoryId: state.categoryId,
     appliedRuleId: state.appliedRuleId,
   });
 };
@@ -35,13 +34,7 @@ export const toTransactionState = (
     amount: transaction.amount,
     description: transaction.description,
     date: transaction.date,
-    categories: transaction.categories
-      ? {
-          id: transaction.categories.id,
-          name: transaction.categories.name,
-          created_at: transaction.categories.created_at,
-        }
-      : null,
+    categoryId: transaction.categoryId,
     appliedRuleId: transaction.appliedRuleId,
   };
 };

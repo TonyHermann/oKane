@@ -18,8 +18,8 @@ const at = (year: number, month: number, day = 15): number =>
 const tx = (
   amount: number,
   date: number,
-  category: { id: string; name: string } | null = null,
-): SpendingTransaction => ({ amount, date, categories: category });
+  categoryId: string | null = null,
+): SpendingTransaction => ({ amount, date, categoryId });
 
 const JANUARY: SpendingPeriod = { year: 2024, month: 1 };
 
@@ -102,8 +102,8 @@ describe("calculatePeriodSpending", () => {
   });
 
   it("groups expenses by category and keeps uncategorized spend explicit", () => {
-    const food = { id: "cat-food", name: "Comida" };
-    const home = { id: "cat-home", name: "Hogar" };
+    const food = "cat-food";
+    const home = "cat-home";
 
     const result = calculatePeriodSpending(
       [
@@ -120,14 +120,12 @@ describe("calculatePeriodSpending", () => {
     expect(result.uncategorizedSpend).toBe(10);
     expect(result.byCategory).toEqual([
       {
-        categoryId: "cat-food",
-        categoryName: "Comida",
+        categoryId: food,
         amount: 50,
         share: 0.5,
       },
       {
-        categoryId: "cat-home",
-        categoryName: "Hogar",
+        categoryId: home,
         amount: 40,
         share: 0.4,
       },
