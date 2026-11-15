@@ -9,9 +9,7 @@ export const SettingsLayout = () => {
   return (
     <SidebarLayout label={t("settings.title")}>
       <Link to={PATHS.SETTINGS_GENERAL}>{t("settings.general")}</Link>
-      <Link to={PATHS.SETTINGS_LANGUAGE}>
-        {t("settings.languageRegion")}
-      </Link>
+      <Link to={PATHS.SETTINGS_LANGUAGE}>{t("settings.languageRegion")}</Link>
       <Link to={PATHS.SETTINGS_ASCII}>{t("settings.ascii")}</Link>
     </SidebarLayout>
   );

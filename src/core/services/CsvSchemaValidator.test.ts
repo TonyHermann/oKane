@@ -22,9 +22,7 @@ describe("csvSchemaValidator", () => {
       expect.unreachable("validate should have thrown");
     } catch (error) {
       expect(error).toBeInstanceOf(MissingRequiredColumnError);
-      expect((error as MissingRequiredColumnError).details).toBe(
-        "description",
-      );
+      expect((error as MissingRequiredColumnError).details).toBe("description");
     }
   });
 });

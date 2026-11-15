@@ -22,9 +22,11 @@ export const CategorizationRulesPage = () => {
   const getErrorMessage = useErrorMessage();
   const categories = useAppSelector((state) => state.categories.items);
   const transactions = useAppSelector((state) => state.transactions.items);
-  const { items: rules, loading, error } = useAppSelector(
-    (state) => state.categorizationRules,
-  );
+  const {
+    items: rules,
+    loading,
+    error,
+  } = useAppSelector((state) => state.categorizationRules);
   const [selectedDescriptions, setSelectedDescriptions] = useState<string[]>(
     [],
   );
@@ -113,43 +115,48 @@ export const CategorizationRulesPage = () => {
           <label htmlFor="rule-descriptions">
             {t("rules.descriptionsLabel")}
           </label>
-           <select
-             id="rule-descriptions"
-             value={selectedDescription}
-             onChange={handleDescriptionChange}
-           >
-             <option value="">{t("rules.selectDescription")}</option>
-             {availableDescriptions.map((description) => (
-               <option key={description} value={description}>
-                 {description}
-               </option>
-             ))}
-           </select>
-           {selectedDescriptions.length > 0 && (
-             <div
-               className="categorization-rules-selected-descriptions"
-               aria-label={t("rules.selectedDescriptionsAria")}
-             >
-               {selectedDescriptions.map((description) => (
-                 <span className="categorization-rules-description-tag" key={description}>
-                   <span>{description}</span>
-                   <button
-                     type="button"
-                     aria-label={t("rules.removeDescriptionAria", {
-                       description,
-                     })}
-                     onClick={() =>
-                       setSelectedDescriptions((currentDescriptions) =>
-                         currentDescriptions.filter((item) => item !== description),
-                       )
-                     }
-                   >
-                     ×
-                   </button>
-                 </span>
-               ))}
-             </div>
-           )}
+          <select
+            id="rule-descriptions"
+            value={selectedDescription}
+            onChange={handleDescriptionChange}
+          >
+            <option value="">{t("rules.selectDescription")}</option>
+            {availableDescriptions.map((description) => (
+              <option key={description} value={description}>
+                {description}
+              </option>
+            ))}
+          </select>
+          {selectedDescriptions.length > 0 && (
+            <div
+              className="categorization-rules-selected-descriptions"
+              aria-label={t("rules.selectedDescriptionsAria")}
+            >
+              {selectedDescriptions.map((description) => (
+                <span
+                  className="categorization-rules-description-tag"
+                  key={description}
+                >
+                  <span>{description}</span>
+                  <button
+                    type="button"
+                    aria-label={t("rules.removeDescriptionAria", {
+                      description,
+                    })}
+                    onClick={() =>
+                      setSelectedDescriptions((currentDescriptions) =>
+                        currentDescriptions.filter(
+                          (item) => item !== description,
+                        ),
+                      )
+                    }
+                  >
+                    ×
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
           <label htmlFor="rule-category">{t("rules.categoryLabel")}</label>
           <select
             id="rule-category"
@@ -172,17 +179,15 @@ export const CategorizationRulesPage = () => {
             >
               {t("rules.addButton")}
             </button>
-            <button
-              type="button"
-              disabled={loading}
-              onClick={handleApplyAll}
-            >
+            <button type="button" disabled={loading} onClick={handleApplyAll}>
               {t("rules.applyButton")}
             </button>
           </div>
         </form>
 
-        {appliedMessage && <p className="categorization-rules-applied">{appliedMessage}</p>}
+        {appliedMessage && (
+          <p className="categorization-rules-applied">{appliedMessage}</p>
+        )}
         {error && <p role="alert">{getErrorMessage(error)}</p>}
         {rules.length === 0 ? (
           <p>{t("rules.empty")}</p>

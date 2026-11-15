@@ -72,9 +72,8 @@ const restoreURLMethod = (
 };
 
 const loadImage = async () => {
-  const fileInput = document.querySelector<HTMLInputElement>(
-    'input[type="file"]',
-  );
+  const fileInput =
+    document.querySelector<HTMLInputElement>('input[type="file"]');
 
   if (!fileInput) throw new Error("File input not found");
 
@@ -89,8 +88,13 @@ const loadImage = async () => {
 describe("ASCIIConverter", () => {
   beforeEach(() => {
     vi.stubGlobal("Image", FakeImage);
-    vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockReturnValue(context);
-    setURLMethod("createObjectURL", vi.fn(() => "blob:test"));
+    vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockReturnValue(
+      context,
+    );
+    setURLMethod(
+      "createObjectURL",
+      vi.fn(() => "blob:test"),
+    );
     setURLMethod("revokeObjectURL", vi.fn());
   });
 

@@ -11,9 +11,7 @@ const Probe = () => {
   return (
     <div>
       <span>{t("nav.home")}</span>
-      <span data-testid="rowCount">
-        {t("common.rowCount", { count: 3 })}
-      </span>
+      <span data-testid="rowCount">{t("common.rowCount", { count: 3 })}</span>
       <span data-testid="locale">{locale}</span>
       <button type="button" onClick={() => setLocale("es")}>
         switch to es

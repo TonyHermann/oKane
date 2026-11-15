@@ -17,10 +17,7 @@ export const LOCALE_STORAGE_KEY = "okane.locale";
 
 export type TranslationParams = Record<string, string | number>;
 
-export type Translate = (
-  key: MessageKey,
-  params?: TranslationParams,
-) => string;
+export type Translate = (key: MessageKey, params?: TranslationParams) => string;
 
 export interface I18nValue {
   locale: Locale;
@@ -52,10 +49,7 @@ const detectLocale = (): Locale => {
   return DEFAULT_LOCALE;
 };
 
-const interpolate = (
-  template: string,
-  params?: TranslationParams,
-): string => {
+const interpolate = (template: string, params?: TranslationParams): string => {
   if (!params) {
     return template;
   }
@@ -106,7 +100,5 @@ export const I18nProvider = ({ children }: I18nProviderProps) => {
     return { locale, setLocale, t };
   }, [locale]);
 
-  return (
-    <I18nContext.Provider value={value}>{children}</I18nContext.Provider>
-  );
+  return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
 };

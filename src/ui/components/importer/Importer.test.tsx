@@ -44,6 +44,8 @@ describe("Importer", () => {
     expect(await screen.findByRole("alert")).toHaveTextContent(
       "No se pudo interpretar el CSV. Revisa el formato y las comillas.",
     );
-    expect(screen.queryByText("No se pudieron importar las transacciones.")).toBeNull();
+    expect(
+      screen.queryByText("No se pudieron importar las transacciones."),
+    ).toBeNull();
   });
 });

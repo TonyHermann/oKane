@@ -49,15 +49,27 @@ describe("toErrorCode", () => {
 
 describe("resolveErrorCode", () => {
   it.each([
-    ["explicit code", "DATA_UPDATE_FAILED", "DATA_SAVE_FAILED", "DATA_UPDATE_FAILED"],
+    [
+      "explicit code",
+      "DATA_UPDATE_FAILED",
+      "DATA_SAVE_FAILED",
+      "DATA_UPDATE_FAILED",
+    ],
     ["unknown code", "UNKNOWN", "DATA_SAVE_FAILED", "DATA_SAVE_FAILED"],
     ["missing payload", undefined, "DATA_LOAD_FAILED", "DATA_LOAD_FAILED"],
-    ["foreign payload", "ERR_UNKNOWN", "DATA_DELETE_FAILED", "DATA_DELETE_FAILED"],
-    ["non-string payload", { code: "VALIDATION_FAILED" }, "DATA_SAVE_FAILED", "DATA_SAVE_FAILED"],
-  ] as const)(
-    "resolves %s to %s",
-    (_label, payload, fallback, expected) => {
-      expect(resolveErrorCode(payload, fallback)).toBe(expected);
-    },
-  );
+    [
+      "foreign payload",
+      "ERR_UNKNOWN",
+      "DATA_DELETE_FAILED",
+      "DATA_DELETE_FAILED",
+    ],
+    [
+      "non-string payload",
+      { code: "VALIDATION_FAILED" },
+      "DATA_SAVE_FAILED",
+      "DATA_SAVE_FAILED",
+    ],
+  ] as const)("resolves %s to %s", (_label, payload, fallback, expected) => {
+    expect(resolveErrorCode(payload, fallback)).toBe(expected);
+  });
 });

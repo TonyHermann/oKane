@@ -39,9 +39,13 @@ export const asciiConverterSchema = (t: Translate) =>
       ),
   });
 
-const ImageComponent = ({ img, alt }: { img: HTMLImageElement; alt: string }) => (
-  <img style={{ maxWidth: "100px" }} src={img.src} alt={alt} />
-);
+const ImageComponent = ({
+  img,
+  alt,
+}: {
+  img: HTMLImageElement;
+  alt: string;
+}) => <img style={{ maxWidth: "100px" }} src={img.src} alt={alt} />;
 
 interface RenderASCIIProps {
   img: HTMLImageElement;
@@ -237,9 +241,7 @@ export const ASCIIConverter = () => {
         {ASCIIOutput ? (
           <pre className="ascii-output__art">{ASCIIOutput}</pre>
         ) : (
-          <p className="ascii-output__empty">
-            {t("ascii.empty")}
-          </p>
+          <p className="ascii-output__empty">{t("ascii.empty")}</p>
         )}
       </section>
     </>

@@ -45,7 +45,9 @@ const previewFixture = (): RuleApplicationPreview => ({
   enabledRules: 3,
 });
 
-const ruleFixture = (overrides: Partial<CategorizationRule> = {}): CategorizationRule => ({
+const ruleFixture = (
+  overrides: Partial<CategorizationRule> = {},
+): CategorizationRule => ({
   id: "rule-1",
   order: 1,
   enabled: true,
@@ -226,9 +228,7 @@ describe("categorization rules slice errors", () => {
 
     await store.dispatch(loadCategorizationRules());
 
-    expect(store.getState().categorizationRules.error).toBe(
-      "DATA_LOAD_FAILED",
-    );
+    expect(store.getState().categorizationRules.error).toBe("DATA_LOAD_FAILED");
   });
 
   it("stores the validation error code when saving fails", async () => {
@@ -253,9 +253,7 @@ describe("categorization rules slice errors", () => {
       saveCategorizationRule({ categoryId: "cat-1", conditionValues: ["x"] }),
     );
 
-    expect(store.getState().categorizationRules.error).toBe(
-      "DATA_SAVE_FAILED",
-    );
+    expect(store.getState().categorizationRules.error).toBe("DATA_SAVE_FAILED");
   });
 
   it("stores the apply-rules error code when applying fails", async () => {

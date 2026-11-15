@@ -103,7 +103,9 @@ describe("ApplyRulesToExistingTransactions", () => {
       update,
     } as unknown as ITransactionRepository;
     const ruleRepository = {
-      findAll: vi.fn(async () => [rule(1, ["rent"], Category.Create({ name: "Home" }))]),
+      findAll: vi.fn(async () => [
+        rule(1, ["rent"], Category.Create({ name: "Home" })),
+      ]),
     } as unknown as ICategorizationRuleRepository;
 
     const updated = await ApplyRulesToExistingTransactions(

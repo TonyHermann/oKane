@@ -40,18 +40,21 @@ export const CsvTable = ({
         ))}
       </Table.Header>
       <Table.Body>
-          {(row: ICsvRow, index: number) => (
-            <tr key={getRowId(row)}>
-              <Table.SelectRow row={row} index={index} />
+        {(row: ICsvRow, index: number) => (
+          <tr key={getRowId(row)}>
+            <Table.SelectRow row={row} index={index} />
 
-              {Object.entries(row as object).map(([column, value]) => (
-                <td key={column}>{String(value)}</td>
-              ))}
-            </tr>
-          )}
+            {Object.entries(row as object).map(([column, value]) => (
+              <td key={column}>{String(value)}</td>
+            ))}
+          </tr>
+        )}
       </Table.Body>
       <Table.Footer>
-        {plural({ one: "common.rows.one", other: "common.rows.other" }, rows.length)}
+        {plural(
+          { one: "common.rows.one", other: "common.rows.other" },
+          rows.length,
+        )}
       </Table.Footer>
     </Table>
   );

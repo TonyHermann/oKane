@@ -6,9 +6,7 @@ import { getCategoryLabel } from "./categoryLabel";
 
 const t: Translate = (key) => es[key];
 
-const category = (
-  overrides: Partial<CategoryState> = {},
-): CategoryState => ({
+const category = (overrides: Partial<CategoryState> = {}): CategoryState => ({
   id: "cat-1",
   name: "Comida",
   created_at: 1,
