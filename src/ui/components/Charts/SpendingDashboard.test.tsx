@@ -8,6 +8,10 @@ import transactionsReducer, {
   type TransactionsState,
   type TransactionState,
 } from "@/ui/store/slices/transactionsSlices";
+import categoriesReducer, {
+  type CategoriesState,
+  type CategoryState,
+} from "@/ui/store/slices/categorySlices";
 import {
   currentSpendingPeriod,
   previousSpendingPeriod,
@@ -22,13 +26,13 @@ const transaction = (
   id: string,
   amount: number,
   date: number,
-  categories: TransactionState["categories"] = null,
+  categoryId: TransactionState["categoryId"] = null,
 ): TransactionState => ({
   id,
   amount,
   date,
   description: id,
-  categories,
+  categoryId,
   appliedRuleId: null,
 });
 
@@ -42,10 +46,20 @@ const stateWith = (
   ...overrides,
 });
 
-const renderDashboard = (state: TransactionsState) => {
+const categoriesWith = (items: CategoryState[] = []): CategoriesState => ({
+  items,
+  loading: false,
+  error: null,
+  loadedAt: 1,
+});
+
+const renderDashboard = (
+  state: TransactionsState,
+  categories: CategoriesState = categoriesWith(),
+) => {
   const store = configureStore({
-    reducer: { transactions: transactionsReducer },
-    preloadedState: { transactions: state },
+    reducer: { transactions: transactionsReducer, categories: categoriesReducer },
+    preloadedState: { transactions: state, categories },
   });
 
   const Wrapper = ({ children }: { children: ReactNode }) => (
@@ -84,16 +98,13 @@ describe("SpendingDashboard", () => {
     renderDashboard(
       stateWith({
         items: [
-          transaction("food", -100, thisMonth(3), {
-            id: "cat-food",
-            name: "Comida",
-            created_at: 1,
-          }),
+          transaction("food", -100, thisMonth(3), "cat-food"),
           transaction("uncategorized", -50, thisMonth(4)),
           transaction("salary", 200, thisMonth(5)),
           transaction("last-month", -75, lastMonth(3)),
         ],
       }),
+      categoriesWith([{ id: "cat-food", name: "Comida", created_at: 1 }]),
     );
 
     expect(screen.getByText(/150,00/)).toBeInTheDocument();
@@ -126,7 +137,7 @@ describe("SpendingDashboard", () => {
   });
 
   it("shows an accessible error state with a retry action", () => {
-    renderDashboard(stateWith({ error: "IndexedDB unavailable", loadedAt: 1 }));
+    renderDashboard(stateWith({ error: "DATA_LOAD_FAILED", loadedAt: 1 }));
 
     expect(screen.getByRole("alert")).toHaveTextContent(
       "No se pudo cargar el resumen de gastos.",

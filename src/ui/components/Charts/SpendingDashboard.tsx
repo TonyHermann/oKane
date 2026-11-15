@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/ui/store/hooks";
 import { loadTransactions } from "@/ui/store/slices/transactionsSlices";
+import { loadCategories } from "@/ui/store/slices/categorySlices";
+import { getCategoryLabel } from "@/ui/components/TransactionList/categoryLabel";
 import {
   useFormatters,
   useTranslation,
@@ -52,8 +54,14 @@ export const SpendingDashboard = () => {
   const transactions = useAppSelector((state) => state.transactions.items);
   const loading = useAppSelector((state) => state.transactions.loading);
   const error = useAppSelector((state) => state.transactions.error);
+  const categories = useAppSelector((state) => state.categories.items);
   const { t } = useTranslation();
   const formatters = useFormatters();
+
+  const categoriesById = useMemo(
+    () => new Map(categories.map((category) => [category.id, category])),
+    [categories],
+  );
 
   const [period, setPeriod] = useState<SpendingPeriod>(() =>
     currentSpendingPeriod(),
@@ -61,6 +69,7 @@ export const SpendingDashboard = () => {
 
   useEffect(() => {
     dispatch(loadTransactions());
+    dispatch(loadCategories());
   }, [dispatch]);
 
   const overview = useMemo(
@@ -79,7 +88,7 @@ export const SpendingDashboard = () => {
   const rows: BreakdownRow[] = useMemo(() => {
     const categorized = overview.current.byCategory.map((category) => ({
       key: `category-${category.categoryId}`,
-      label: category.categoryName,
+      label: getCategoryLabel(category.categoryId, categoriesById, t),
       amount: category.amount,
       share: category.share,
       uncategorized: false,
@@ -100,7 +109,7 @@ export const SpendingDashboard = () => {
         uncategorized: true,
       },
     ];
-  }, [overview, t]);
+  }, [overview, t, categoriesById]);
 
   const periodControl = (
     <div className={styles.periodControl}>
