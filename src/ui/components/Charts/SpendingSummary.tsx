@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { useAppDispatch, useAppSelector } from "@/ui/store/hooks";
 import { loadTransactions } from "@/ui/store/slices/transactionsSlices";
 import { loadCategories } from "@/ui/store/slices/categorySlices";
@@ -13,14 +13,19 @@ import {
 import {
   currentSpendingPeriod,
   GetSpendingOverview,
-  spendingPeriodFromMonthInput,
-  spendingPeriodToMonthInput,
+  isInSpendingPeriod,
+  nextSpendingPeriod,
+  previousSpendingPeriod,
   type SpendingDelta,
   type SpendingPeriod,
 } from "@/core/use-cases/dashboard/GetSpendingOverview";
 import { Spinner } from "@/ui/components/Spinner";
 import { Button } from "@/ui/components/Button/Button";
-import styles from "./SpendingDashboard.module.css";
+import {
+  CategoryBreakdown,
+  type CategoryBreakdownRow,
+} from "./CategoryBreakdown";
+import styles from "./SpendingSummary.module.css";
 
 type Translate = (key: MessageKey, params?: TranslationParams) => string;
 
@@ -41,15 +46,7 @@ const describeDelta = (
     : t("dashboard.delta.down", { percent });
 };
 
-interface BreakdownRow {
-  key: string;
-  label: string;
-  amount: number;
-  share: number;
-  uncategorized: boolean;
-}
-
-export const SpendingDashboard = () => {
+export const SpendingSummary = () => {
   const dispatch = useAppDispatch();
   const transactions = useAppSelector((state) => state.transactions.items);
   const loading = useAppSelector((state) => state.transactions.loading);
@@ -66,6 +63,7 @@ export const SpendingDashboard = () => {
   const [period, setPeriod] = useState<SpendingPeriod>(() =>
     currentSpendingPeriod(),
   );
+  const [expandedKey, setExpandedKey] = useState<string | null>(null);
 
   useEffect(() => {
     dispatch(loadTransactions());
@@ -85,9 +83,10 @@ export const SpendingDashboard = () => {
     [overview, t, formatters],
   );
 
-  const rows: BreakdownRow[] = useMemo(() => {
+  const rows: CategoryBreakdownRow[] = useMemo(() => {
     const categorized = overview.current.byCategory.map((category) => ({
       key: `category-${category.categoryId}`,
+      categoryId: category.categoryId,
       label: getCategoryLabel(category.categoryId, categoriesById, t),
       amount: category.amount,
       share: category.share,
@@ -100,6 +99,7 @@ export const SpendingDashboard = () => {
       ...categorized,
       {
         key: "uncategorized",
+        categoryId: null,
         label: t("dashboard.uncategorized"),
         amount: overview.current.uncategorizedSpend,
         share:
@@ -111,21 +111,81 @@ export const SpendingDashboard = () => {
     ];
   }, [overview, t, categoriesById]);
 
+  const changePeriod = (next: SpendingPeriod) => {
+    setPeriod(next);
+    setExpandedKey(null);
+  };
+
+  const toggleExpanded = (key: string) => {
+    setExpandedKey((current) => (current === key ? null : key));
+  };
+
+  const renderExpanded = (row: CategoryBreakdownRow): ReactNode => {
+    const expandedTransactions = transactions.filter(
+      (transaction) =>
+        transaction.categoryId === row.categoryId &&
+        isInSpendingPeriod(transaction.date, period),
+    );
+
+    return (
+      <div className={styles.transactions}>
+        <p
+          id={`${row.key}-transactions-title`}
+          className={styles.transactionsTitle}
+        >
+          {t("dashboard.categoryTransactions", { category: row.label })}
+        </p>
+        {expandedTransactions.length === 0 ? (
+          <p className={styles.status}>
+            {t("dashboard.noCategoryTransactions")}
+          </p>
+        ) : (
+          <ul
+            className={styles.transactionsList}
+            aria-labelledby={`${row.key}-transactions-title`}
+          >
+            {expandedTransactions.map((transaction) => (
+              <li key={transaction.id} className={styles.transaction}>
+                <span>
+                  {formatters.date.format(new Date(transaction.date))}
+                </span>
+                <span className={styles.transactionDescription}>
+                  {transaction.description}
+                </span>
+                <span>{formatters.currency.format(transaction.amount)}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    );
+  };
+
   const periodControl = (
-    <div className={styles.periodControl}>
-      <label className={styles.periodLabel} htmlFor="spending-period">
-        {t("dashboard.period")}
-      </label>
-      <input
-        id="spending-period"
-        className={styles.periodInput}
-        type="month"
-        value={spendingPeriodToMonthInput(period)}
-        onChange={(event) => {
-          const next = spendingPeriodFromMonthInput(event.target.value);
-          if (next !== null) setPeriod(next);
-        }}
-      />
+    <div
+      className={styles.periodControl}
+      role="group"
+      aria-label={t("dashboard.period")}
+    >
+      <button
+        type="button"
+        className={styles.periodButton}
+        aria-label={t("dashboard.previousPeriod")}
+        onClick={() => changePeriod(previousSpendingPeriod(period))}
+      >
+        ←
+      </button>
+      <span className={styles.periodLabel}>
+        {formatters.month.format(new Date(period.year, period.month - 1, 1))}
+      </span>
+      <button
+        type="button"
+        className={styles.periodButton}
+        aria-label={t("dashboard.nextPeriod")}
+        onClick={() => changePeriod(nextSpendingPeriod(period))}
+      >
+        →
+      </button>
     </div>
   );
 
@@ -205,50 +265,12 @@ export const SpendingDashboard = () => {
             </div>
           </dl>
 
-          <div className={styles.breakdown}>
-            <table className={styles.table}>
-              <caption className={styles.caption}>
-                {t("dashboard.categoryBreakdown")}
-              </caption>
-              <thead>
-                <tr>
-                  <th scope="col">{t("dashboard.category")}</th>
-                  <th scope="col">{t("dashboard.amount")}</th>
-                  <th scope="col">{t("dashboard.share")}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {rows.length === 0 ? (
-                  <tr>
-                    <td colSpan={3}>{t("dashboard.noExpenses")}</td>
-                  </tr>
-                ) : (
-                  rows.map((row) => (
-                    <tr key={row.key}>
-                      <th
-                        scope="row"
-                        className={
-                          row.uncategorized ? styles.uncategorized : ""
-                        }
-                      >
-                        {row.label}
-                      </th>
-                      <td>{formatters.currency.format(row.amount)}</td>
-                      <td>
-                        <span className={styles.barTrack} aria-hidden="true">
-                          <span
-                            className={styles.barFill}
-                            style={{ width: `${Math.round(row.share * 100)}%` }}
-                          />
-                        </span>
-                        {`${formatPercent(row.share * 100, formatters)}%`}
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+          <CategoryBreakdown
+            rows={rows}
+            expandedKey={expandedKey}
+            onToggle={toggleExpanded}
+            renderExpanded={renderExpanded}
+          />
         </>
       )}
     </section>

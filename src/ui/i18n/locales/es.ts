@@ -162,6 +162,8 @@ export const es = {
   "ascii.onlyOneImage": "Solo se permite una imagen a la vez",
   "dashboard.title": "Resumen de gastos",
   "dashboard.period": "Periodo",
+  "dashboard.previousPeriod": "Período anterior",
+  "dashboard.nextPeriod": "Período siguiente",
   "dashboard.totalSpend": "Gasto total",
   "dashboard.income": "Ingresos",
   "dashboard.balance": "Balance",
@@ -178,6 +180,9 @@ export const es = {
   "dashboard.uncategorized": "Sin categoría",
   "dashboard.empty": "No hay movimientos en este periodo.",
   "dashboard.noExpenses": "No hay gastos registrados en este periodo.",
+  "dashboard.categoryTransactions": "Movimientos de {category}",
+  "dashboard.noCategoryTransactions":
+    "No hay movimientos de esta categoría en este período.",
   "dashboard.loading": "Cargando resumen de gastos…",
   "dashboard.error": "No se pudo cargar el resumen de gastos.",
   "dashboard.retry": "Reintentar",

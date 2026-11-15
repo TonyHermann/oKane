@@ -15,9 +15,8 @@ import categoriesReducer, {
 import {
   currentSpendingPeriod,
   previousSpendingPeriod,
-  spendingPeriodToMonthInput,
 } from "@/core/use-cases/dashboard/GetSpendingOverview";
-import { SpendingDashboard } from "./SpendingDashboard";
+import { SpendingSummary } from "./SpendingSummary";
 
 const timestampIn = (year: number, month: number, day = 10): number =>
   new Date(year, month - 1, day, 12).getTime();
@@ -53,7 +52,7 @@ const categoriesWith = (items: CategoryState[] = []): CategoriesState => ({
   loadedAt: 1,
 });
 
-const renderDashboard = (
+const renderSummary = (
   state: TransactionsState,
   categories: CategoriesState = categoriesWith(),
 ) => {
@@ -68,7 +67,7 @@ const renderDashboard = (
     </I18nProvider>
   );
 
-  return render(<SpendingDashboard />, { wrapper: Wrapper });
+  return render(<SpendingSummary />, { wrapper: Wrapper });
 };
 
 const period = currentSpendingPeriod();
@@ -77,9 +76,9 @@ const previousPeriod = previousSpendingPeriod(period);
 const lastMonth = (day = 10) =>
   timestampIn(previousPeriod.year, previousPeriod.month, day);
 
-describe("SpendingDashboard", () => {
+describe("SpendingSummary", () => {
   it("shows a loading state while transactions load", () => {
-    renderDashboard(stateWith({ loading: true, loadedAt: null }));
+    renderSummary(stateWith({ loading: true, loadedAt: null }));
 
     expect(
       screen.getByRole("status", { name: /cargando resumen de gastos/i }),
@@ -87,7 +86,7 @@ describe("SpendingDashboard", () => {
   });
 
   it("shows an explicit empty state when the period has no transactions", () => {
-    renderDashboard(stateWith());
+    renderSummary(stateWith());
 
     expect(
       screen.getByText("No hay movimientos en este periodo."),
@@ -95,7 +94,7 @@ describe("SpendingDashboard", () => {
   });
 
   it("renders totals, deltas and the category breakdown from store data", () => {
-    renderDashboard(
+    renderSummary(
       stateWith({
         items: [
           transaction("food", -100, thisMonth(3), "cat-food"),
@@ -117,7 +116,7 @@ describe("SpendingDashboard", () => {
   });
 
   it("updates every metric when the selected period changes", () => {
-    renderDashboard(
+    renderSummary(
       stateWith({
         items: [
           transaction("current", -100, thisMonth(3)),
@@ -128,16 +127,66 @@ describe("SpendingDashboard", () => {
 
     expect(screen.getAllByText(/100,00/).length).toBeGreaterThan(0);
 
-    fireEvent.change(screen.getByLabelText("Periodo"), {
-      target: { value: spendingPeriodToMonthInput(previousPeriod) },
-    });
+    fireEvent.click(screen.getByRole("button", { name: "Período anterior" }));
 
     expect(screen.getAllByText(/40,00/).length).toBeGreaterThan(0);
     expect(screen.queryAllByText(/100,00/)).toHaveLength(0);
+
+    fireEvent.click(screen.getByRole("button", { name: "Período siguiente" }));
+
+    expect(screen.getAllByText(/100,00/).length).toBeGreaterThan(0);
+  });
+
+  it("toggles a category's transactions from its row button", () => {
+    renderSummary(
+      stateWith({
+        items: [
+          transaction("food-one", -100, thisMonth(3), "cat-food"),
+          transaction("food-two", -20, thisMonth(4), "cat-food"),
+        ],
+      }),
+      categoriesWith([{ id: "cat-food", name: "Comida", created_at: 1 }]),
+    );
+
+    const toggle = screen.getByRole("button", { name: "Comida" });
+
+    expect(toggle).toHaveAttribute("aria-expanded", "false");
+    expect(toggle).toHaveAttribute(
+      "aria-controls",
+      "category-cat-food-transactions",
+    );
+
+    fireEvent.click(toggle);
+
+    expect(toggle).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByText("food-one")).toBeInTheDocument();
+    expect(screen.getByText("food-two")).toBeInTheDocument();
+
+    fireEvent.click(toggle);
+
+    expect(toggle).toHaveAttribute("aria-expanded", "false");
+    expect(screen.queryByText("food-one")).not.toBeInTheDocument();
+    expect(screen.queryByText("food-two")).not.toBeInTheDocument();
+  });
+
+  it("expands the uncategorized row and lists its transactions", () => {
+    renderSummary(
+      stateWith({ items: [transaction("misc", -50, thisMonth(4))] }),
+    );
+
+    const toggle = screen.getByRole("button", { name: "Sin categoría" });
+
+    fireEvent.click(toggle);
+
+    expect(toggle).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByText("misc")).toBeInTheDocument();
+    expect(
+      screen.getByText("Movimientos de Sin categoría"),
+    ).toBeInTheDocument();
   });
 
   it("shows an accessible error state with a retry action", () => {
-    renderDashboard(stateWith({ error: "DATA_LOAD_FAILED", loadedAt: 1 }));
+    renderSummary(stateWith({ error: "DATA_LOAD_FAILED", loadedAt: 1 }));
 
     expect(screen.getByRole("alert")).toHaveTextContent(
       "No se pudo cargar el resumen de gastos.",

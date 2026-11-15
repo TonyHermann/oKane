@@ -4,6 +4,7 @@ import { useTranslation } from "./useTranslation";
 export interface Formatters {
   currency: Intl.NumberFormat;
   date: Intl.DateTimeFormat;
+  month: Intl.DateTimeFormat;
   number: Intl.NumberFormat;
 }
 
@@ -17,6 +18,10 @@ export const useFormatters = (): Formatters => {
         currency: "EUR",
       }),
       date: new Intl.DateTimeFormat(locale, { dateStyle: "medium" }),
+      month: new Intl.DateTimeFormat(locale, {
+        month: "long",
+        year: "numeric",
+      }),
       number: new Intl.NumberFormat(locale),
     }),
     [locale],

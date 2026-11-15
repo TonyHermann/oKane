@@ -78,6 +78,13 @@ export const previousSpendingPeriod = (
   return { year: period.year, month: (period.month - 1) as MonthOfYear };
 };
 
+export const nextSpendingPeriod = (period: SpendingPeriod): SpendingPeriod => {
+  if (period.month === 12) {
+    return { year: period.year + 1, month: 1 };
+  }
+  return { year: period.year, month: (period.month + 1) as MonthOfYear };
+};
+
 export const sameMonthPreviousYearPeriod = (
   period: SpendingPeriod,
 ): SpendingPeriod => ({ year: period.year - 1, month: period.month });
@@ -100,7 +107,12 @@ export const spendingPeriodFromMonthInput = (
   return { year, month: month as MonthOfYear };
 };
 
-const isInPeriod = (timestamp: number, period: SpendingPeriod): boolean => {
+// Exported so the category drill-down in the UI shares this month rule
+// instead of re-implementing it.
+export const isInSpendingPeriod = (
+  timestamp: number,
+  period: SpendingPeriod,
+): boolean => {
   const date = new Date(timestamp);
   return (
     date.getFullYear() === period.year && date.getMonth() + 1 === period.month
@@ -125,7 +137,7 @@ export const calculatePeriodSpending = (
   let uncategorizedSpend = 0;
 
   transactions.forEach((transaction) => {
-    if (!isInPeriod(transaction.date, period)) return;
+    if (!isInSpendingPeriod(transaction.date, period)) return;
 
     transactionCount += 1;
 

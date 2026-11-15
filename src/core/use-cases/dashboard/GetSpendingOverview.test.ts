@@ -3,6 +3,7 @@ import {
   calculatePeriodSpending,
   currentSpendingPeriod,
   GetSpendingOverview,
+  nextSpendingPeriod,
   previousSpendingPeriod,
   sameMonthPreviousYearPeriod,
   spendingPeriodFromMonthInput,
@@ -46,6 +47,17 @@ describe("spending period helpers", () => {
     expect(previousSpendingPeriod({ year: 2024, month: 6 })).toEqual({
       year: 2024,
       month: 5,
+    });
+  });
+
+  it("advances to the next period over a year boundary", () => {
+    expect(nextSpendingPeriod({ year: 2024, month: 12 })).toEqual({
+      year: 2025,
+      month: 1,
+    });
+    expect(nextSpendingPeriod({ year: 2024, month: 6 })).toEqual({
+      year: 2024,
+      month: 7,
     });
   });
 

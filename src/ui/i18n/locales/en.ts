@@ -162,6 +162,8 @@ export const en: Record<MessageKey, string> = {
   "ascii.onlyOneImage": "Only one image is allowed at a time",
   "dashboard.title": "Spending summary",
   "dashboard.period": "Period",
+  "dashboard.previousPeriod": "Previous period",
+  "dashboard.nextPeriod": "Next period",
   "dashboard.totalSpend": "Total spend",
   "dashboard.income": "Income",
   "dashboard.balance": "Balance",
@@ -178,6 +180,9 @@ export const en: Record<MessageKey, string> = {
   "dashboard.uncategorized": "Uncategorized",
   "dashboard.empty": "No transactions in this period.",
   "dashboard.noExpenses": "No spending recorded in this period.",
+  "dashboard.categoryTransactions": "Transactions in {category}",
+  "dashboard.noCategoryTransactions":
+    "No transactions in this category for this period.",
   "dashboard.loading": "Loading spending summary…",
   "dashboard.error": "The spending summary could not be loaded.",
   "dashboard.retry": "Retry",
