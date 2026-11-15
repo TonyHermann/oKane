@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import type { RuleApplicationPreview } from "@/core/use-cases/rules/PreviewRulesApplication";
+import { I18nProvider } from "@/ui/i18n";
 import { ApplyRulesConfirmation } from "./ApplyRulesConfirmation";
 
 const preview = (
@@ -16,15 +17,24 @@ const preview = (
   ...overrides,
 });
 
+const renderConfirmation = (
+  values: RuleApplicationPreview,
+  onConfirm = vi.fn(),
+  onCancel = vi.fn(),
+) =>
+  render(
+    <I18nProvider>
+      <ApplyRulesConfirmation
+        preview={values}
+        onConfirm={onConfirm}
+        onCancel={onCancel}
+      />
+    </I18nProvider>,
+  );
+
 describe("ApplyRulesConfirmation", () => {
   it("renders the real counts", () => {
-    render(
-      <ApplyRulesConfirmation
-        preview={preview()}
-        onConfirm={vi.fn()}
-        onCancel={vi.fn()}
-      />,
-    );
+    renderConfirmation(preview());
 
     expect(
       screen.getByText(
@@ -38,21 +48,25 @@ describe("ApplyRulesConfirmation", () => {
 
   it("shows the destructive warning only when there is something to revert", () => {
     const { rerender } = render(
-      <ApplyRulesConfirmation
-        preview={preview()}
-        onConfirm={vi.fn()}
-        onCancel={vi.fn()}
-      />,
+      <I18nProvider>
+        <ApplyRulesConfirmation
+          preview={preview()}
+          onConfirm={vi.fn()}
+          onCancel={vi.fn()}
+        />
+      </I18nProvider>,
     );
 
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
 
     rerender(
-      <ApplyRulesConfirmation
-        preview={preview({ toRevert: 2 })}
-        onConfirm={vi.fn()}
-        onCancel={vi.fn()}
-      />,
+      <I18nProvider>
+        <ApplyRulesConfirmation
+          preview={preview({ toRevert: 2 })}
+          onConfirm={vi.fn()}
+          onCancel={vi.fn()}
+        />
+      </I18nProvider>,
     );
 
     expect(screen.getByRole("alert")).toHaveTextContent(
@@ -60,16 +74,18 @@ describe("ApplyRulesConfirmation", () => {
     );
   });
 
+  it("uses the singular form for a single reverted transaction", () => {
+    renderConfirmation(preview({ toRevert: 1 }));
+
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "quita la categoría a 1 transacción",
+    );
+  });
+
   it("confirms through the callback", async () => {
     const onConfirm = vi.fn();
 
-    render(
-      <ApplyRulesConfirmation
-        preview={preview()}
-        onConfirm={onConfirm}
-        onCancel={vi.fn()}
-      />,
-    );
+    renderConfirmation(preview(), onConfirm);
 
     await userEvent.click(screen.getByRole("button", { name: "Confirmar" }));
 
@@ -80,13 +96,7 @@ describe("ApplyRulesConfirmation", () => {
     const onConfirm = vi.fn();
     const onCancel = vi.fn();
 
-    render(
-      <ApplyRulesConfirmation
-        preview={preview()}
-        onConfirm={onConfirm}
-        onCancel={onCancel}
-      />,
-    );
+    renderConfirmation(preview(), onConfirm, onCancel);
 
     await userEvent.click(screen.getByRole("button", { name: "Cancelar" }));
 

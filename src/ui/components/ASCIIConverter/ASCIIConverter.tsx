@@ -1,5 +1,6 @@
 import {
   useEffect,
+  useMemo,
   useRef,
   useState,
   type ChangeEvent,
@@ -18,6 +19,8 @@ import {
 } from "@/core/services/AsciiArt";
 import { FieldError } from "@/ui/components/FieldError/FieldError";
 import { Select } from "@/ui/components/Select/Select";
+import { useTranslation } from "@/ui/i18n";
+import type { Translate } from "@/ui/i18n/I18nProvider";
 import { logger } from "@/shared/logger/Logger";
 import "./ASCIIConverter.css";
 
@@ -25,23 +28,19 @@ const MIN_COLS = 20;
 const MAX_COLS = 300;
 const DEFAULT_COLS = "100";
 
-export const asciiConverterSchema = z.object({
-  cols: z.coerce
-    .number()
-    .refine(
-      (value) =>
-        Number.isInteger(value) && value >= MIN_COLS && value <= MAX_COLS,
-      `El ancho debe ser un entero entre ${MIN_COLS} y ${MAX_COLS}.`,
-    ),
-});
+export const asciiConverterSchema = (t: Translate) =>
+  z.object({
+    cols: z.coerce
+      .number()
+      .refine(
+        (value) =>
+          Number.isInteger(value) && value >= MIN_COLS && value <= MAX_COLS,
+        t("ascii.widthError", { min: MIN_COLS, max: MAX_COLS }),
+      ),
+  });
 
-const PRESET_OPTIONS: { value: AsciiPresetId; label: string }[] = [
-  { value: "classic", label: "Clásico" },
-  { value: "braille", label: "Braille" },
-];
-
-const ImageComponent = ({ img }: { img: HTMLImageElement }) => (
-  <img style={{ maxWidth: "100px" }} src={img.src} alt="Imagen seleccionada" />
+const ImageComponent = ({ img, alt }: { img: HTMLImageElement; alt: string }) => (
+  <img style={{ maxWidth: "100px" }} src={img.src} alt={alt} />
 );
 
 interface RenderASCIIProps {
@@ -92,6 +91,7 @@ const renderASCII = ({ img, cols, canvas, ramp }: RenderASCIIProps) => {
 };
 
 export const ASCIIConverter = () => {
+  const { t } = useTranslation();
   const [image, setImage] = useState<File | null>(null);
   const [loadedImage, setLoadedImage] = useState<HTMLImageElement | null>(null);
   const [ASCIIOutput, setASCIIOutput] = useState<string>("");
@@ -99,8 +99,14 @@ export const ASCIIConverter = () => {
   const [colsInput, setColsInput] = useState(DEFAULT_COLS);
   const [colsTouched, setColsTouched] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const schema = useMemo(() => asciiConverterSchema(t), [t]);
 
-  const colsResult = asciiConverterSchema.safeParse({ cols: colsInput });
+  const presetOptions: { value: AsciiPresetId; label: string }[] = [
+    { value: "classic", label: t("ascii.preset.classic") },
+    { value: "braille", label: t("ascii.preset.braille") },
+  ];
+
+  const colsResult = schema.safeParse({ cols: colsInput });
   const colsError =
     !colsResult.success && colsTouched
       ? colsResult.error.issues[0]?.message
@@ -135,7 +141,7 @@ export const ASCIIConverter = () => {
 
   const handleFilesAccepted = (file: File | Array<File>) => {
     if (Array.isArray(file)) {
-      throw new ValidationError("Solo se permite una imagen a la vez", "file");
+      throw new ValidationError(t("ascii.onlyOneImage"), "file");
     }
     setLoadedImage(null);
     setImage(file);
@@ -183,24 +189,26 @@ export const ASCIIConverter = () => {
             setASCIIOutput("");
           }}
         >
-          Haz click aquí para subir otra imágen.
+          {t("ascii.uploadAnother")}
         </button>
       )}
       <canvas className="hidden" ref={canvasRef} />
-      {loadedImage && <ImageComponent img={loadedImage} />}
+      {loadedImage && (
+        <ImageComponent img={loadedImage} alt={t("ascii.selectedImage")} />
+      )}
       <div className="ascii-controls">
         <div className="ascii-field">
           <Select
             id="ascii-preset"
             name="preset"
-            label="Estilo"
-            options={PRESET_OPTIONS}
+            label={t("ascii.presetLabel")}
+            options={presetOptions}
             value={preset}
             onChange={handlePresetChange}
           />
         </div>
         <div className="ascii-field">
-          <label htmlFor="ascii-cols">Ancho</label>
+          <label htmlFor="ascii-cols">{t("ascii.width")}</label>
           <input
             id="ascii-cols"
             name="cols"
@@ -219,18 +227,18 @@ export const ASCIIConverter = () => {
       </div>
       <div className="ascii-actions">
         <button type="button" onClick={handleGenerate} disabled={!canGenerate}>
-          ¡Generar!
+          {t("ascii.generate")}
         </button>
-        <button type="button" disabled title="Próximamente">
-          Guardar ASCII Art
+        <button type="button" disabled title={t("ascii.comingSoon")}>
+          {t("ascii.save")}
         </button>
       </div>
-      <section className="ascii-output" aria-label="Resultado ASCII">
+      <section className="ascii-output" aria-label={t("ascii.result")}>
         {ASCIIOutput ? (
           <pre className="ascii-output__art">{ASCIIOutput}</pre>
         ) : (
           <p className="ascii-output__empty">
-            Todavía no generaste ningún ASCII.
+            {t("ascii.empty")}
           </p>
         )}
       </section>

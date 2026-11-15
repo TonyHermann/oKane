@@ -1,9 +1,13 @@
+import { useTranslation } from "@/ui/i18n";
+
 export const Footer = () => {
+  const { t } = useTranslation();
+
   return (
     <footer className="glass">
       <div>
         <p>
-          Developed by
+          {t("footer.developedBy")}
           <a href="https://github.com/TonyHermann/" target="_blank" rel="noreferrer">
             @TonyHermann
           </a>

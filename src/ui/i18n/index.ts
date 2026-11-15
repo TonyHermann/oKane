@@ -15,5 +15,8 @@ export {
 } from "./I18nProvider";
 export type { I18nValue, TranslationParams } from "./I18nProvider";
 export { useTranslation } from "./useTranslation";
+export { useErrorMessage } from "./useErrorMessage";
 export { useFormatters } from "./useFormatters";
 export type { Formatters } from "./useFormatters";
+export { usePlural } from "./usePlural";
+export type { PluralKeys } from "./usePlural";

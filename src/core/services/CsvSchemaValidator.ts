@@ -4,10 +4,12 @@ import type { ICsvSchemaValidator } from "./ICsvSchemaValidator";
 
 export const csvSchemaValidator: ICsvSchemaValidator = {
   validate(headers: string[], schema: CsvSchema) {
-    const ok = schema.hasRequiredColumns(headers);
+    const missingColumn = schema.requiredColumns.find(
+      (column) => !headers.includes(column),
+    );
 
-    if (!ok) {
-      throw new MissingRequiredColumnError();
+    if (missingColumn) {
+      throw new MissingRequiredColumnError(missingColumn);
     }
   },
 };

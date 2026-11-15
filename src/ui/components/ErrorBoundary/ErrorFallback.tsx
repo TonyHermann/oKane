@@ -1,17 +1,18 @@
+import { useTranslation } from "@/ui/i18n";
 import type { FallbackProps } from "./ErrorBoundaryTypes";
 
-export const ErrorFallback = ({ error, resetError }: FallbackProps) => {
-  const { message } = error;
+export const ErrorFallback = ({ resetError }: FallbackProps) => {
+  const { t } = useTranslation();
   return (
     <div className="errorPage">
-      <h2>Sorry. Something went wrong. </h2>
+      <h2>{t("errors.boundary.title")}</h2>
       <p>
-        Try{" "}
+        {t("errors.boundary.try")}{" "}
         <button onClick={resetError} type="button">
-          refreshing.
+          {t("errors.boundary.retry")}
         </button>
       </p>
-      <p>{message}</p>
+      <p>{t("errors.unknown")}</p>
     </div>
   );
 };

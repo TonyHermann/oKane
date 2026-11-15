@@ -1,5 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
+import type { ReactNode } from "react";
 import { describe, expect, it, vi } from "vitest";
+import { I18nProvider } from "@/ui/i18n";
 import { Table } from "./Table";
 
 interface TestRow {
@@ -14,6 +16,10 @@ const rows: TestRow[] = [
   { id: "d", label: "Delta" },
   { id: "e", label: "Epsilon" },
 ];
+
+const wrapper = ({ children }: { children: ReactNode }) => (
+  <I18nProvider>{children}</I18nProvider>
+);
 
 const renderTable = (
   tableRows = rows,
@@ -40,6 +46,7 @@ const renderTable = (
         )}
       </Table.Body>
     </Table>,
+    { wrapper },
   );
 
 describe("Table", () => {
@@ -68,6 +75,7 @@ describe("Table", () => {
           </tr>
         </Table.Body>
       </Table>,
+      { wrapper },
     );
 
     expect(screen.getByText("All rows are rendered by the caller.")).toBeInTheDocument();
@@ -100,5 +108,22 @@ describe("Table", () => {
 
     expect(screen.getByText("Alpha")).toBeInTheDocument();
     expect(screen.getByText("Página 1 de 1")).toBeInTheDocument();
+  });
+
+  it("gives each row checkbox a distinct accessible name", () => {
+    renderTable();
+
+    expect(
+      screen.getByRole("checkbox", { name: "Seleccionar todas las filas" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("checkbox", { name: "Seleccionar fila a" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("checkbox", { name: "Seleccionar fila b" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("checkbox", { name: "Seleccionar fila" }),
+    ).not.toBeInTheDocument();
   });
 });

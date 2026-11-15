@@ -1,7 +1,9 @@
-@import url(./base/_xp.css);
-@import url(./base/_variables.css);
-@import url(./base/fonts.css);
-@import url(./base/_globals.css);
+@import url(./reset.css);
+@import url(./variables.css);
+@import url(./vendor/_xp.css);
+@import url(./typography.css);
+@import url(./global.css);
+@import url(./utilities.css);
 
 @import url(./layout/navbar.css);
 @import url(./layout/footer.css);

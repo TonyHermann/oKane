@@ -102,6 +102,7 @@ describe("TransactionList", () => {
       categories: categoriesState,
     });
     expect(screen.getByText("Categoría eliminada")).toBeInTheDocument();
+    expect(screen.getByText("1 fila")).toBeInTheDocument();
   });
 
   it("should render the list item in the list with the current category name label on category column", () => {
@@ -181,7 +182,7 @@ describe("TransactionList", () => {
     expect(screen.getByText("Cargando…")).toBeInTheDocument();
   });
 
-  it("should render 'Error al cargar categorías' text on categories field if error !== null", () => {
+  it("should render the translated load error text on categories field if error !== null", () => {
     const categoriaActual: CategoryState = {
       id: "cat-1",
       name: "Comida (old)",
@@ -207,7 +208,7 @@ describe("TransactionList", () => {
     const categoriesState: CategoriesState = {
       items: [categoriaActual],
       loading: true,
-      error: "Error al cargar categorías, amigo!",
+      error: "DATA_LOAD_FAILED",
       loadedAt: null,
     };
 
@@ -218,17 +219,7 @@ describe("TransactionList", () => {
 
     expect(screen.queryByText("Comida (old)")).not.toBeInTheDocument();
     expect(
-      screen.getByText("Error al cargar categorías, amigo!"),
+      screen.getByText("No se pudieron cargar los datos."),
     ).toBeInTheDocument();
   });
 });
-
-// 2. Test "Cargando…". categories.loadedAt === null → la celda de categoría muestra "Cargando…".
-// 3. Test "Error al cargar categorías". categories.error con valor → la celda muestra ese texto.
-// Criterios (valen para los dos tests, declarados antes de que escribas):
-// - Cubren una sola rama cada uno; el assert apunta al texto de esa rama.
-// - Deterministas. Sin setTimeout, sin esperas arbitrarias, sin sleep. Si el test depende de timing, no cuenta.
-// - Aislan la persistencia siguiendo la convención del repo. No mockees useAppSelector / useAppDispatch.
-// - Sin any y sin duplicar tipos: los tipos se importan de las slices.
-// - npx vitest run src/ui/components/TransactionList verde y npm run typecheck sin errores nuevos.
-// - No tocás la lógica de TransactionList.tsx al final. No commiteás.

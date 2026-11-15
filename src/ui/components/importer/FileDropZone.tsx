@@ -1,73 +1,104 @@
 import { useRef, useState, type ChangeEvent, type ReactNode } from "react";
 import "./FileDropZone.css";
+import { type MessageKey, useTranslation } from "@/ui/i18n";
 import { FileValidator } from "@/core/services/FileValidator";
+import { logger } from "@/shared/logger/Logger";
 import { useDragging } from "@/ui/hooks/useDragging";
 
 type Props = {
   onFilesAccepted: (files: File | Array<File>) => void | Promise<void>;
   maxFileSize?: number;
+  maxFiles?: number;
   validFileTypes?: string[];
   children?: ReactNode;
 };
 
+type FileDropZoneError = "tooLarge" | "invalidType" | "tooMany" | "process";
+
+const FIXED_ERROR_MESSAGES: Record<
+  Exclude<FileDropZoneError, "tooMany">,
+  MessageKey
+> = {
+  tooLarge: "importer.fileTooLarge",
+  invalidType: "importer.invalidType",
+  process: "importer.processError",
+};
+
+const toError = (cause: unknown): Error =>
+  cause instanceof Error ? cause : new Error(String(cause));
+
 export const FileDropZone = ({
   onFilesAccepted,
   maxFileSize,
+  maxFiles = 1,
   validFileTypes,
   children,
 }: Props) => {
-  const [error, setError] = useState<Error | null>(null);
+  const { t } = useTranslation();
+  const [error, setError] = useState<FileDropZoneError | null>(null);
   const [fileOrFiles, setFiles] = useState<File | Array<File> | null>(null);
   const elementRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { isValidType, isValidSize } = FileValidator;
 
-  const validateFile = (file: File): boolean => {
-    if (maxFileSize && !isValidSize(maxFileSize, file.size)) {
-      setError(
-        new Error("El archivo que has ingresado, supera el límite de peso."),
-      );
-      return false;
+  const validateFiles = (
+    files: File | Array<File>,
+  ): FileDropZoneError | null => {
+    const fileList = files instanceof File ? [files] : files;
+
+    if (fileList.length > maxFiles) {
+      return "tooMany";
     }
-    if (validFileTypes && !isValidType(validFileTypes, file.type)) {
-      setError(
-        new Error("El archivo que has ingresado, no es de un tipo válido."),
-      );
-      return false;
+
+    if (
+      maxFileSize !== undefined &&
+      fileList.some((file) => !isValidSize(maxFileSize, file.size))
+    ) {
+      return "tooLarge";
     }
-    setError(null);
-    return true;
+
+    if (
+      validFileTypes &&
+      fileList.some((file) => !isValidType(validFileTypes, file.type))
+    ) {
+      return "invalidType";
+    }
+
+    return null;
   };
 
-  const reportError = (cause: unknown) => {
-    setError(
-      cause instanceof Error
-        ? cause
-        : new Error("No se pudo procesar el archivo."),
-    );
+  const getErrorText = (value: FileDropZoneError): string => {
+    if (value === "tooMany") {
+      return maxFiles === 1
+        ? t("importer.onlyOneFile")
+        : t("importer.tooManyFiles", { count: maxFiles });
+    }
+
+    return t(FIXED_ERROR_MESSAGES[value]);
+  };
+
+  const reportProcessError = (cause: unknown) => {
+    // The cause is diagnostic only: the user gets the stable process message.
+    logger.error(toError(cause), "FileDropZone: file processing failed");
+    setError("process");
   };
 
   const handleChanges = (files: File | Array<File>) => {
-    let checkError = false;
-    if (files) {
-      if (files instanceof File) {
-        checkError = !validateFile(files);
-      } else {
-        files.forEach((file) => {
-          checkError = !validateFile(file) || checkError;
-        });
-      }
+    const validationError = validateFiles(files);
+
+    if (validationError) {
+      setError(validationError);
+      return;
     }
-    if (checkError) return;
 
     try {
       const result = onFilesAccepted(files);
       if (result instanceof Promise) {
-        result.catch(reportError);
+        result.catch(reportProcessError);
       }
-    } catch (cause: unknown) {
-      reportError(cause);
+    } catch (cause) {
+      reportProcessError(cause);
       return;
     }
 
@@ -96,10 +127,14 @@ export const FileDropZone = ({
         data-testid="dropzone"
         ref={elementRef}
       >
-        <p>¡Dropea un archivo aquí!</p>
-        <p className="FileDropZone__hint">o haz clic para seleccionar</p>
+        <p>{t("importer.dropHere")}</p>
+        <p className="FileDropZone__hint">{t("importer.hint")}</p>
       </div>
-      {error && <div className="FileDropZone__error">{error.message}</div>}
+      {error && (
+        <div className="FileDropZone__error" role="alert">
+          {getErrorText(error)}
+        </div>
+      )}
       {fileOrFiles && (
         <div className="FileDropZone__files">
           {fileOrFiles instanceof Array

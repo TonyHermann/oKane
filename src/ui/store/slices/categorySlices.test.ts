@@ -214,7 +214,7 @@ describe("categories slice", () => {
     expect(store.getState().categories.loadedAt).not.toBeNull();
   });
 
-  it("saveCategory rejection without a message surfaces the Spanish fallback", async () => {
+  it("stores the save error code when saving fails", async () => {
     const store = createTestStore();
     vi.mocked(CategoryActions.save).mockRejectedValue({ code: "ERR_UNKNOWN" });
 
@@ -222,7 +222,25 @@ describe("categories slice", () => {
 
     const state = store.getState().categories;
     expect(state.loading).toBe(false);
-    expect(state.error).toBe("Error al guardar una categoría.");
+    expect(state.error).toBe("DATA_SAVE_FAILED");
+  });
+
+  it("stores the load error code when loading fails", async () => {
+    const store = createTestStore();
+    vi.mocked(CategoryActions.getAll).mockRejectedValue(new Error("offline"));
+
+    await store.dispatch(loadCategories());
+
+    expect(store.getState().categories.error).toBe("DATA_LOAD_FAILED");
+  });
+
+  it("stores the delete error code when removing fails", async () => {
+    const store = createTestStore([categoryFixture({ id: "cat-1" })]);
+    vi.mocked(CategoryActions.delete).mockRejectedValue(new Error("offline"));
+
+    await store.dispatch(removeCategory("cat-1"));
+
+    expect(store.getState().categories.error).toBe("DATA_DELETE_FAILED");
   });
 
   it("preserves items and loadedAt when persistence fails", async () => {
@@ -238,5 +256,6 @@ describe("categories slice", () => {
 
     expect(store.getState().categories.items).toEqual(before.items);
     expect(store.getState().categories.loadedAt).toBe(before.loadedAt);
+    expect(store.getState().categories.error).toBe("DATA_UPDATE_FAILED");
   });
 });

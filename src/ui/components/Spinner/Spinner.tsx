@@ -1,4 +1,5 @@
 import type { FunctionComponent } from "react";
+import { useTranslation } from "@/ui/i18n";
 import "./spinner.css";
 
 export interface SpinnerProps {
@@ -9,7 +10,7 @@ export interface SpinnerProps {
   size?: number;
   /**
    * Accessible label for the spinner.
-   * @default "Loading"
+   * @default the localized "Loading" message
    */
   label?: string;
   /**
@@ -20,18 +21,21 @@ export interface SpinnerProps {
 
 export const Spinner: FunctionComponent<SpinnerProps> = ({
   size = 24,
-  label = "Loading",
+  label,
   className = "",
 }) => {
+  const { t } = useTranslation();
+  const resolvedLabel = label ?? t("common.loading");
+
   return (
     <div
       className={`spinner ${className}`.trim()}
       role="status"
-      aria-label={label}
+      aria-label={resolvedLabel}
       style={{ width: size, height: size }}
     >
       <span className="spinner-icon" />
-      <span className="sr-only">{label}</span>
+      <span className="sr-only">{resolvedLabel}</span>
     </div>
   );
 };

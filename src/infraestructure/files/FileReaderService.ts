@@ -1,3 +1,5 @@
+import { FileReadError } from "@/core/errors/ImportErrors";
+
 export const FileReaderService = {
   readAsText: (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -8,7 +10,7 @@ export const FileReaderService = {
       };
 
       reader.onerror = () => {
-        reject(new Error("Error reading file"));
+        reject(new FileReadError());
       };
 
       reader.readAsText(file);

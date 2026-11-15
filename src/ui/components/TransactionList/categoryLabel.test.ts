@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 import type { CategoryState } from "@/ui/store/slices/categorySlices";
+import { es } from "@/ui/i18n/locales/es";
+import type { Translate } from "@/ui/i18n/I18nProvider";
 import { getCategoryLabel } from "./categoryLabel";
+
+const t: Translate = (key) => es[key];
 
 const category = (
   overrides: Partial<CategoryState> = {},
@@ -15,20 +19,22 @@ describe("getCategoryLabel", () => {
   it("returns Sin categoría when the transaction has no category", () => {
     const categoriesById = new Map<string, CategoryState>();
 
-    expect(getCategoryLabel(null, categoriesById)).toBe("Sin categoría");
+    expect(getCategoryLabel(null, categoriesById, t)).toBe("Sin categoría");
   });
 
   it("returns the current category name when the category still exists", () => {
     const currentCategory = category({ name: "Comida" });
     const categoriesById = new Map([[currentCategory.id, currentCategory]]);
 
-    expect(getCategoryLabel(currentCategory.id, categoriesById)).toBe("Comida");
+    expect(getCategoryLabel(currentCategory.id, categoriesById, t)).toBe(
+      "Comida",
+    );
   });
 
   it("returns Categoría eliminada when the stored category no longer exists", () => {
     const categoriesById = new Map<string, CategoryState>();
 
-    expect(getCategoryLabel("cat-missing", categoriesById)).toBe(
+    expect(getCategoryLabel("cat-missing", categoriesById, t)).toBe(
       "Categoría eliminada",
     );
   });

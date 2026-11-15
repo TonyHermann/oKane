@@ -1,0 +1,12 @@
+.wrapper {
+  display: flex;
+  gap: var(--space-5);
+}
+
+.container {
+  margin: 0 0 var(--space-3) 0;
+}
+
+.disabled {
+  cursor: not-allowed;
+}

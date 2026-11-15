@@ -17,10 +17,15 @@ export const LOCALE_STORAGE_KEY = "okane.locale";
 
 export type TranslationParams = Record<string, string | number>;
 
+export type Translate = (
+  key: MessageKey,
+  params?: TranslationParams,
+) => string;
+
 export interface I18nValue {
   locale: Locale;
   setLocale: (locale: Locale) => void;
-  t: (key: MessageKey, params?: TranslationParams) => string;
+  t: Translate;
 }
 
 export const I18nContext = createContext<I18nValue | null>(null);

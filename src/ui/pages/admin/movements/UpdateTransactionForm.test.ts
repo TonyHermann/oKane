@@ -1,5 +1,15 @@
 import { describe, it, expect } from "vitest";
+import { en } from "@/ui/i18n/locales/en";
+import { es, type MessageKey } from "@/ui/i18n/locales/es";
+import type { Translate } from "@/ui/i18n/I18nProvider";
 import { updateTransactionSchema } from "./UpdateTransactionForm";
+
+const translate =
+  (catalog: Record<MessageKey, string>): Translate =>
+  (key) =>
+    catalog[key];
+
+const schema = updateTransactionSchema(translate(es));
 
 describe("updateTransactionSchema", () => {
   it("accepts an empty categoryId", () => {
@@ -10,7 +20,7 @@ describe("updateTransactionSchema", () => {
       categoryId: "",
     };
 
-    const result = updateTransactionSchema.safeParse(input);
+    const result = schema.safeParse(input);
 
     expect(result.success).toBe(true);
   });
@@ -24,7 +34,7 @@ describe("updateTransactionSchema", () => {
       categoryId: mockId,
     };
 
-    const result = updateTransactionSchema.safeParse(input);
+    const result = schema.safeParse(input);
 
     expect(result.success).toBe(true);
   });
@@ -37,8 +47,27 @@ describe("updateTransactionSchema", () => {
       categoryId: null,
     };
 
-    const result = updateTransactionSchema.safeParse(input);
+    const result = schema.safeParse(input);
 
     expect(result.success).toBe(false);
+  });
+
+  it("uses the message from the active locale catalog", () => {
+    const input = {
+      description: "",
+      amount: 25,
+      date: new Date("2026-01-01"),
+      categoryId: "",
+    };
+
+    const esResult = updateTransactionSchema(translate(es)).safeParse(input);
+    const enResult = updateTransactionSchema(translate(en)).safeParse(input);
+
+    expect(esResult.success).toBe(false);
+    expect(enResult.success).toBe(false);
+    expect(esResult.error?.issues[0]?.message).toBe(
+      "La descripción es obligatoria.",
+    );
+    expect(enResult.error?.issues[0]?.message).toBe("Description is required.");
   });
 });
