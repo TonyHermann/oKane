@@ -8,18 +8,21 @@ oKane is a local-first personal finance app that runs entirely in the browser an
 
 ## Commands
 
-| Command             | What it does                                                   |
-| ------------------- | -------------------------------------------------------------- |
-| `npm run dev`       | Start the Vite dev server.                                     |
-| `npm run build`     | Production build. Does not typecheck.                          |
-| `npm run preview`   | Serve the built output.                                        |
-| `npm test`          | Vitest in watch mode. Hangs in CI.                             |
-| `npm run lint`      | ESLint over `src` and the Vite/Vitest configs.                 |
-| `npm run typecheck` | `tsc` over the app and node projects. The only full typecheck. |
+| Command                | What it does                                                   |
+| ---------------------- | -------------------------------------------------------------- |
+| `npm run dev`          | Start the Vite dev server.                                     |
+| `npm run build`        | Production build. Does not typecheck.                          |
+| `npm run preview`      | Serve the built output.                                        |
+| `npm test`             | Vitest in watch mode. Hangs in CI.                             |
+| `npm run lint`         | ESLint over `src` and the Vite/Vitest configs.                 |
+| `npm run typecheck`    | `tsc` over the app and node projects. The only full typecheck. |
+| `npm run format`       | Format the repository with Prettier.                           |
+| `npm run format:check` | Verify formatting without writing.                             |
+| `npm run ci`           | Everything CI runs, in the same order.                         |
 
 - `npm test` is watch mode. For a single run use `npx vitest run` or `npm test -- --run`.
 - `npm test` and `npm run build` do not typecheck. Run `npm run typecheck` explicitly.
-- CI runs lint, typecheck, `npx vitest run` and build on every push to `dev`/`main` and on every pull request.
+- CI runs format check, lint, typecheck, `npx vitest run` and build on every push to `dev`/`main` and on every pull request. `npm run ci` runs the same set locally.
 
 ## Architecture boundaries
 

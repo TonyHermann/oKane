@@ -45,6 +45,8 @@ npm test           # tests in watch mode
 npx vitest run     # tests, single run
 npm run typecheck  # tsc over both projects
 npm run lint       # eslint
+npm run format     # prettier, writes
+npm run ci         # everything CI runs, in the same order
 ```
 
 `npm test` and `npm run build` do **not** typecheck. `npm run typecheck` is the only command that runs `tsc` over the whole project.
