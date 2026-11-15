@@ -35,9 +35,7 @@ export const UpdateTransactionForm = ({
   const [date, setDate] = useState(
     `${initialDate.getFullYear()}-${String(initialDate.getMonth() + 1).padStart(2, "0")}-${String(initialDate.getDate()).padStart(2, "0")}`,
   );
-  const [categoryId, setCategoryId] = useState(
-    transaction.categories?.id || "",
-  );
+  const [categoryId, setCategoryId] = useState(transaction.categoryId ?? "");
   const [errors, setErrors] = useState<{
     description?: string[];
     amount?: string[];
@@ -68,20 +66,16 @@ export const UpdateTransactionForm = ({
     setSubmitError(null);
 
     try {
-      const selectedCategory = categories.find((catx) => {
-        return catx.id === result.data.categoryId;
-      });
-
       await dispatch(
         updateTransaction({
           ...transaction,
           description: result.data.description,
           amount: result.data.amount,
           date: result.data.date.getTime(),
-          categories: selectedCategory || null,
+          categoryId: result.data.categoryId || null,
           appliedRuleId: resolveAppliedRuleIdAfterEdit({
-            currentCategoryId: transaction.categories?.id ?? null,
-            nextCategoryId: selectedCategory?.id ?? null,
+            currentCategoryId: transaction.categoryId,
+            nextCategoryId: result.data.categoryId || null,
             appliedRuleId: transaction.appliedRuleId,
           }),
         }),

@@ -98,7 +98,7 @@ describe("planRuleApplication", () => {
       amount: 10,
       date: Date.now(),
       description: "Supermarket",
-      categories: category("Manual"),
+      categoryId: category("Manual").id,
     });
 
     const plan = planRuleApplication(
@@ -252,7 +252,7 @@ describe("planRuleApplication", () => {
     );
 
     expect(plan.toCategorize[0].transaction).toBe(plain);
-    expect(plain.categories).toBeNull();
+    expect(plain.categoryId).toBeNull();
     expect(plain.appliedRuleId).toBeNull();
     expect(transactions).toEqual([plain]);
   });

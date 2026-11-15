@@ -13,10 +13,7 @@ import { RemoveIcon } from "../Icons/RemoveIcon";
 import useModalContext from "../modal/context/useModalContext";
 import Modal from "../modal/Modal";
 import { UpdateTransactionForm } from "@/ui/pages/admin/movements/UpdateTransactionForm";
-import {
-  loadCategories,
-  type CategoryState,
-} from "@/ui/store/slices/categorySlices";
+import { loadCategories } from "@/ui/store/slices/categorySlices";
 import { getCategoryLabel } from "./categoryLabel";
 import { useFormatters, type Formatters } from "@/ui/i18n";
 
@@ -46,7 +43,6 @@ const TransactionRow = ({
       <td>{row.description}</td>
       <td>{formattedAmount}</td>
       <td>{formatters.date.format(new Date(row.date))}</td>
-      {/* TODO: [transaction-category-selection] Resolve the stored category against the current category index and show "Categoría eliminada" for stale references. */}
       <td>{categoryLabel}</td>
       <td>
         <div className="rowActions-container">
@@ -146,10 +142,10 @@ export const TransactionList = ({
     );
   }
 
-  const toCategoryLabel = (stored: CategoryState | null) => {
+  const toCategoryLabel = (categoryId: string | null) => {
     if (categoriesError) return categoriesError;
     if (categoriesLoadedAt === null) return "Cargando…";
-    return getCategoryLabel(stored, categoriesById);
+    return getCategoryLabel(categoryId, categoriesById);
   };
 
   return (
@@ -179,7 +175,7 @@ export const TransactionList = ({
                 index={index}
                 handleEdit={handleEdit}
                 handleRemove={handleRemove}
-                categoryLabel={toCategoryLabel(transaction.categories)}
+                categoryLabel={toCategoryLabel(transaction.categoryId)}
                 formatters={formatters}
               />
             )}

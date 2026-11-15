@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import { Category } from "@/core/entities/Category";
 import { Transaction } from "@/core/entities/Transaction";
 import type { TransactionState } from "../slices/transactionsSlices";
 import {
@@ -7,18 +6,17 @@ import {
   toTransaction,
   toTransactionState,
 } from "./toTransaction";
-import type { CategoryState } from "../slices/categorySlices";
 
 const FIXED_DATE = new Date("2024-01-01").getTime();
 
 describe("toTransaction → toTransactionState round-trip", () => {
-  it("preserves appliedRuleId and the category snapshot", () => {
+  it("preserves appliedRuleId and the category id", () => {
     const state: TransactionState = {
       id: "tx-1",
       amount: 100,
       date: FIXED_DATE,
       description: "Café",
-      categories: { id: "cat-1", name: "Food", created_at: FIXED_DATE },
+      categoryId: "cat-1",
       appliedRuleId: "rule-1",
     };
 
@@ -33,7 +31,7 @@ describe("toTransaction → toTransactionState round-trip", () => {
       amount: 50,
       date: FIXED_DATE,
       description: "Manual",
-      categories: { id: "cat-2", name: "Otros", created_at: FIXED_DATE },
+      categoryId: "cat-2",
       appliedRuleId: null,
     };
 
@@ -46,18 +44,14 @@ describe("toTransaction → toTransactionState round-trip", () => {
       amount: 10,
       date: FIXED_DATE,
       description: "Café",
-      categories: Category.Rehydrate({
-        id: "cat-1",
-        name: "Food",
-        created_at: FIXED_DATE,
-      }),
+      categoryId: "cat-1",
       appliedRuleId: "rule-9",
     });
 
     const state = toTransactionState(transaction);
 
     expect(state.appliedRuleId).toBe("rule-9");
-    expect(state.categories?.id).toBe("cat-1");
+    expect(state.categoryId).toBe("cat-1");
   });
 
   it("creates new transactions without provenance", () => {
@@ -65,58 +59,44 @@ describe("toTransaction → toTransactionState round-trip", () => {
       amount: 10,
       date: FIXED_DATE,
       description: "Nueva",
-      categories: null,
+      categoryId: null,
     });
 
     expect(transaction.appliedRuleId).toBeNull();
     expect(toTransactionState(transaction).appliedRuleId).toBeNull();
   });
 
-  it("returns its category as an entity, not a plain object", () => {
+  it("passes the category id through instead of a snapshot", () => {
     const state: TransactionState = {
       id: "tx-1",
       amount: 100,
       date: FIXED_DATE,
       description: "Café",
-      categories: { id: "cat-1", name: "Food", created_at: FIXED_DATE },
+      categoryId: "cat-1",
       appliedRuleId: null,
     };
 
-    const transaction = toTransaction(state);
-
-    expect(transaction.categories).toBeInstanceOf(Category);
+    expect(toTransaction(state).categoryId).toBe("cat-1");
+    expect(
+      createTransaction({
+        amount: 100,
+        date: FIXED_DATE,
+        description: "Café",
+        categoryId: "cat-1",
+      }).categoryId,
+    ).toBe("cat-1");
   });
 
-  it("createTransaction returns its category as an entity, not a plain object", () => {
-    const transaction = createTransaction({
-      amount: 100,
-      date: FIXED_DATE,
-      description: "Café",
-      categories: { id: "cat-1", name: "Food", created_at: FIXED_DATE },
-    });
-
-    expect(transaction.categories).toBeInstanceOf(Category);
-  });
-
-  it("does not share category with the store", () => {
-    const storedCategory: CategoryState = {
-      id: "cat-1",
-      name: "Food",
-      created_at: FIXED_DATE,
-    };
-
+  it("keeps an uncategorized transaction uncategorized", () => {
     const state: TransactionState = {
       id: "tx-1",
       amount: 100,
       date: FIXED_DATE,
       description: "Café",
-      categories: storedCategory,
+      categoryId: null,
       appliedRuleId: null,
     };
 
-    const transaction = toTransaction(state);
-    storedCategory.name = "Modified";
-
-    expect(transaction.categories?.name).toBe("Food");
+    expect(toTransactionState(toTransaction(state)).categoryId).toBeNull();
   });
 });

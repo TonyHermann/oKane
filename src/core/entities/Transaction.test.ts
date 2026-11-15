@@ -25,7 +25,7 @@ describe("Transaction provenance", () => {
       amount: 10,
       date: Date.now(),
       description: "Supermarket",
-      categories: category("Food"),
+      categoryId: category("Food").id,
     });
 
     expect(transaction.appliedRuleId).toBeNull();
@@ -39,19 +39,20 @@ describe("Transaction provenance", () => {
       description: "Supermarket",
     });
 
-    expect(transaction.categories).toBeNull();
+    expect(transaction.categoryId).toBeNull();
     expect(transaction.isManuallyCategorized).toBe(false);
   });
 
   it("does not treat a rule-applied category as manual", () => {
+    const food = category("Food");
     const transaction = Transaction.Create({
       amount: 10,
       date: Date.now(),
       description: "Supermarket",
-    }).withCategoryFromRule(rule("rule-1", category("Food")));
+    }).withCategoryFromRule(rule("rule-1", food));
 
     expect(transaction.appliedRuleId).toBe("rule-1");
-    expect(transaction.categories?.name).toBe("Food");
+    expect(transaction.categoryId).toBe(food.id);
     expect(transaction.isManuallyCategorized).toBe(false);
   });
 
@@ -61,7 +62,7 @@ describe("Transaction provenance", () => {
       amount: 10,
       date: Date.now(),
       description: "Supermarket",
-      categories: category("Food"),
+      categoryId: category("Food").id,
     });
 
     expect(legacy.appliedRuleId).toBeNull();
@@ -69,18 +70,19 @@ describe("Transaction provenance", () => {
   });
 
   it("clears the category and the rule ownership when reconciliation reverts", () => {
+    const food = category("Food");
     const fromRule = Transaction.Create({
       amount: 10,
       date: Date.now(),
       description: "Supermarket",
-    }).withCategoryFromRule(rule("rule-1", category("Food")));
+    }).withCategoryFromRule(rule("rule-1", food));
 
     const reverted = fromRule.uncategorized();
 
-    expect(reverted.categories).toBeNull();
+    expect(reverted.categoryId).toBeNull();
     expect(reverted.appliedRuleId).toBeNull();
     expect(reverted.isManuallyCategorized).toBe(false);
-    expect(fromRule.categories?.name).toBe("Food");
+    expect(fromRule.categoryId).toBe(food.id);
   });
 
   it("returns new instances without mutating the original", () => {
@@ -95,7 +97,7 @@ describe("Transaction provenance", () => {
     );
 
     expect(categorized).not.toBe(original);
-    expect(original.categories).toBeNull();
+    expect(original.categoryId).toBeNull();
     expect(original.appliedRuleId).toBeNull();
   });
 });

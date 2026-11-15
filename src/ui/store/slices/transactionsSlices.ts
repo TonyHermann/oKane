@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { ImportTransactionActions } from "@/adapters/ImportTransactionActions";
 import { transactionActions } from "@/adapters/TransactionActions";
-import type { CategoryState } from "./categorySlices";
 import { applyAllCategorizationRules } from "./categorizationRulesSlices";
 import {
   createTransaction,
@@ -14,7 +13,7 @@ export interface CreateTransactionState {
   amount: number;
   date: number;
   description: string;
-  categories: CategoryState | null;
+  categoryId: string | null;
 }
 
 export type TransactionState = CreateTransactionState & {

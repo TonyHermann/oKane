@@ -1,10 +1,10 @@
 import type { CategoryState } from "@/ui/store/slices/categorySlices";
 
 export function getCategoryLabel(
-  storedCategory: CategoryState | null,
+  categoryId: string | null,
   categoriesById: Map<string, CategoryState>,
 ): string {
-  if (!storedCategory) return "Sin categoría";
+  if (categoryId === null) return "Sin categoría";
 
-  return categoriesById.get(storedCategory.id)?.name ?? "Categoría eliminada";
+  return categoriesById.get(categoryId)?.name ?? "Categoría eliminada";
 }

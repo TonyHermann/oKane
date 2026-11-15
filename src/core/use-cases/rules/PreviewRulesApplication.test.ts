@@ -36,7 +36,7 @@ describe("PreviewRulesApplication", () => {
       amount: 20,
       date: Date.now(),
       description: "Salary",
-      categories: category("Manual"),
+      categoryId: category("Manual").id,
     });
     const orphaned = Transaction.Create({
       amount: 30,

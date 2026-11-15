@@ -1,27 +1,15 @@
-/**
- * Spending dashboard metric model and aggregation.
- *
- * Pure core: no React, no storage, no formatting. The UI passes the
- * transactions it already holds and a period, and gets every metric back in
- * one pass so period changes stay consistent across the dashboard.
- */
-
-/**
- * The projection the aggregation needs from a transaction.
- *
- * Declared structurally so both domain entities and plain store state satisfy
- * it without the core depending on the UI layer.
- */
 export interface SpendingTransaction {
   amount: number;
   date: number;
-  categories: { id: string; name: string } | null;
+  categoryId: string | null;
 }
 
-/** A calendar month. `month` is 1-12, not the zero-based index of `Date`. */
+export type MonthOfYear = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+
+/** A local calendar month. `month` is 1-12, not `Date`'s zero-based index. */
 export interface SpendingPeriod {
   year: number;
-  month: number;
+  month: MonthOfYear;
 }
 
 export type DeltaDirection = "up" | "down" | "flat";
@@ -29,16 +17,14 @@ export type DeltaDirection = "up" | "down" | "flat";
 export interface SpendingDelta {
   current: number;
   previous: number;
-  /** `current - previous`. Positive means the current period spent more. */
   absolute: number;
-  /** `null` when the baseline is zero, because the change is undefined. */
+  /** `null` when `previous` is 0: the change is undefined. */
   percentage: number | null;
   direction: DeltaDirection;
 }
 
 export interface CategorySpending {
   categoryId: string;
-  categoryName: string;
   amount: number;
   /** Fraction of the period's total spend, 0-1. */
   share: number;
@@ -46,17 +32,14 @@ export interface CategorySpending {
 
 export interface PeriodSpending {
   period: SpendingPeriod;
-  /** Sum of expense magnitudes (always >= 0). */
   totalSpend: number;
-  /** Sum of positive amounts (always >= 0). */
   income: number;
-  /** `income - totalSpend`. */
   balance: number;
   transactionCount: number;
   expensesCount: number;
   /** Categorized expenses, highest amount first. */
   byCategory: CategorySpending[];
-  /** Expenses without a category, kept out of `byCategory` on purpose. */
+  /** Uncategorized expenses stay out of `byCategory` on purpose. */
   uncategorizedSpend: number;
 }
 
@@ -70,17 +53,20 @@ export interface SpendingOverview {
 
 const padMonth = (month: number): string => String(month).padStart(2, "0");
 
-/** Extract the calendar month of a timestamp, in the user's local time. */
+// `Date.getMonth()` is the only zero-based month in the app; this cast is it.
+const monthOfYear = (date: Date): MonthOfYear =>
+  (date.getMonth() + 1) as MonthOfYear;
+
 export const spendingPeriodOf = (timestamp: number): SpendingPeriod => {
   const date = new Date(timestamp);
-  return { year: date.getFullYear(), month: date.getMonth() + 1 };
+  return { year: date.getFullYear(), month: monthOfYear(date) };
 };
 
 export const currentSpendingPeriod = (
   now: number | Date = Date.now(),
 ): SpendingPeriod => {
   const date = now instanceof Date ? now : new Date(now);
-  return { year: date.getFullYear(), month: date.getMonth() + 1 };
+  return { year: date.getFullYear(), month: monthOfYear(date) };
 };
 
 export const previousSpendingPeriod = (
@@ -89,18 +75,16 @@ export const previousSpendingPeriod = (
   if (period.month === 1) {
     return { year: period.year - 1, month: 12 };
   }
-  return { year: period.year, month: period.month - 1 };
+  return { year: period.year, month: (period.month - 1) as MonthOfYear };
 };
 
 export const sameMonthPreviousYearPeriod = (
   period: SpendingPeriod,
 ): SpendingPeriod => ({ year: period.year - 1, month: period.month });
 
-/** Format a period for `<input type="month">` (`YYYY-MM`). */
 export const spendingPeriodToMonthInput = (period: SpendingPeriod): string =>
   `${period.year}-${padMonth(period.month)}`;
 
-/** Parse an `<input type="month">` value; `null` for empty or invalid input. */
 export const spendingPeriodFromMonthInput = (
   value: string,
 ): SpendingPeriod | null => {
@@ -113,7 +97,7 @@ export const spendingPeriodFromMonthInput = (
 
   if (!Number.isInteger(year) || month < 1 || month > 12) return null;
 
-  return { year, month };
+  return { year, month: month as MonthOfYear };
 };
 
 const isInPeriod = (timestamp: number, period: SpendingPeriod): boolean => {
@@ -123,13 +107,9 @@ const isInPeriod = (timestamp: number, period: SpendingPeriod): boolean => {
   );
 };
 
-/**
- * Signed-amount policy: bank amounts are stored as exported, so a negative
- * amount is an expense and a positive amount is income.
- *
- * TODO: [currency-import] Make this configurable when imports expose explicit
- * income/expense semantics instead of relying on the sign.
- */
+// Signed-amount policy: negative is an expense, positive is income.
+// TODO: [currency-import] Make this configurable when imports expose explicit
+// income/expense semantics instead of relying on the sign.
 const expenseMagnitude = (amount: number): number => (amount < 0 ? -amount : 0);
 const incomeMagnitude = (amount: number): number => (amount > 0 ? amount : 0);
 
@@ -137,7 +117,7 @@ export const calculatePeriodSpending = (
   transactions: SpendingTransaction[],
   period: SpendingPeriod,
 ): PeriodSpending => {
-  const categoryTotals = new Map<string, { name: string; amount: number }>();
+  const categoryTotals = new Map<string, number>();
   let totalSpend = 0;
   let income = 0;
   let transactionCount = 0;
@@ -154,14 +134,13 @@ export const calculatePeriodSpending = (
       totalSpend += spend;
       expensesCount += 1;
 
-      if (transaction.categories === null) {
+      if (transaction.categoryId === null) {
         uncategorizedSpend += spend;
       } else {
-        const current = categoryTotals.get(transaction.categories.id);
-        categoryTotals.set(transaction.categories.id, {
-          name: transaction.categories.name,
-          amount: (current?.amount ?? 0) + spend,
-        });
+        categoryTotals.set(
+          transaction.categoryId,
+          (categoryTotals.get(transaction.categoryId) ?? 0) + spend,
+        );
       }
     } else {
       income += incomeMagnitude(transaction.amount);
@@ -169,16 +148,15 @@ export const calculatePeriodSpending = (
   });
 
   const byCategory: CategorySpending[] = Array.from(categoryTotals.entries())
-    .map(([categoryId, total]) => ({
+    .map(([categoryId, amount]) => ({
       categoryId,
-      categoryName: total.name,
-      amount: total.amount,
-      share: totalSpend === 0 ? 0 : total.amount / totalSpend,
+      amount,
+      share: totalSpend === 0 ? 0 : amount / totalSpend,
     }))
     .sort(
       (left, right) =>
         right.amount - left.amount ||
-        left.categoryName.localeCompare(right.categoryName),
+        left.categoryId.localeCompare(right.categoryId),
     );
 
   return {
@@ -210,13 +188,7 @@ const calculateDelta = (current: number, previous: number): SpendingDelta => {
   };
 };
 
-/**
- * Build every dashboard metric for a period: the period itself, its
- * month-over-month and year-over-year comparisons, and the deltas.
- *
- * All three periods are derived from the same transaction list, so a period
- * change can never leave one metric reading a different slice.
- */
+// All three periods come from the same list, so a dashboard can never mix slices.
 export const GetSpendingOverview = (
   transactions: SpendingTransaction[],
   period: SpendingPeriod,

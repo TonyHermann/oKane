@@ -75,7 +75,7 @@ export const planRuleApplication = (
     if (match !== null) {
       const alreadyApplied =
         match.id === transaction.appliedRuleId &&
-        match.category.id === transaction.categories?.id;
+        match.category.id === transaction.categoryId;
 
       if (alreadyApplied) {
         plan.unchanged.push(transaction);
@@ -93,7 +93,7 @@ export const planRuleApplication = (
 
     // Inconsistent legacy state: a rule id survived without its category. There
     // is nothing to revert, so leave it alone until a rule matches again.
-    if (transaction.categories === null) {
+    if (transaction.categoryId === null) {
       plan.unchanged.push(transaction);
       return;
     }
